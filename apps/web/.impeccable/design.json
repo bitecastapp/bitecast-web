@@ -1,61 +1,60 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-21T15:00:00+05:30",
+  "generatedAt": "2026-10-21T21:00:00+05:30",
   "title": "Design System: Bitecast",
   "extensions": {
     "colorMeta": {
-      "pitch-board": { "role": "primary", "displayName": "Pitch Board", "canonical": "oklch(0.32 0.06 165)", "tonalRamp": ["oklch(0.15 0.06 165)", "oklch(0.25 0.06 165)", "oklch(0.32 0.06 165)", "oklch(0.45 0.06 165)", "oklch(0.58 0.06 165)", "oklch(0.7 0.05 165)", "oklch(0.83 0.03 165)", "oklch(0.95 0.015 165)"] },
-      "marigold": { "role": "secondary", "displayName": "Marigold", "canonical": "oklch(0.83 0.16 85)", "tonalRamp": ["oklch(0.25 0.05 80)", "oklch(0.4 0.1 82)", "oklch(0.55 0.13 84)", "oklch(0.7 0.15 85)", "oklch(0.83 0.16 85)", "oklch(0.88 0.12 88)", "oklch(0.93 0.07 90)", "oklch(0.97 0.03 90)"] },
-      "chalk-plate": { "role": "neutral", "displayName": "Chalk Plate", "canonical": "oklch(0.97 0.008 160)" },
-      "scorecard-sheet": { "role": "neutral", "displayName": "Scorecard Sheet", "canonical": "oklch(0.985 0.004 160)" }
+      "mint-ground": { "role": "neutral", "displayName": "Mint Ground", "canonical": "oklch(0.97 0.008 150)" },
+      "leaf-ink": { "role": "primary", "displayName": "Leaf Ink", "canonical": "oklch(0.29 0.045 155)", "tonalRamp": ["oklch(0.15 0.04 155)", "oklch(0.29 0.045 155)", "oklch(0.4 0.05 155)", "oklch(0.52 0.05 155)", "oklch(0.64 0.04 155)", "oklch(0.76 0.03 155)", "oklch(0.88 0.02 155)", "oklch(0.96 0.01 155)"] },
+      "bloom": { "role": "secondary", "displayName": "Bloom", "canonical": "oklch(0.58 0.19 33)", "tonalRamp": ["oklch(0.3 0.1 33)", "oklch(0.42 0.15 33)", "oklch(0.58 0.19 33)", "oklch(0.68 0.16 33)", "oklch(0.78 0.11 33)", "oklch(0.86 0.07 33)", "oklch(0.92 0.04 33)", "oklch(0.97 0.015 33)"] },
+      "lattice": { "role": "neutral", "displayName": "Lattice", "canonical": "oklch(0.46 0.09 148)" },
+      "pane-live": { "role": "neutral", "displayName": "Pane Live", "canonical": "oklch(0.93 0.04 150)" }
     },
     "typographyMeta": {
-      "plate": { "displayName": "Plate", "purpose": "Board plates only, uppercase." },
-      "headline": { "displayName": "Sheet headline", "purpose": "One per sheet." }
+      "display": { "displayName": "Display", "purpose": "Login tagline only." },
+      "headline": { "displayName": "Headline", "purpose": "One per screen." }
     },
     "shadows": [],
     "motion": [
-      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Plate drop-in and sheet entrance." },
-      { "name": "plate-out", "value": "260ms cubic-bezier(0.7, 0, 0.84, 0)", "purpose": "Old plate dropping out of its slot." },
-      { "name": "plate-in", "value": "360ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "New plate dropping into its slot, staggered 45ms." }
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Sprout draw, bloom pop, content rise." },
+      { "name": "sprout", "value": "700ms ease-out-expo", "purpose": "Stem and leaves draw up in the live pane." },
+      { "name": "bloom", "value": "420ms ease-out-expo, staggered 90ms", "purpose": "Flower pops in a finished pane." }
     ],
     "breakpoints": [{ "name": "md", "value": "768px" }]
   },
   "components": [
     {
-      "name": "Plate",
+      "name": "Glasshouse",
       "kind": "custom",
-      "refersTo": "plate",
-      "description": "A chalk tin plate on the pitch board.",
-      "html": "<div class=\"ds-board\"><span class=\"ds-plate\">RATE</span> <span class=\"ds-plate\">THE</span> <span class=\"ds-plate ds-plate-live\">DISH.</span></div>",
-      "css": ".ds-board { background: oklch(0.32 0.06 165); padding: 24px; display: flex; gap: 6px; } .ds-plate { display: inline-block; background: oklch(0.97 0.008 160); color: oklch(0.2 0.025 165); font-family: 'Big Shoulders', sans-serif; font-weight: 800; font-size: 56px; line-height: 0.95; text-transform: uppercase; border-radius: 6px; padding: 0.1em 0.14em 0.06em; } .ds-plate-live { background: oklch(0.83 0.16 85); color: oklch(0.25 0.05 80); }"
+      "description": "The arch with four step panes; finished panes bloom.",
+      "html": "<svg class=\"ds-house\" viewBox=\"0 0 342 280\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M1 279V150C1 66 80 1 171 1s170 65 170 149v129Z\" fill=\"#fbfdfb\"/><path d=\"M171 1v278M86 22v257M256 22v257M1 150h340\" stroke-opacity=\".5\"/><rect x=\"171\" y=\"151\" width=\"85\" height=\"127\" fill=\"#ddf0df\" stroke=\"none\"/><path d=\"M43 252v-52m0 14c-16-8-24-20-22-32 14 2 22 14 22 32m0-8c14-10 24-14 28-26-14 0-24 10-28 26\" stroke-width=\"2\"/><circle cx=\"43\" cy=\"192\" r=\"9\" fill=\"#d9412b\" stroke=\"none\"/></svg>",
+      "css": ".ds-house { width: 300px; color: oklch(0.46 0.09 148); }"
     },
     {
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Main action, bottom of the sheet.",
-      "html": "<button class=\"ds-btn-primary\">Send my link</button>",
-      "css": ".ds-btn-primary { background: oklch(0.32 0.06 165); color: oklch(0.98 0.006 160); height: 52px; padding: 0 20px; border: 0; border-radius: 6px; font: 600 16px 'Hanken Grotesk', sans-serif; transition: background 0.2s; } .ds-btn-primary:hover { background: oklch(0.32 0.06 165 / 0.85); } .ds-btn-primary:focus-visible { outline: 3px solid oklch(0.45 0.08 165 / 0.5); outline-offset: 2px; }"
+      "description": "Main action, bottom of the screen.",
+      "html": "<button class=\"ds-btn\">Send my link</button>",
+      "css": ".ds-btn { background: oklch(0.29 0.045 155); color: oklch(0.97 0.008 150); min-height: 52px; padding: 12px 20px; border: 0; border-radius: 12px; font: 700 16px Manrope, sans-serif; } .ds-btn:focus-visible { outline: none; box-shadow: 0 0 0 2px oklch(0.97 0.008 150), 0 0 0 4px oklch(0.29 0.045 155); }"
     },
     {
       "name": "Text Input",
       "kind": "input",
       "refersTo": "input",
-      "description": "52px field, 16px text.",
+      "description": "52px glass field, 16px text.",
       "html": "<input class=\"ds-input\" placeholder=\"you@example.com\">",
-      "css": ".ds-input { height: 52px; padding: 0 14px; border: 1px solid oklch(0.8 0.015 160); border-radius: 6px; font: 400 16px 'Hanken Grotesk', sans-serif; color: oklch(0.2 0.025 165); background: transparent; } .ds-input:focus-visible { outline: none; border-color: oklch(0.45 0.08 165); box-shadow: 0 0 0 3px oklch(0.45 0.08 165 / 0.5); }"
+      "css": ".ds-input { height: 52px; padding: 0 14px; background: oklch(0.99 0.004 150); border: 1px solid oklch(0.6 0.03 150); border-radius: 12px; font: 400 16px Manrope, sans-serif; color: oklch(0.29 0.045 155); } .ds-input:focus-visible { outline: none; border-color: oklch(0.29 0.045 155); box-shadow: 0 0 0 2px oklch(0.29 0.045 155); }"
     }
   ],
   "narrative": {
-    "northStar": "The Manual Scoreboard",
-    "overview": "A pitch-green board of chalk tin plates over a calm scorecard sheet. The board is loud, the sheet is plain.",
-    "keyCharacteristics": ["Board on top, sheet below", "Uppercase condensed plates", "One marigold live plate", "Flat, no shadows", "One motion: the tin-plate swap"],
+    "northStar": "The Glasshouse",
+    "overview": "A Lalbagh-style glasshouse on a calm mint ground; each finished step leaves a flower in its pane.",
+    "keyCharacteristics": ["Mint ground, glass surfaces, leaf ink", "One arch, same size on every screen", "Bloom red for flowers and one word", "Flat", "One motion: the bloom"],
     "rules": [
-      { "name": "The One Marigold Rule", "body": "At most one marigold plate per board; it means live.", "section": "colors" },
-      { "name": "The Plates-Only Display Rule", "body": "Big Shoulders only on the board.", "section": "typography" }
+      { "name": "The One Bloom Rule", "body": "Red is for flowers and at most one large word per screen.", "section": "colors" }
     ],
-    "dos": ["Put the one changing value on a plate and swap it.", "Keep sheet controls standard."],
-    "donts": ["No shadows, gradients, glass or food-photo chrome.", "No kicker above a sheet headline.", "No region-vs-region framing."]
+    "dos": ["Keep the arch in the same place on every screen.", "Show progress as panes, never a progress bar."],
+    "donts": ["No photos, cards, shadows or gradients as chrome.", "No bloom red on small text, buttons or errors.", "No kicker above a headline."]
   }
 }

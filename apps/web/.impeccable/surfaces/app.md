@@ -11,18 +11,18 @@ Mode: operate. Phone-first (390 wide), works to desktop. Audience: young Bengalu
 
 Constraints: magic link (no code entry; free-tier email templates locked). One home region today (Bengaluru), more later. Never region-vs-region framing. No invented counts or dishes.
 
-Unresolved: owner has not yet seen or approved the direction (chosen unattended from the roll).
+Owner chose this direction on 2026-10-21 over Metro Line, Kolam, Dish Mascots and Filter Coffee, replacing the earlier scoreboard world: "more refreshing and minimal but more interesting".
 
 ## Direction contract
 
-THESIS: Bitecast's shell is a manual cricket scoreboard: every number and name is a painted tin plate hung on a pitch-green board, so a dish's score reads like a score. Refuses the food-app default of white cards, food photos and an orange accent.
+THESIS: Bitecast is a glasshouse: a light hairline arch over a calm mint ground, where each step you finish leaves a small flower in its own pane. Refuses the food-app default of photos, white cards and an orange accent, and the loud poster board it replaces.
 
-OWN-WORLD: Pitch-green board (#0E3B2C family) carries the top half of every screen; chalk-white tin plates with near-black numerals; marigold (#F2B705 family) only for the live/selected plate; forms sit on a cool off-white scorecard sheet that slides over the board. Big Shoulders Display (variable weight) for plates and numerals, uppercase, tight; Hanken Grotesk for UI text. Square-ish 6px plate corners, 1px hairline plate seams, no gradients, no glass.
+OWN-WORLD: Mint-white ground (#f2f6f1), glass-white panes (#fbfdfb), leaf-green hairline lattice (#2f6b3a), deep leaf ink (#173322), pale mint for the live pane (#d6eed9), and one bloom red (#d9412b) used only for flowers and the single emphasised word. Manrope at 800 for display and 400–700 for UI. 12px corners, 1.5px hairlines, no shadows, no gradients.
 
-STORY: The visitor sees "rate the dish, not the place" hung as plates, understands it's about dishes, enters email, is told plainly to open the link on this phone, then picks a handle that is painted onto the board live as they type, then picks home.
+STORY: The visitor sees the glasshouse with one lit pane and a sprout, reads "Rate the dish, not the place", sends their email link, then watches a flower bloom in each pane as they pick a handle and a home; home shows the full row in bloom.
 
-FIRST VIEWPORT: Login at 390x844: board 52% height, wordmark plate top-left, "BLR" plate top-right, three-line headline in plates at 56–64px; sheet below with one heading, email field (16px+), full-width primary button in thumb zone.
+FIRST VIEWPORT: Login at 390x844: wordmark left, "Bengaluru" right; the arch at 342x280 under the header with pane 1 lit; 44px two-line headline with "dish" in bloom red; one-line subcopy; email field and dark leaf button pinned to the bottom in thumb reach.
 
-FORM: Chinnaswamy manual scoreboard, candidate 5 of 7 (1 darshini menu board, 2 banana-leaf meals, 3 sign-painter lettering, 4 story stickers, 5 manual scoreboard, 6 BMTC route board, 7 vintage packaging). seed:377b743a9998681e. Signature move: the tin-plate swap: when a value changes, the old plate slides down out of its slot and the new one drops in (200ms, exponential ease-out), used for the sent-link state, the live handle plate, and later scores. Raises: from variable-font-specimen, the handle plate's weight tracks input length live (one control drives the plate); from vertical-feed and terminal-wayfinding, one decision per sheet; from boarding-pass gate board, a changed plate holds marigold until the next interaction.
+FORM: Lalbagh glasshouse, candidate 7 of 7 in re-roll 2 (1 filter coffee, 2 jasmine string, 3 darshini order chit, 4 auto-rickshaw meter, 5 steel thali, 6 Mysore silk border, 7 Lalbagh glasshouse). seed:377b743a9998681e. Signature move: the bloom: when a step completes, its pane's sprout draws itself and a red flower pops, and the next pane lights. Raises: from the Saville catalog sleeve, vast quiet ground with one element owning the field (the arch); from the star atlas, size carries hierarchy; from the botanical folio, every stage uses the same arch at the same scale; from the split-flap board, the one changing word swaps in place; from the midnight transit diagram, the live pane is emphasised while the others keep their context.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

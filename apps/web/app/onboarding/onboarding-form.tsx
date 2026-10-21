@@ -1,12 +1,11 @@
 "use client";
 
-import { useActionState, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { ArrowLeftIcon, ArrowRightIcon, CheckIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel, FieldLegend, FieldSet } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { Plate, SwapPlate } from "@/components/plate";
 import { Screen } from "@/components/screen";
 import { usernameSchema } from "@/lib/validation";
 import { cn } from "@/lib/utils";
@@ -38,9 +37,6 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
     mounted.current = true;
   }, [step]);
 
-  const handle = username.trim().replace(/^@/, "").toLowerCase();
-  const regionName = regions.find((r) => r.slug === region)?.name;
-
   function next() {
     const parsed = usernameSchema.safeParse(username);
     if (!parsed.success) return setUsernameError(parsed.error.issues[0].message);
@@ -49,18 +45,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
   }
 
   return (
-    <Screen
-      board={
-        <dl className="flex flex-col">
-          <BoardRow label="Handle">
-            <HandlePlate handle={handle} live={step === 1} />
-          </BoardRow>
-          <BoardRow label="Home">
-            <SwapPlate value={regionName && step === 2 ? regionName : "—"} live={step === 2} />
-          </BoardRow>
-        </dl>
-      }
-    >
+    <Screen step={step + 2}>
       <form
         action={action}
         onSubmit={(e) => {
@@ -72,11 +57,11 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
         className="flex flex-1 flex-col"
         noValidate
       >
-        <div key={step} className="flex flex-1 animate-[sheet-up_420ms_var(--ease-out-expo)_both] flex-col gap-6">
+        <div key={step} className="flex flex-1 animate-[rise_420ms_var(--ease-out-expo)_both] flex-col gap-6">
           {step === 1 ? (
             <>
-              <div className="flex flex-col gap-2">
-                <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">
+              <div className="flex flex-col gap-3">
+                <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] leading-tight font-extrabold tracking-tight outline-none">
                   Pick your handle
                 </h1>
                 <p className="text-muted-foreground">It&apos;s how you show up on every dish you rate.</p>
@@ -99,7 +84,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
                     placeholder="dosa_devotee"
                     aria-invalid={usernameError ? true : undefined}
                     aria-describedby="username-help"
-                    className="h-13 px-3.5 text-base"
+                    className="h-13 bg-glass px-3.5 text-base"
                   />
                   {usernameError ? (
                     <FieldError id="username-help">{usernameError}</FieldError>
@@ -111,8 +96,8 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
             </>
           ) : (
             <>
-              <div className="flex flex-col gap-2">
-                <h1 ref={headingRef} tabIndex={-1} className="text-2xl font-semibold tracking-tight outline-none">
+              <div className="flex flex-col gap-3">
+                <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] leading-tight font-extrabold tracking-tight outline-none">
                   Where&apos;s home?
                 </h1>
                 <p className="text-muted-foreground">
@@ -127,8 +112,8 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
                     <label
                       key={r.slug}
                       className={cn(
-                        "flex h-14 cursor-pointer items-center justify-between rounded-lg border px-4 text-base font-medium transition-colors duration-200 has-focus-visible:ring-3 has-focus-visible:ring-ring/50",
-                        region === r.slug ? "border-primary bg-primary/6" : "border-border hover:bg-muted",
+                        "flex min-h-14 cursor-pointer items-center justify-between gap-3 rounded-lg border px-4 py-3 text-base font-semibold transition-colors duration-200 has-focus-visible:ring-3 has-focus-visible:ring-ring has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-background",
+                        region === r.slug ? "border-primary bg-pane-live" : "border-input bg-glass hover:bg-muted",
                       )}
                     >
                       <input
@@ -142,12 +127,14 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
                       {r.name}
                       <CheckIcon
                         aria-hidden
-                        className={cn("size-5 text-primary transition-opacity", region === r.slug ? "opacity-100" : "opacity-0")}
+                        className={cn("size-5 shrink-0 text-primary transition-opacity", region === r.slug ? "opacity-100" : "opacity-0")}
                       />
                     </label>
                   ))}
                 </div>
-                {state.error?.field === "region" ? (
+                {regions.length === 0 ? (
+                  <FieldError>Couldn&apos;t load places. Refresh the page to try again.</FieldError>
+                ) : state.error?.field === "region" ? (
                   <FieldError>{state.error.message}</FieldError>
                 ) : (
                   <FieldDescription>More places are coming soon.</FieldDescription>
@@ -170,50 +157,12 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
               Back
             </Button>
           )}
-          <Button type="submit" size="xl" className="flex-1" disabled={pending}>
+          <Button type="submit" size="xl" className="flex-1" disabled={pending || (step === 2 && regions.length === 0)}>
             {step === 1 ? "Next" : pending ? "Saving" : "Let's eat"}
             {pending ? <Spinner data-icon="inline-end" /> : step === 1 && <ArrowRightIcon data-icon="inline-end" />}
           </Button>
         </div>
       </form>
     </Screen>
-  );
-}
-
-function BoardRow({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex flex-col gap-2 border-t border-board-seam py-4 first:border-t-0 first:pt-0">
-      <dt className="font-display text-sm font-bold tracking-[0.2em] text-board-ink uppercase">{label}</dt>
-      <dd className="flex min-h-[1.05em] items-center text-[clamp(2.75rem,13vw,4.5rem)] md:text-[clamp(3rem,5vw,5rem)]">{children}</dd>
-    </div>
-  );
-}
-
-// The handle plate stays on one line: it gets lighter as it grows, then shrinks to fit the board width.
-function HandlePlate({ handle, live }: { handle: string; live: boolean }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useLayoutEffect(() => {
-    const el = ref.current;
-    if (!el?.parentElement) return;
-    el.style.fontSize = "1em";
-    const ratio = el.parentElement.clientWidth / el.offsetWidth;
-    el.style.fontSize = "";
-    setScale(Math.min(1, ratio));
-  }, [handle]);
-
-  return (
-    <Plate
-      ref={ref}
-      live={live}
-      className="whitespace-nowrap"
-      style={{
-        fontWeight: Math.max(600, 860 - Math.max(0, handle.length - 7) * 20),
-        fontSize: `${scale}em`,
-      }}
-    >
-      {handle ? `@${handle}` : "@—"}
-    </Plate>
   );
 }

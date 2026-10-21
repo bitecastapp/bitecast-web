@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Set up · Bitecast" };
 
 export default function OnboardingPage() {
   return (
-    <Suspense fallback={<Screen board={null}>{null}</Screen>}>
+    <Suspense fallback={<Screen step={3}>{null}</Screen>}>
       <Onboarding />
     </Suspense>
   );
