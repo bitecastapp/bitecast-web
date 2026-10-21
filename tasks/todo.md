@@ -45,6 +45,6 @@ Create the pnpm workspace, `apps/web` (Next.js App Router + TS + Tailwind), shad
 
 ## Task 6: Design and a11y pass (M) (design done: see `apps/web/DESIGN.md`)
 Visual pass with `impeccable`, copy with `ux-writing`, mobile fixes with `mobile-native`, then `a11y-audit` + `break-ui`.
-- [ ] No a11y blockers; long and weird input doesn't break layouts
+- [x] No a11y blockers; long and weird input doesn't break layouts
 - Deps: 5
 - Files: the three pages + `app/globals.css`, `app/layout.tsx`

@@ -26,3 +26,7 @@ FIRST VIEWPORT: Login at 390x844: wordmark left, "Bengaluru" right; the arch at 
 FORM: Lalbagh glasshouse, candidate 7 of 7 in re-roll 2 (1 filter coffee, 2 jasmine string, 3 darshini order chit, 4 auto-rickshaw meter, 5 steel thali, 6 Mysore silk border, 7 Lalbagh glasshouse). seed:377b743a9998681e. Signature move: the bloom: when a step completes, its pane's sprout draws itself and a red flower pops, and the next pane lights. Raises: from the Saville catalog sleeve, vast quiet ground with one element owning the field (the arch); from the star atlas, size carries hierarchy; from the botanical folio, every stage uses the same arch at the same scale; from the split-flap board, the one changing word swaps in place; from the midnight transit diagram, the live pane is emphasised while the others keep their context.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+
+## Browse screens (restaurants + dishes)
+
+Layout chosen by the owner on 2026-10-21 from a dealt round (menu cards / by neighbourhood / search first): **by neighbourhood, with the search field from search-first on top**. Home: wordmark header, "Where to eat", a search field that matches dishes and places as you type, then restaurants grouped under area headings with dish counts. Restaurant page: back link, name, area, dish rows, "Add a dish". Dish page: name, restaurant link, "ratings open soon". The glasshouse arch stays on sign-up screens only.

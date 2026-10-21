@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { emailSchema, usernameSchema } from "./validation";
+import { dishNameSchema, emailSchema, usernameSchema } from "./validation";
 
 describe("usernameSchema", () => {
   it.each([
@@ -24,5 +24,19 @@ describe("emailSchema", () => {
 
   it("rejects junk", () => {
     expect(emailSchema.safeParse("not-an-email").success).toBe(false);
+  });
+});
+
+describe("dishNameSchema", () => {
+  it("tidies spacing", () => {
+    expect(dishNameSchema.parse("  Set   Dosa ")).toBe("Set Dosa");
+  });
+
+  it.each(["a", " ", "x".repeat(61), "!!", "—"])("rejects %j", (input) => {
+    expect(dishNameSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("accepts non-Latin names", () => {
+    expect(dishNameSchema.parse("ಮಸಾಲೆ ದೋಸೆ")).toBe("ಮಸಾಲೆ ದೋಸೆ");
   });
 });

@@ -149,6 +149,11 @@ Flat. Depth comes only from the arch framing the glass.
 - **Buttons:** shadcn Button, `xl` size (52px minimum, and the label wraps if text is enlarged). Primary is leaf ink, secondary is wash, ghost is for back and cancel.
 - **Inputs:** 52px tall, glass fill, 16px text (no iOS zoom).
 - **Choice rows:** 56px minimum, glass fill, field border; selected rows fill pane-live with a check icon.
+- **PageShell** (`components/page-shell.tsx`): the browsing screens' shell: wordmark linking home, then one column (max 576px). The glasshouse arch is for sign-up screens only.
+- **Row** (`components/row.tsx`): a 64px-minimum tappable list row (bold title, muted detail line, lattice chevron). Lists separate rows with `divide-y` hairlines; the hover fill is rounded inside them.
+- **Section label:** 14px bold lattice text, optionally trailed by a hairline (neighbourhood headings, "3 dishes"). Never above an h1.
+- **Search field:** a 52px glass input with a leading search icon and a 40px clear button; results replace the grouped list while there's a query.
+- **Back link:** 44px-tall lattice text link with a chevron, at the top left of detail screens.
 
 ### Motion: the bloom
 - The live pane fills in (400ms ease-out).
