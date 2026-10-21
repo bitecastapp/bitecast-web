@@ -1,6 +1,6 @@
 ---
 name: Bitecast
-description: Bengaluru's dish-by-dish guide to what's worth eating.
+description: A dish-by-dish guide to what's actually worth eating.
 colors:
   mint-ground: "oklch(0.97 0.008 150)"
   glass: "oklch(0.99 0.004 150)"
@@ -109,7 +109,7 @@ Fresh greens with a single red.
 ### Neutral
 - **Mint Ground** (oklch(0.97 0.008 150)): page background. Also the browser theme color (#f2f6f1).
 - **Glass** (oklch(0.99 0.004 150)): inside the arch, inputs, choice rows.
-- **Lattice** (oklch(0.46 0.09 148)): the arch's lines and the city label.
+- **Lattice** (oklch(0.46 0.09 148)): the arch's lines.
 - **Pane Live** (oklch(0.93 0.04 150)): the current step's pane and the selected choice row.
 - **Muted Ink** (oklch(0.45 0.03 155)): supporting copy, 6.3:1 or better.
 - **Field Border** (oklch(0.6 0.03 150)): input and choice-row borders, 3.57:1 against the ground.
@@ -132,7 +132,7 @@ Fresh greens with a single red.
 
 ## Layout
 
-On phones: a 24px gutter with safe-area insets. The header (wordmark left, "Bengaluru" right) sits above the arch, which scales to the width but never grows taller than 34% of the screen height. Content follows with a 28px gap, and the main action sits at the bottom in thumb reach. From the `md` breakpoint it becomes two equal columns, with header and arch on the left and content (max 384px) on the right, vertically centred.
+On phones: a 24px gutter with safe-area insets. The header (wordmark only) sits above the arch, which scales to the width but never grows taller than 34% of the screen height. Content follows with a 28px gap, and the main action sits at the bottom in thumb reach. From the `md` breakpoint it becomes two equal columns, with header and arch on the left and content (max 384px) on the right, vertically centred.
 
 ## Elevation & Depth
 
@@ -165,3 +165,4 @@ Flat. Depth comes only from the arch framing the glass.
 - Don't use bloom red for small text, buttons or errors.
 - Don't put a label or kicker above a headline.
 - Don't frame regions against each other.
+- Don't name a city in UI copy: Bitecast is pan-India and only launches in Bengaluru. City names appear only as data (home regions, restaurant locations).

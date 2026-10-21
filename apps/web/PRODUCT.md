@@ -18,7 +18,7 @@ Bitecast rates **individual dishes**, not restaurants. People give a dish 1–10
 **Tastes like home**: for a dish with a home region, Bitecast shows how people *from* that region rate it ("8.7 from 12 Hyderabadis"). No restaurant-rating app can say whether the biryani passes the Hyderabadi test.
 
 ## Operating Context
-Launch city: Bengaluru only. Mobile-first PWA in the browser; native apps later. Each user picks one home region at onboarding (only Bengaluru exists at launch; more regions come later). Spaces are leaderboards per food (Biryani, Dosa...). Ranking uses a Bayesian average.
+Bitecast is meant for all of India; Bengaluru is only the launch city. UI copy must not brand the product as a Bengaluru app (owner, 2026-10-21). Mobile-first PWA in the browser; native apps later. Each user picks one home region at onboarding (only Bengaluru exists at launch; more regions come later). Spaces are leaderboards per food (Biryani, Dosa...). Ranking uses a Bayesian average.
 
 ## Capabilities and Constraints
 - v1: email sign-in (magic link), username + home region onboarding, restaurants, dishes, Spaces, reviews with photos, Facts/Cap feed, Tastes like home, reporting.

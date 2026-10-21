@@ -55,7 +55,7 @@ export function LoginScreen({ initialState = { status: "idle" } }: { initialStat
               Rate the <span className="text-bloom">dish</span>,<br />
               not the place.
             </h1>
-            <p className="text-muted-foreground">Bengaluru&apos;s dish-by-dish guide to what&apos;s worth eating.</p>
+            <p className="text-muted-foreground">A dish-by-dish guide to what&apos;s actually worth eating.</p>
           </div>
           <Suspense>
             <LinkError />

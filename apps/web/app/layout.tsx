@@ -9,7 +9,7 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: "Bitecast",
-  description: "Rate the dish, not the place. Bengaluru's dish-by-dish guide to what's worth eating.",
+  description: "Rate the dish, not the place. A dish-by-dish guide to what's actually worth eating.",
 };
 
 export const viewport: Viewport = {
