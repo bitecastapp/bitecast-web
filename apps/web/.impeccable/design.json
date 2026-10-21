@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-21T15:00:00+05:30",
+  "title": "Design System: Bitecast",
+  "extensions": {
+    "colorMeta": {
+      "pitch-board": { "role": "primary", "displayName": "Pitch Board", "canonical": "oklch(0.32 0.06 165)", "tonalRamp": ["oklch(0.15 0.06 165)", "oklch(0.25 0.06 165)", "oklch(0.32 0.06 165)", "oklch(0.45 0.06 165)", "oklch(0.58 0.06 165)", "oklch(0.7 0.05 165)", "oklch(0.83 0.03 165)", "oklch(0.95 0.015 165)"] },
+      "marigold": { "role": "secondary", "displayName": "Marigold", "canonical": "oklch(0.83 0.16 85)", "tonalRamp": ["oklch(0.25 0.05 80)", "oklch(0.4 0.1 82)", "oklch(0.55 0.13 84)", "oklch(0.7 0.15 85)", "oklch(0.83 0.16 85)", "oklch(0.88 0.12 88)", "oklch(0.93 0.07 90)", "oklch(0.97 0.03 90)"] },
+      "chalk-plate": { "role": "neutral", "displayName": "Chalk Plate", "canonical": "oklch(0.97 0.008 160)" },
+      "scorecard-sheet": { "role": "neutral", "displayName": "Scorecard Sheet", "canonical": "oklch(0.985 0.004 160)" }
+    },
+    "typographyMeta": {
+      "plate": { "displayName": "Plate", "purpose": "Board plates only, uppercase." },
+      "headline": { "displayName": "Sheet headline", "purpose": "One per sheet." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Plate drop-in and sheet entrance." },
+      { "name": "plate-out", "value": "260ms cubic-bezier(0.7, 0, 0.84, 0)", "purpose": "Old plate dropping out of its slot." },
+      { "name": "plate-in", "value": "360ms cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "New plate dropping into its slot, staggered 45ms." }
+    ],
+    "breakpoints": [{ "name": "md", "value": "768px" }]
+  },
+  "components": [
+    {
+      "name": "Plate",
+      "kind": "custom",
+      "refersTo": "plate",
+      "description": "A chalk tin plate on the pitch board.",
+      "html": "<div class=\"ds-board\"><span class=\"ds-plate\">RATE</span> <span class=\"ds-plate\">THE</span> <span class=\"ds-plate ds-plate-live\">DISH.</span></div>",
+      "css": ".ds-board { background: oklch(0.32 0.06 165); padding: 24px; display: flex; gap: 6px; } .ds-plate { display: inline-block; background: oklch(0.97 0.008 160); color: oklch(0.2 0.025 165); font-family: 'Big Shoulders', sans-serif; font-weight: 800; font-size: 56px; line-height: 0.95; text-transform: uppercase; border-radius: 6px; padding: 0.1em 0.14em 0.06em; } .ds-plate-live { background: oklch(0.83 0.16 85); color: oklch(0.25 0.05 80); }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main action, bottom of the sheet.",
+      "html": "<button class=\"ds-btn-primary\">Send my link</button>",
+      "css": ".ds-btn-primary { background: oklch(0.32 0.06 165); color: oklch(0.98 0.006 160); height: 52px; padding: 0 20px; border: 0; border-radius: 6px; font: 600 16px 'Hanken Grotesk', sans-serif; transition: background 0.2s; } .ds-btn-primary:hover { background: oklch(0.32 0.06 165 / 0.85); } .ds-btn-primary:focus-visible { outline: 3px solid oklch(0.45 0.08 165 / 0.5); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "52px field, 16px text.",
+      "html": "<input class=\"ds-input\" placeholder=\"you@example.com\">",
+      "css": ".ds-input { height: 52px; padding: 0 14px; border: 1px solid oklch(0.8 0.015 160); border-radius: 6px; font: 400 16px 'Hanken Grotesk', sans-serif; color: oklch(0.2 0.025 165); background: transparent; } .ds-input:focus-visible { outline: none; border-color: oklch(0.45 0.08 165); box-shadow: 0 0 0 3px oklch(0.45 0.08 165 / 0.5); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Manual Scoreboard",
+    "overview": "A pitch-green board of chalk tin plates over a calm scorecard sheet. The board is loud, the sheet is plain.",
+    "keyCharacteristics": ["Board on top, sheet below", "Uppercase condensed plates", "One marigold live plate", "Flat, no shadows", "One motion: the tin-plate swap"],
+    "rules": [
+      { "name": "The One Marigold Rule", "body": "At most one marigold plate per board; it means live.", "section": "colors" },
+      { "name": "The Plates-Only Display Rule", "body": "Big Shoulders only on the board.", "section": "typography" }
+    ],
+    "dos": ["Put the one changing value on a plate and swap it.", "Keep sheet controls standard."],
+    "donts": ["No shadows, gradients, glass or food-photo chrome.", "No kicker above a sheet headline.", "No region-vs-region framing."]
+  }
+}
