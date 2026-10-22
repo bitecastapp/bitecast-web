@@ -13,7 +13,7 @@ User stories:
 - I Agree or Disagree with a review (tap again to undo; switching is allowed) and sort a dish's reviews by Top or New.
 - I comment on a review and reply to a comment.
 - A dish page shows the average score, a 1–10 distribution bar, and its reviews.
-- A profile shows avatar, name, bio, home, stats (dishes rated, average score, karma), 4 pinned favourite dishes, recent ratings, and reviews. I can edit mine.
+- A profile shows avatar, name, bio, home, stats (dishes rated, average score, heat), 4 pinned favourite dishes, recent ratings, and reviews. I can edit mine.
 
 ## Decisions (assumptions; correct me)
 1. **One rating per user per dish** (your original rule). Rating it again updates your entry instead of adding a second.
@@ -45,7 +45,7 @@ User stories:
 - **`favourites`:** user, dish, position (1–4).
 - **`profiles` gains:** `display_name`, `bio` (≤160), `avatar_path`.
 - **Storage buckets:** `rating-photos` and `avatars`.
-- **Counts** (votes, comments, averages, karma): views first, cached columns if needed.
+- **Counts** (votes, comments, averages, heat): views first, cached columns if needed.
 
 ## Design
 This is the biggest change to how the app feels. A scroll-first social feed with photos is a different screen type from the calm forms built so far, and you asked for **more Gen-Z**. Before building the feed I'll run a design round for the feed card and profile, like we did for the look, with sketches you pick from. The Glasshouse look can stay as the base or be pushed louder. That's your call in that round.

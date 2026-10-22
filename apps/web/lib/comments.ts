@@ -7,7 +7,7 @@ export type Comment = {
   parent_id: string | null;
   like_count: number;
   dislike_count: number;
-  author: { username: string };
+  author: { username: string; avatar: string | null; avatar_path: string | null };
 };
 export type CommentVote = "like" | "dislike";
 export type Thread = Comment & { replies: Comment[] };
@@ -16,7 +16,7 @@ export type Thread = Comment & { replies: Comment[] };
 export async function getThreads(supabase: SupabaseClient, ratingId: string): Promise<Thread[]> {
   const { data, error } = await supabase
     .from("comments")
-    .select("id, body, created_at, parent_id, like_count, dislike_count, author:profiles!comments_user_id_fkey(username)")
+    .select("id, body, created_at, parent_id, like_count, dislike_count, author:profiles!comments_user_id_fkey(username, avatar, avatar_path)")
     .eq("rating_id", ratingId)
     .order("created_at")
     .returns<Comment[]>();

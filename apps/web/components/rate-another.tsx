@@ -2,6 +2,7 @@ import Link from "next/link";
 import { PlusIcon } from "lucide-react";
 import type { Dish, Restaurant } from "@/lib/restaurants";
 import { DietMark } from "@/components/diet-mark";
+import { DishAvg } from "@/components/dish-avg";
 
 const MAX_CHIPS = 8;
 
@@ -24,8 +25,9 @@ export function RateAnother({ restaurant, dishes }: { restaurant: Restaurant; di
                 className="inline-flex min-h-9 max-w-full items-center gap-1.5 rounded-full border border-hairline bg-raised px-3 text-sm font-medium transition-colors hover:border-mustard focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 <PlusIcon aria-hidden className="size-3.5 shrink-0 text-mustard" strokeWidth={2.5} />
-                <DietMark veg={d.veg} className="size-3" />
+                <DietMark diet={d.diet} className="size-3" />
                 <span className="truncate">{d.name}</span>
+                <DishAvg avg={d.avg_score} count={d.rating_count} />
               </Link>
             </li>
           ))}

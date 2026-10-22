@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { commentSchema, dishNameSchema, emailSchema, ratingSchema, usernameSchema } from "./validation";
+import { commentSchema, dishNameSchema, emailSchema, favouritesSchema, isAtLeast13, preferencesSchema, profileSchema, ratingSchema, reportSchema, usernameSchema } from "./validation";
 
 describe("usernameSchema", () => {
   it.each([
@@ -70,5 +70,111 @@ describe("commentSchema", () => {
 
   it.each(["", "   ", "x".repeat(501)])("rejects %j", (input) => {
     expect(commentSchema.safeParse(input).success).toBe(false);
+  });
+});
+
+describe("profileSchema", () => {
+  const ok = {
+    display_name: "  Asha  ",
+    bio: "",
+    avatar: "2a31",
+    diet: "eggetarian",
+    instagram: "https://www.instagram.com/asha.eats/",
+    date_of_birth: "2001-05-04",
+    gender: "female",
+  };
+
+  it("trims, cleans the Instagram link, and empties become null", () => {
+    expect(profileSchema.parse(ok)).toEqual({
+      display_name: "Asha",
+      bio: null,
+      avatar: "2a31",
+      diet: "eggetarian",
+      instagram: "asha.eats",
+      date_of_birth: "2001-05-04",
+      gender: "female",
+    });
+  });
+
+  it("leaves every optional field empty", () => {
+    const empty = { display_name: "", bio: "", avatar: "0000", diet: "", instagram: "", date_of_birth: "", gender: "" };
+    expect(profileSchema.parse(empty)).toEqual({
+      display_name: null,
+      bio: null,
+      avatar: "0000",
+      diet: null,
+      instagram: null,
+      date_of_birth: null,
+      gender: null,
+    });
+  });
+
+  it("accepts @handle for Instagram", () => {
+    expect(profileSchema.parse({ ...ok, instagram: "@asha.eats" }).instagram).toBe("asha.eats");
+  });
+
+  it.each([
+    ["a long name", { display_name: "x".repeat(41) }],
+    ["a long bio", { bio: "x".repeat(161) }],
+    ["a bad avatar code", { avatar: "NOPE" }],
+    ["an unknown diet", { diet: "carnivore" }],
+    ["a bad Instagram handle", { instagram: "not a handle!" }],
+    ["a half date", { date_of_birth: "2001-05" }],
+    ["a birthday before 1900", { date_of_birth: "1899-12-31" }],
+    ["an under-13 birthday", { date_of_birth: new Date().toISOString().slice(0, 10) }],
+    ["an unknown gender", { gender: "robot" }],
+  ])("rejects %s", (_, change) => {
+    expect(profileSchema.safeParse({ ...ok, ...change }).success).toBe(false);
+  });
+});
+
+describe("isAtLeast13", () => {
+  const today = new Date(Date.UTC(2026, 9, 22));
+  it.each([
+    ["2013-10-22", true],
+    ["2013-10-23", false],
+    ["1990-01-01", true],
+  ])("%s → %s", (dob, ok) => expect(isAtLeast13(dob, today)).toBe(ok));
+});
+
+describe("favouritesSchema", () => {
+  const id = "3f1c2a9e-5b7d-4c11-9a2e-0d4b6f8a1c3e";
+  it("accepts up to 4 distinct ids", () => {
+    expect(favouritesSchema.parse([id])).toEqual([id]);
+  });
+  it.each([
+    ["five", Array(5).fill(id)],
+    ["a repeat", [id, id]],
+    ["a non-id", ["dosa"]],
+  ])("rejects %s", (_, ids) => {
+    expect(favouritesSchema.safeParse(ids).success).toBe(false);
+  });
+});
+
+describe("reportSchema", () => {
+  const ok = { target_type: "rating", target_id: "3f1c2a9e-5b7d-4c11-9a2e-0d4b6f8a1c3e", reason: "spam", note: "  promo link  " };
+  it("trims the note, empty note is null", () => {
+    expect(reportSchema.parse(ok).note).toBe("promo link");
+    expect(reportSchema.parse({ ...ok, note: " " }).note).toBeNull();
+  });
+  it.each([
+    ["an unknown target", { target_type: "profile" }],
+    ["a bad id", { target_id: "dosa" }],
+    ["no reason", { reason: "" }],
+    ["a long note", { note: "x".repeat(301) }],
+  ])("rejects %s", (_, change) => {
+    expect(reportSchema.safeParse({ ...ok, ...change }).success).toBe(false);
+  });
+});
+
+describe("preferencesSchema", () => {
+  it("accepts the known choices", () => {
+    expect(preferencesSchema.parse({ show_diet: "egg", feed_default: "following" })).toEqual({ show_diet: "egg", feed_default: "following" });
+  });
+  it.each([
+    [{ show_diet: "meat", feed_default: "top" }],
+    [{ show_diet: "all", feed_default: "hot" }],
+  ])("rejects %j", (input) => {
+    expect(preferencesSchema.safeParse(input).success).toBe(false);
   });
 });

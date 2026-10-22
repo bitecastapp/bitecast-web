@@ -11,6 +11,11 @@ import { RestaurantView } from "@/app/r/[slug]/restaurant-view";
 import { DishView } from "@/app/r/[slug]/[dish]/dish-view";
 import { RateForm } from "@/app/rate/rate-form";
 import { RateAnother } from "@/components/rate-another";
+import { ProfileView } from "@/app/u/[handle]/profile-view";
+import { ProfileForm } from "@/app/settings/profile/profile-form";
+import { PreferencesForm } from "@/app/settings/preferences-form";
+import { FeedSkeleton, PageLoader } from "@/components/loader";
+import { DeleteAccount } from "@/app/settings/delete-account";
 import { Comments } from "@/components/comments";
 import { ReviewCard } from "@/components/review-card";
 import type { Thread } from "@/lib/comments";
@@ -25,7 +30,13 @@ const place = (name: string, area: string, dishes: string[]): Restaurant => ({
   name,
   area,
   city: "Bengaluru",
-  dishes: dishes.map((d) => ({ id: id(), name: d, veg: !/chicken|mutton|kebab|fish|egg|burger/i.test(d) })),
+  dishes: dishes.map((d, i) => ({
+    id: id(),
+    name: d,
+    diet: /egg/i.test(d) ? ("egg" as const) : /chicken|mutton|kebab|fish|burger/i.test(d) ? ("non_veg" as const) : ("veg" as const),
+    rating_count: i * 7,
+    avg_score: i ? 6.5 + i : null,
+  })),
 });
 const DEMO_PLACES = [
   place("Vidyarthi Bhavan", "Basavanagudi", ["Kesari Bath", "Masala Dosa", "Rava Vada"]),
@@ -52,8 +63,8 @@ const review = (take: string, score: number, author: string, p: Restaurant, fact
   cap_count: cap,
   comments_count: 3,
   created_at: "2026-10-21T10:00:00Z",
-  author: { username: author },
-  dish: { name: p.dishes[0]?.name ?? "Dish", veg: p.dishes[0]?.veg ?? true, restaurant: p },
+  author: { username: author, avatar: null, avatar_path: null },
+  dish: { id: p.dishes[0]?.id ?? "fixture-dish", name: p.dishes[0]?.name ?? "Dish", diet: p.dishes[0]?.diet ?? ("veg" as const), rating_count: 12, avg_score: 8.3, restaurant: p },
   photos: [],
 });
 
@@ -86,7 +97,7 @@ const comment = (id: string, username: string, body: string, parent_id: string |
   like_count,
   dislike_count,
   created_at: "2026-10-22T05:00:00Z",
-  author: { username },
+  author: { username, avatar: null, avatar_path: null },
 });
 // Sample threads (fixtures). Worst: a 500-character comment, long handles, many replies.
 const THREADS: Record<string, Thread[]> = {
@@ -143,7 +154,25 @@ const FIXTURES = {
 };
 
 type DataKey = keyof typeof FIXTURES;
-const SCREENS = ["login", "onboarding", "home", "restaurant", "dish", "rate", "review"] as const;
+const SCREENS = ["login", "onboarding", "home", "restaurant", "dish", "rate", "review", "profile", "edit", "settings", "loading"] as const;
+
+// Profile fixtures: worst case has a 40-character name, a 160-character bio and negative trust.
+const fixtureProfile = (data: DataKey, f: (typeof FIXTURES)[DataKey]) => ({
+  id: "fixture",
+  username: f.profile.username,
+  display_name: data === "worst" ? "Mohammed Abdulrahman Al-Hashimi Sultan K" : data === "demo" ? "Dosa Devotee" : null,
+  bio: data === "worst" ? "x".repeat(160) : data === "demo" ? "Crisp edges or nothing. Will queue for ghee." : null,
+  avatar: null,
+  avatar_path: null,
+  diet: data === "demo" ? ("eggetarian" as const) : null,
+  instagram: data === "demo" ? "dosa.devotee" : data === "worst" ? "a".repeat(30) : null,
+  created_at: "2026-10-01T05:00:00Z",
+  regions: f.profile.regions && { name: f.profile.regions.name },
+});
+const fixtureStats = { demo: { rated: 23, average: 7.8, trust: 214, followers: 48, following: 12 }, worst: { rated: 12345, average: 1, trust: -9876, followers: 1234567, following: 0 } } as Record<string, { rated: number; average: number | null; trust: number; followers: number; following: number }>;
+
+// "Want to try" for the fixture feed: the first dish already saved, the rest not.
+const fixtureSaves = (list: { dish: { id: string } }[] | undefined) => Object.fromEntries((list ?? []).map((r, i) => [r.dish.id, i === 0]));
 
 export function BreakUi() {
   const params = useSearchParams();
@@ -160,7 +189,7 @@ export function BreakUi() {
       {screen === "restaurant" && (f.places[0] ? <RestaurantView restaurant={f.places[0]} /> : <p className="p-6">No place in this fixture.</p>)}
       {screen === "review" && REVIEWS[data]?.[0] && (
         <div className="mx-auto w-full max-w-xl p-5">
-          <ReviewCard review={REVIEWS[data][0]} viewer={f.profile.username} full />
+          <ReviewCard review={REVIEWS[data][0]} saved={false} viewer={f.profile.username} full />
           {f.places[0] && (
             <div className="mb-6">
               <RateAnother restaurant={f.places[0]} dishes={f.places[0].dishes} />
@@ -172,6 +201,53 @@ export function BreakUi() {
       {screen === "rate" && f.places[0]?.dishes[0] && (
         <div className="mx-auto w-full max-w-xl p-5">
           <RateForm dish={{ ...f.places[0].dishes[0], restaurant: f.places[0] }} userId="fixture" existing={null} />
+        </div>
+      )}
+      {screen === "profile" && (
+        <ProfileView
+          profile={fixtureProfile(data, f)}
+          stats={fixtureStats[data] ?? { rated: 0, average: null, trust: 0, followers: 0, following: 0 }}
+          favourites={(REVIEWS[data] ?? []).slice(0, 3).map((r, i) => ({ position: i + 1, rating: r }))}
+          ratings={REVIEWS[data] ?? []}
+          votes={FIXTURE_VOTES[data] ?? {}}
+          saveStates={fixtureSaves(REVIEWS[data])}
+          viewer={f.profile.username}
+          tab={params.get("tab") === "diary" || params.get("tab") === "saved" ? (params.get("tab") as "diary" | "saved") : "takes"}
+          saves={(f.places[0]?.dishes ?? []).map((d) => ({ created_at: "2026-10-20T10:00:00Z", dish: { ...d, restaurant: f.places[0] } }))}
+          following={data === "demo"}
+          match={data === "demo" ? { common: 4, percent: 82, split: { dish: "Masala Dosa", place: "Vidyarthi Bhavan", mine: 9, theirs: 4.5 } } : { common: 1, percent: null }}
+        />
+      )}
+      {screen === "edit" && (
+        <div className="mx-auto w-full max-w-xl p-5">
+          <ProfileForm
+            userId="00000000-0000-0000-0000-000000000000"
+            handle={f.profile.username}
+            initial={{
+              display_name: fixtureProfile(data, f).display_name ?? "",
+              bio: fixtureProfile(data, f).bio ?? "",
+              avatar: null,
+              avatar_path: null,
+              diet: fixtureProfile(data, f).diet ?? "",
+              instagram: fixtureProfile(data, f).instagram ?? "",
+              date_of_birth: data === "demo" ? "2001-05-04" : "",
+              gender: data === "demo" ? "female" : "",
+            }}
+          />
+        </div>
+      )}
+      {screen === "loading" && (
+        <div className="mx-auto flex w-full max-w-xl flex-col p-5">
+          <PageLoader />
+          <FeedSkeleton />
+        </div>
+      )}
+      {screen === "settings" && (
+        <div className="mx-auto w-full max-w-xl p-5">
+          <PreferencesForm initial={{ show_diet: data === "demo" ? "egg" : "all", feed_default: "top" }} />
+          <div className="mt-8">
+            <DeleteAccount handle={f.profile.username} />
+          </div>
         </div>
       )}
       {screen === "dish" &&

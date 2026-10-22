@@ -6,6 +6,9 @@ import { cn } from "@/lib/utils";
 import { VoteButtons } from "@/components/vote-buttons";
 import { PhotoCarousel } from "@/components/photo-carousel";
 import { DietMark } from "@/components/diet-mark";
+import { DishAvg } from "@/components/dish-avg";
+import { SaveButton } from "@/components/save-button";
+import { PersonLink } from "@/components/avatar";
 import { timeAgo } from "@/lib/time";
 
 // "Must try" scores get a scalloped award-badge edge instead of a plain circle.
@@ -69,18 +72,16 @@ type Props = {
   showDish?: boolean; // feeds show the dish; a dish page doesn't need to repeat it
   full?: boolean; // the review page: no clamping, every photo large
   inMeal?: boolean; // one dish inside a meal card, whose header already names the place and the author
+  saved?: boolean; // "Want to try" state of the dish for the viewer; left out when there's no button (they've rated it)
 };
 
 // One take in a list. Feeds lead with the dish (score + name + place) and sign the take underneath;
 // on a dish page the dish is already the subject, so the author leads instead.
-export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inMeal }: Props) {
+export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inMeal, saved }: Props) {
   const mode = !viewer ? "signed-out" : viewer === r.author.username ? "own" : "vote";
   const byline = (
     <>
-      <span aria-hidden className="grid size-6 shrink-0 place-items-center rounded-full bg-raised text-[0.6875rem] font-semibold text-muted-foreground uppercase">
-        {r.author.username[0]}
-      </span>
-      <span className="min-w-0 truncate font-semibold text-muted-foreground">@{r.author.username}</span>
+      <PersonLink handle={r.author.username} avatar={r.author.avatar} photo={r.author.avatar_path} className="text-muted-foreground hover:text-foreground" />
       <time dateTime={r.created_at} className="shrink-0 text-faint">
         {timeAgo(r.created_at)}
       </time>
@@ -93,7 +94,7 @@ export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inM
           {byline}
           <span className="ml-auto flex items-center gap-2">
             <Verdict score={r.score} />
-            <Score score={r.score} size={40} />
+            <Score score={r.score} size={48} />
           </span>
         </header>
       )}
@@ -104,7 +105,7 @@ export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inM
             <header>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <DietMark veg={r.dish.veg} />
+                  <DietMark diet={r.dish.diet} />
                   <Link
                     href={dishHref(r.dish.restaurant.slug, r.dish.name)}
                     className="relative z-10 text-[1.0625rem] leading-snug font-bold tracking-[-0.01em] wrap-anywhere hover:underline"
@@ -124,6 +125,8 @@ export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inM
                     </Link>
                   </p>
                 )}
+                {/* Everyone's score for the dish shows on the opened post, not on feed cards. */}
+                {full && <DishAvg avg={r.dish.avg_score} count={r.dish.rating_count} labeled className="mt-1.5 flex w-fit" />}
               </div>
             </header>
           )}
@@ -146,7 +149,7 @@ export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inM
           )}
           {showDish && !inMeal && <p className="mt-2.5 flex items-center gap-2 text-[0.8125rem]">{byline}</p>}
         </div>
-        {showDish && <Score score={r.score} size={inMeal ? 44 : undefined} />}
+        {showDish && <Score score={r.score} size={full ? 76 : inMeal ? 54 : 66} />}
       </div>
 
       <div className="mt-3 flex items-start gap-3">
@@ -160,6 +163,12 @@ export function ReviewCard({ review: r, vote, viewer, showDish = true, full, inM
             <MessageCircleIcon aria-hidden className="size-[18px]" />
             {r.comments_count}
           </Link>
+        )}
+        {/* The opened post has room to say it; feed cards show just the bookmark. */}
+        {saved !== undefined && (
+          <span className="ml-auto">
+            <SaveButton dishId={r.dish.id} saved={saved} signedIn={viewer !== null} compact={!full} className={cn(full && "min-h-9 rounded-full px-3.5 text-sm")} />
+          </span>
         )}
       </div>
     </article>

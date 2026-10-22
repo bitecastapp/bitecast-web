@@ -6,6 +6,7 @@ import type { Restaurant } from "@/lib/restaurants";
 import { dishKey } from "@/lib/dishes";
 import { Input } from "@/components/ui/input";
 import { Row } from "@/components/row";
+import { DishAvg } from "@/components/dish-avg";
 
 // Step one of rating: find the dish (across every place).
 export function DishPicker({ restaurants }: { restaurants: Restaurant[] }) {
@@ -34,7 +35,7 @@ export function DishPicker({ restaurants }: { restaurants: Restaurant[] }) {
       <ul className="divide-y divide-border" aria-live="polite">
         {dishes.map((d) => (
           <li key={d.id}>
-            <Row href={`/rate?dish=${d.id}`} veg={d.veg} title={d.name} meta={`${d.place.name} · ${d.place.area}`} />
+            <Row href={`/rate?dish=${d.id}`} diet={d.diet} title={d.name} meta={<>{d.place.name} · <DishAvg avg={d.avg_score} count={d.rating_count} orEmpty /></>} />
           </li>
         ))}
       </ul>

@@ -234,6 +234,61 @@
   animation-timing-function: var(--ease-in-out);
 }
 
+/* Loader: three food characters hop in a wave, squashing as they land; their shadows shrink as they rise. */
+@keyframes hop {
+  0%, 100% { transform: translateY(0) scale(1.08, 0.9); }
+  12% { transform: translateY(0) scale(1, 1); }
+  40% { transform: translateY(-15px) scale(0.96, 1.05); }
+  62% { transform: translateY(0) scale(1, 1); }
+  72% { transform: translateY(0) scale(1.06, 0.92); }
+  84% { transform: translateY(0) scale(1, 1); }
+}
+@keyframes hop-shadow {
+  0%, 12%, 62%, 100% { transform: scaleX(1); opacity: 0.45; }
+  40% { transform: scaleX(0.55); opacity: 0.18; }
+}
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(6px); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+/* Confirmations: the toast rises in and fades away; a check pops with a little overshoot. */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+}
+@keyframes toast-out {
+  to { opacity: 0; transform: translateY(8px) scale(0.98); }
+}
+@keyframes check-pop {
+  0% { opacity: 0; transform: scale(0.4); }
+  60% { opacity: 1; transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+@keyframes shimmer {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+
+/* Lists rise in one after another on first render (8 at most, so long lists don't drag). */
+.stagger > * {
+  animation: rise-in 360ms var(--ease-out) both;
+}
+.stagger > :nth-child(2) { animation-delay: 45ms; }
+.stagger > :nth-child(3) { animation-delay: 90ms; }
+.stagger > :nth-child(4) { animation-delay: 135ms; }
+.stagger > :nth-child(5) { animation-delay: 180ms; }
+.stagger > :nth-child(6) { animation-delay: 225ms; }
+.stagger > :nth-child(7) { animation-delay: 270ms; }
+.stagger > :nth-child(n + 8) { animation-delay: 315ms; }
+
+/* Loading placeholders: a soft sheen sweeping across. */
+.skeleton {
+  background: linear-gradient(90deg, var(--raised) 30%, color-mix(in oklab, var(--raised), white 7%) 50%, var(--raised) 70%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-group(*),
   ::view-transition-old(*),
@@ -243,5 +298,13 @@
   *, ::before, ::after {
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;
+  }
+  /* Endless loops would strobe at 1ms: stop them outright. */
+  .skeleton,
+  .hop-loader,
+  .hop-loader *,
+  .animate-pulse,
+  [class*="_infinite"] {
+    animation: none !important;
   }
 }

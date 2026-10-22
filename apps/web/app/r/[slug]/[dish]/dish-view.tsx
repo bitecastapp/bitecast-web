@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { DishDetail } from "@/lib/restaurants";
-import { formatScore, photoUrl, summarize, type Review, type Sort, type Vote } from "@/lib/ratings";
+import { formatScore, photoUrl, scoreColor, summarize, type Review, type Sort, type Vote } from "@/lib/ratings";
 import { dishHref } from "@/lib/dishes";
 import { cn } from "@/lib/utils";
 import { PageShell } from "@/components/page-shell";
 import { ReviewCard } from "@/components/review-card";
 import { BackLink } from "@/components/back-link";
 import { DietMark } from "@/components/diet-mark";
+import { ReportButton } from "@/components/report-button";
 
 type Props = {
   dish: DishDetail;
@@ -15,10 +16,12 @@ type Props = {
   viewer?: string | null;
   sort?: Sort;
   rateNext?: React.ReactNode; // after you've rated this dish: the rest of the place's menu
+  save?: React.ReactNode; // the "Want to try" button
+  wanted?: number; // how many people have it on their "Want to try" list
 };
 
 // Like a Letterboxd film page: title + poster, average and spread, your rating, then the takes.
-export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort = "top", rateNext }: Props) {
+export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort = "top", rateNext, save, wanted = 0 }: Props) {
   const { count, average, spread } = summarize(ratings.map((r) => r.score));
   const peak = Math.max(1, ...spread);
   const mine = viewer ? ratings.find((r) => r.author.username === viewer) : undefined;
@@ -35,12 +38,12 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
       {/* Desktop: the dish card stays pinned on the left while the takes scroll on the right. */}
       <div className="lg:grid lg:grid-cols-[20rem_minmax(0,1fr)] lg:items-start lg:gap-14 xl:gap-20">
         <div className="flex flex-col lg:sticky lg:top-6">
-          <BackLink href="/" />
+          <BackLink href={`/r/${dish.restaurant.slug}`} />
 
           <div className="mt-3 flex items-start gap-4 lg:flex-col-reverse">
             <div className="min-w-0 flex-1">
               <h1 className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em] wrap-anywhere">
-                  <DietMark veg={dish.veg} className="mr-2 size-4 align-[0.1em]" />
+                  <DietMark diet={dish.diet} className="mr-2 size-4 align-[0.1em]" />
                   {dish.name}
                 </h1>
               <p className="mt-1 text-muted-foreground">
@@ -58,9 +61,15 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
 
           <section aria-label="Ratings" className="mt-6 flex items-end gap-6 border-y border-hairline py-4">
             <div className="shrink-0">
-              <p className="text-xs font-semibold tracking-[0.08em] text-faint uppercase">Average</p>
-              <p className="mt-1 w-fit bg-(image:--score-gradient) bg-clip-text pb-0.5 text-3xl leading-none font-bold text-transparent tabular-nums">{average === null ? "–" : average.toFixed(1)}</p>
-              <p className="mt-1 text-xs text-faint">{count ? `${count} ${count === 1 ? "rating" : "ratings"}` : "No ratings yet"}</p>
+              <p className="text-xs font-semibold tracking-[0.08em] text-faint uppercase">Overall rating</p>
+              <p className="mt-1.5 flex items-center gap-2 text-3xl leading-none font-bold tabular-nums">
+                {average !== null && <span aria-hidden className="size-2.5 rounded-full" style={{ background: scoreColor(average) }} />}
+                {average === null ? "–" : average.toFixed(1)}
+                {count > 0 && <span className="sr-only">{`, from ${count} ${count === 1 ? "rating" : "ratings"}`}</span>}
+              </p>
+              <p className="mt-1.5 text-xs text-faint">
+                {[!count && "No ratings yet", wanted > 0 && `${wanted} want to try`].filter(Boolean).join(" · ") || " "}
+              </p>
             </div>
             <div className="flex h-14 flex-1 items-end gap-[3px]" role="img" aria-label={`Scores: ${spread.map((n, i) => `${n} rated ${i + 1}`).join(", ")}`}>
               {spread.map((n, i) => (
@@ -73,13 +82,20 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
             </div>
           </section>
 
-          <Link
-            href={viewer ? `/rate?dish=${dish.id}` : "/login"}
-            className="mt-4 inline-flex min-h-11 lg:w-full items-center justify-center rounded-md bg-ketchup px-4 font-semibold text-studio hover:brightness-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
-          >
-            {!viewer ? "Sign in to rate" : mine ? `You rated it ${formatScore(mine.score)} · Change` : "Rate this dish"}
-          </Link>
+          <div className="mt-4 flex flex-wrap gap-2">
+            <Link
+              href={viewer ? `/rate?dish=${dish.id}` : "/login"}
+              className="inline-flex min-h-11 flex-1 items-center justify-center rounded-md bg-ketchup px-4 font-semibold whitespace-nowrap text-studio hover:brightness-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+            >
+              {!viewer ? "Sign in to rate" : mine ? `You rated it ${formatScore(mine.score)} · Change` : "Rate this dish"}
+            </Link>
+            {/* Saving for later only makes sense before you've had it. */}
+            {!mine && save}
+          </div>
           {rateNext && <div className="mt-4">{rateNext}</div>}
+          <div className="mt-2 -ml-2">
+            <ReportButton targetType="dish" targetId={dish.id} what="this dish" signedIn={viewer !== null} />
+          </div>
         </div>
 
         <section aria-labelledby="takes" className="mt-8 pb-10 lg:mt-0 lg:pt-14">
@@ -92,6 +108,7 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
                 <Link
                   key={s}
                   href={s === "top" ? href : `${href}?sort=new`}
+                  replace
                   scroll={false}
                   aria-current={sort === s ? "page" : undefined}
                   className={cn(
@@ -105,7 +122,7 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
             </nav>
           </div>
           {reviews.length ? (
-            <ul className="divide-y divide-hairline">
+            <ul className="stagger divide-y divide-hairline">
               {reviews.map((r) => (
                 <li key={r.id}>
                   <ReviewCard review={r} vote={votes[r.id]} viewer={viewer} showDish={false} />

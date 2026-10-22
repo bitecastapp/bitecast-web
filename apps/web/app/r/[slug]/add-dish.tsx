@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { DietMark } from "@/components/diet-mark";
+import { DISH_DIETS, type DishDiet } from "@/lib/diet";
 import { addDish, type AddDishState } from "./actions";
 
 type AddDishProps = { restaurantId: string; restaurantSlug: string; restaurantName: string; dishes: Dish[] };
@@ -18,7 +19,7 @@ export function AddDish({ restaurantId, restaurantSlug, restaurantName, dishes }
   const [state, action, pending] = useActionState<AddDishState, FormData>(addDish, {});
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
-  const [diet, setDiet] = useState<"veg" | "non-veg" | null>(null);
+  const [diet, setDiet] = useState<DishDiet | null>(null);
   const [seenState, setSeenState] = useState(state);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -95,16 +96,16 @@ export function AddDish({ restaurantId, restaurantSlug, restaurantName, dishes }
         )}
       </Field>
       <fieldset>
-        <legend className="mb-2 text-sm font-semibold">Veg or non-veg?</legend>
-        <div className="grid grid-cols-2 gap-2">
-          {(["veg", "non-veg"] as const).map((d) => (
+        <legend className="mb-2 text-sm font-semibold">What kind of dish?</legend>
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+          {DISH_DIETS.map(({ value: d, label }) => (
             <label
               key={d}
               className="flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-md border border-input bg-raised text-sm font-semibold transition-colors has-checked:border-mustard has-checked:bg-mustard/10 has-focus-visible:ring-2 has-focus-visible:ring-ring"
             >
               <input type="radio" name="diet" value={d} checked={diet === d} onChange={() => setDiet(d)} required className="sr-only" />
-              <DietMark veg={d === "veg"} />
-              {d === "veg" ? "Veg" : "Non-veg"}
+              <DietMark diet={d} />
+              {label}
             </label>
           ))}
         </div>

@@ -25,6 +25,8 @@ export async function saveRating(_: SaveRatingState, formData: FormData): Promis
     ? await supabase.from("ratings").update(parsed.data).eq("id", existing.id).select("id").single()
     : await supabase.from("ratings").insert({ dish_id: dishId, ...parsed.data }).select("id").single();
   if (error || !saved) return { error: "Couldn't save that just now. Try again in a moment." };
+  // You've had it now: it comes off your "Want to try" list. Best effort; RLS limits this to your own saves.
+  await supabase.from("saves").delete().eq("dish_id", dishId);
 
   if (photosSent) {
     const { data: old } = await supabase.from("rating_photos").select("path").eq("rating_id", saved.id);
@@ -39,9 +41,11 @@ export async function saveRating(_: SaveRatingState, formData: FormData): Promis
     }
   }
 
-  if (parsed.data.take) redirect(`/review/${saved.id}`);
+  // ?done shows the "Rating posted / updated" toast where you land.
+  const done = existing ? "updated" : "rated";
+  if (parsed.data.take) redirect(`/review/${saved.id}?done=${done}`);
   const { data: dish } = await supabase.from("dishes").select("name, restaurant:restaurants(slug)").eq("id", dishId).single<{ name: string; restaurant: { slug: string } }>();
-  redirect(dish ? dishHref(dish.restaurant.slug, dish.name) : "/");
+  redirect(`${dish ? dishHref(dish.restaurant.slug, dish.name) : "/"}?done=${done}`);
 }
 
 // Agree ("facts") / Disagree ("cap") / clear. The database blocks self-votes and keeps the counts.
@@ -57,4 +61,19 @@ export async function castVote(ratingId: string, kind: Vote | null) {
   }
   // Re-read the page so counts and your vote come from the database, not just the optimistic guess.
   refresh();
+}
+
+// Delete one of your own ratings: its photos rows, votes, comments and favourite pin go with it (cascade);
+// then its photo files. Back to your profile afterwards.
+export async function deleteRating(ratingId: string) {
+  const { supabase, userId, profile } = await getCurrentUser();
+  if (!profile) redirect("/onboarding");
+
+  const { data: photos } = await supabase.from("rating_photos").select("path").eq("rating_id", ratingId);
+  const { data: gone, error } = await supabase.from("ratings").delete().eq("id", ratingId).eq("user_id", userId).select("id");
+  if (error || !gone?.length) throw new Error("Couldn't delete that take.");
+  const paths = (photos ?? []).map((p) => p.path).filter((p) => p.startsWith(`${userId}/`));
+  if (paths.length) await supabase.storage.from("rating-photos").remove(paths); // best effort: a leftover file is harmless
+
+  redirect(`/u/${profile.username}?done=deleted`);
 }

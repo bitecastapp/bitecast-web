@@ -5,26 +5,26 @@ import Link from "next/link";
 import { ChevronDownIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import type { Restaurant } from "@/lib/restaurants";
-import { groupMeals, type Review, type Sort, type Vote } from "@/lib/ratings";
+import type { DishDiet, ShowDiet } from "@/lib/diet";
+import { groupMeals, type FeedSort, type Review, type Vote } from "@/lib/ratings";
 import { ReviewCard } from "@/components/review-card";
 import { MealCard } from "@/components/meal-card";
 import { DietMark } from "@/components/diet-mark";
+import { AccountMenu } from "@/components/account-menu";
+import { DishAvg } from "@/components/dish-avg";
 import { dishHref, dishKey } from "@/lib/dishes";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/page-shell";
 import { Row, dishCount } from "@/components/row";
-import { signOut } from "./actions";
-import { SignInPrompt } from "./r/[slug]/restaurant-view";
 
 type View = "takes" | "dishes" | "places";
-type Feed = { sort: Sort; reviews: Review[]; votes: Record<string, Vote> };
-type DishGroup = { key: string; name: string; spots: { id: string; name: string; veg: boolean; place: Restaurant }[] };
+type Feed = { sort: FeedSort; reviews: Review[]; votes: Record<string, Vote> };
+type DishGroup = { key: string; name: string; spots: { id: string; name: string; diet: DishDiet; avg: number | null; count: number; place: Restaurant }[] };
 
-type HomeProps = { profile: Profile | null; restaurants: Restaurant[]; feed: Feed };
+type HomeProps = { profile: Profile | null; restaurants: Restaurant[]; feed: Feed; showDiet?: ShowDiet; notice?: string };
 
-export function HomeView({ profile, restaurants, feed }: HomeProps) {
+export function HomeView({ profile, restaurants, feed, showDiet = "all", notice }: HomeProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("takes");
   const q = dishKey(useDeferredValue(query));
@@ -33,16 +33,51 @@ export function HomeView({ profile, restaurants, feed }: HomeProps) {
     <PageShell
       wide
       action={
-        <Link
-          href={profile ? "/rate" : "/login"}
-          className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-ketchup px-3.5 text-sm font-semibold text-studio hover:brightness-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
-        >
-          <PlusIcon aria-hidden className="size-4" strokeWidth={2.5} />
-          Rate
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href={profile ? "/rate" : "/login"}
+            className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-ketchup px-3.5 text-sm font-semibold text-studio hover:brightness-110 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none"
+          >
+            <PlusIcon aria-hidden className="size-4" strokeWidth={2.5} />
+            Rate
+          </Link>
+          {profile ? (
+            <AccountMenu handle={profile.username} name={null} avatar={profile.avatar} photo={profile.avatar_path} />
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex min-h-10 items-center rounded-md border border-hairline px-3.5 text-sm font-semibold transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+            >
+              Sign in
+            </Link>
+          )}
+        </div>
       }
     >
       <h1 className="sr-only">Bitecast</h1>
+      {showDiet !== "all" && (
+        <p className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
+          <span className="flex gap-0.5">
+            {showDiet === "vegan" ? (
+              <DietMark diet="vegan" className="size-3" />
+            ) : (
+              <>
+                <DietMark diet="veg" className="size-3" />
+                {showDiet === "egg" && <DietMark diet="egg" className="size-3" />}
+              </>
+            )}
+          </span>
+          Showing {showDiet === "vegan" ? "vegan dishes only" : showDiet === "veg" ? "vegetarian dishes only" : "vegetarian and egg dishes"}
+          <Link href="/settings#preferences" className="font-semibold text-foreground underline-offset-4 hover:underline">
+            Change
+          </Link>
+        </p>
+      )}
+      {notice && (
+        <p role="status" className="mb-4 rounded-lg border border-hairline bg-paper px-4 py-3 text-sm text-muted-foreground">
+          {notice}
+        </p>
+      )}
       {/* Desktop: the feed on the left, a pinned side column on the right. Phones get the feed alone. */}
       <div className="flex flex-1 flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_18rem] lg:items-start lg:gap-12 xl:gap-16">
         <div className="flex min-h-full flex-1 flex-col">
@@ -105,23 +140,6 @@ export function HomeView({ profile, restaurants, feed }: HomeProps) {
               <ByArea restaurants={restaurants} />
             )}
           </div>
-
-          <footer className="mt-10 flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-border pt-4 text-sm text-muted-foreground">
-            {profile ? (
-              <>
-                <span className="min-w-0 wrap-anywhere">
-                  Signed in as <span className="font-semibold text-foreground">@{profile.username}</span>
-                </span>
-                <form action={signOut}>
-                  <Button type="submit" variant="ghost" size="lg" className="-mr-2.5 min-h-11">
-                    Sign out
-                  </Button>
-                </form>
-              </>
-            ) : (
-              <SignInPrompt>to rate dishes and vote on takes</SignInPrompt>
-            )}
-          </footer>
         </div>
 
         <aside aria-label="Around Bitecast" className="hidden [scrollbar-width:none] lg:sticky [&::-webkit-scrollbar]:hidden lg:top-6 lg:flex lg:max-h-[calc(100dvh-3rem)] lg:flex-col lg:gap-9 lg:overflow-x-hidden lg:overflow-y-auto lg:px-2 lg:pb-6">
@@ -141,7 +159,7 @@ function groupDishes(restaurants: Restaurant[], q = "") {
       const key = dishKey(d.name);
       if (q && !key.includes(q)) continue;
       const g = groups.get(key) ?? { key, name: d.name, spots: [] };
-      g.spots.push({ id: d.id, name: d.name, veg: d.veg, place });
+      g.spots.push({ id: d.id, name: d.name, diet: d.diet, avg: d.avg_score, count: d.rating_count, place });
       groups.set(key, g);
     }
   }
@@ -151,7 +169,7 @@ function groupDishes(restaurants: Restaurant[], q = "") {
 function Dishes({ groups }: { groups: DishGroup[] }) {
   if (!groups.length) return <p className="text-muted-foreground">No dishes yet. Open a place and add the one you came for.</p>;
   return (
-    <ul className="divide-y divide-border">
+    <ul className="stagger divide-y divide-border">
       {groups.map((g) => (
         <li key={g.key}>
           <DishGroupRow group={g} />
@@ -165,8 +183,8 @@ function DishGroupRow({ group: g }: { group: DishGroup }) {
   const title = <span className="block text-base font-semibold wrap-anywhere">{g.name}</span>;
 
   if (g.spots.length === 1) {
-    const { name, veg, place } = g.spots[0];
-    return <Row href={dishHref(place.slug, name)} title={title} meta={`${place.name} · ${place.area}`} veg={veg} />;
+    const { name, diet, avg, count, place } = g.spots[0];
+    return <Row href={dishHref(place.slug, name)} title={title} meta={<>{place.name} · <DishAvg avg={avg} count={count} orEmpty /></>} diet={diet} />;
   }
   return (
     <details className="group">
@@ -178,9 +196,9 @@ function DishGroupRow({ group: g }: { group: DishGroup }) {
         <ChevronDownIcon aria-hidden className="size-5 shrink-0 text-foreground transition-transform duration-200 group-open:rotate-180" />
       </summary>
       <ul className="mb-2 ml-3 animate-[rise_320ms_var(--ease-out-expo)_both] divide-y divide-border border-l-2 border-mustard pl-3">
-        {g.spots.map(({ id, name, veg, place }) => (
+        {g.spots.map(({ id, name, diet, avg, count, place }) => (
           <li key={id}>
-            <Row href={dishHref(place.slug, name)} title={place.name} meta={place.area} veg={veg} />
+            <Row href={dishHref(place.slug, name)} title={place.name} meta={<>{place.area} · <DishAvg avg={avg} count={count} orEmpty /></>} diet={diet} />
           </li>
         ))}
       </ul>
@@ -207,7 +225,7 @@ function ByArea({ restaurants, compact }: { restaurants: Restaurant[]; compact?:
                 {compact ? (
                   <Link href={`/r/${r.slug}`} className={SIDE_LINK}>
                     <span className="min-w-0 py-2 wrap-anywhere">{r.name}</span>
-                    <span className="shrink-0 text-xs text-faint tabular-nums">{r.dishes.length}</span>
+                    <span className="shrink-0 text-xs text-faint tabular-nums">{dishCount(r.dishes.length)}</span>
                   </Link>
                 ) : (
                   <Row href={`/r/${r.slug}`} title={r.name} meta={dishCount(r.dishes.length)} />
@@ -249,10 +267,13 @@ function MostDiscussed({ reviews }: { reviews: Review[] }) {
               </span>
               <span className="min-w-0">
                 <span className="block font-semibold text-foreground wrap-anywhere">
-                  <DietMark veg={dish.veg} className="mr-1.5 size-3 align-[-1px]" />
+                  <DietMark diet={dish.diet} className="mr-1.5 size-3 align-[-1px]" />
                   {dish.name}
                 </span>
-                <span className="block text-xs text-faint wrap-anywhere">{dish.restaurant.name}</span>
+                <span className="block text-xs text-faint wrap-anywhere">
+                  {dish.restaurant.name}
+                  {dish.rating_count > 0 && <DishAvg avg={dish.avg_score} count={dish.rating_count} className="ml-1.5" />}
+                </span>
               </span>
             </Link>
           </li>
@@ -310,10 +331,11 @@ function Takes({ feed, viewer }: { feed: Feed; viewer: string | null }) {
   return (
     <section aria-label="Takes">
       <nav aria-label="Sort takes" className="mb-1 flex gap-4 text-sm">
-        {(["top", "new"] as const).map((s) => (
+        {(viewer ? (["top", "new", "following"] as const) : (["top", "new"] as const)).map((s) => (
           <Link
             key={s}
-            href={s === "top" ? "/" : "/?sort=new"}
+            href={`/?sort=${s}`}
+            replace
             aria-current={feed.sort === s ? "page" : undefined}
             scroll={false}
             className={cn(
@@ -329,7 +351,7 @@ function Takes({ feed, viewer }: { feed: Feed; viewer: string | null }) {
         ))}
       </nav>
       {feed.reviews.length ? (
-        <ul className="divide-y divide-hairline">
+        <ul className="stagger divide-y divide-hairline">
           {groupMeals(feed.reviews).map((meal) => (
             <li key={meal[0].id}>
               {meal.length > 1 ? (
@@ -342,8 +364,12 @@ function Takes({ feed, viewer }: { feed: Feed; viewer: string | null }) {
         </ul>
       ) : (
         <div className="py-10 text-center">
-          <p className="font-semibold">No takes yet</p>
-          <p className="mt-1 text-sm text-muted-foreground">Rate a dish and write what you thought. It shows up here.</p>
+          <p className="font-semibold">{feed.sort === "following" ? "Nothing from your people yet" : "No takes yet"}</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {feed.sort === "following"
+              ? "Follow people from their profiles and their takes land here."
+              : "Rate a dish and write what you thought. It shows up here."}
+          </p>
         </div>
       )}
     </section>

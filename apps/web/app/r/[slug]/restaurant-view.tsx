@@ -5,15 +5,11 @@ import { BackLink } from "@/components/back-link";
 import { Row, dishCount } from "@/components/row";
 import { AddDish } from "./add-dish";
 import { dishHref } from "@/lib/dishes";
-import { summarize } from "@/lib/ratings";
+import { DishAvg } from "@/components/dish-avg";
 
-type ViewProps = { restaurant: Restaurant; signedIn?: boolean; scores?: { dish_id: string; score: number }[] };
+type ViewProps = { restaurant: Restaurant; signedIn?: boolean };
 
-export function RestaurantView({ restaurant: r, signedIn = true, scores = [] }: ViewProps) {
-  const scoreLine = (dishId: string) => {
-    const { count, average } = summarize(scores.filter((s) => s.dish_id === dishId).map((s) => s.score));
-    return average === null ? "No ratings yet" : `${average.toFixed(1)} from ${count} ${count === 1 ? "rating" : "ratings"}`;
-  };
+export function RestaurantView({ restaurant: r, signedIn = true }: ViewProps) {
   return (
     <PageShell wide>
       {/* Desktop: the place and "Add a dish" on the left, its dishes on the right. Source order stays phone order. */}
@@ -31,10 +27,10 @@ export function RestaurantView({ restaurant: r, signedIn = true, scores = [] }: 
             {dishCount(r.dishes.length)}
           </h2>
           {r.dishes.length ? (
-            <ul className="divide-y divide-border">
+            <ul className="stagger divide-y divide-border">
               {r.dishes.map((d) => (
                 <li key={d.id}>
-                  <Row href={dishHref(r.slug, d.name)} title={d.name} meta={scoreLine(d.id)} veg={d.veg} />
+                  <Row href={dishHref(r.slug, d.name)} title={d.name} meta={<DishAvg avg={d.avg_score} count={d.rating_count} orEmpty />} diet={d.diet} />
                 </li>
               ))}
             </ul>

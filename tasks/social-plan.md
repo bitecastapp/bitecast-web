@@ -5,7 +5,7 @@ Spec: [SPEC-social.md](../SPEC-social.md). Checklist: [social-todo.md](social-to
 ## Slices
 - **(a) Rate + Facts/Cap + feed:** ratings, photos, votes; the rate flow, dish page, review page, home feed (Top / New); public read.
 - **(b) Comments:** threaded one level on review pages.
-- **(c) Profiles + favourites:** profile page, edit profile, avatar, 4 favourites, diary, karma.
+- **(c) Profiles + favourites:** profile page, edit profile, avatar, 4 favourites, diary, heat.
 
 ## Architecture decisions
 - **Ratings reference `profiles`, not `auth.users`,** so the API can embed the author's handle in one query.

@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist, Urbanist } from "next/font/google";
 import "./globals.css";
 import { NavigationTracker } from "@/components/back-link";
+import { Toaster } from "@/components/toaster";
 
 // Urbanist only sets the wordmark; Geist is the UI face.
 const urbanist = Urbanist({ variable: "--font-urbanist", subsets: ["latin"], weight: ["800", "900"] });
@@ -27,6 +28,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <NavigationTracker />
         </Suspense>
         {children}
+        <Suspense fallback={null}>
+          <Toaster />
+        </Suspense>
       </body>
     </html>
   );

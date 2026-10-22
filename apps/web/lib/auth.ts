@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 
 export type Profile = {
   username: string;
+  avatar: string | null;
+  avatar_path: string | null;
   home_region: string;
   regions: { name: string; demonym: string } | null;
 };
@@ -35,7 +37,7 @@ export async function getCurrentUser() {
 async function getProfile(supabase: Awaited<ReturnType<typeof createClient>>, userId: string) {
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("username, home_region, regions(name, demonym)")
+    .select("username, avatar, avatar_path, home_region, regions(name, demonym)")
     .eq("id", userId)
     .maybeSingle<Profile>();
   if (error) throw error;

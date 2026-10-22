@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Review, Vote } from "@/lib/ratings";
 import { timeAgo } from "@/lib/time";
 import { ReviewCard } from "@/components/review-card";
+import { Avatar } from "@/components/avatar";
 
 type Props = { reviews: Review[]; votes: Record<string, Vote>; viewer: string | null };
 
@@ -14,11 +15,14 @@ export function MealCard({ reviews, votes, viewer }: Props) {
   return (
     <article aria-label={`@${author.username} at ${dish.restaurant.name}, ${reviews.length} dishes`} className="py-5">
       <header className="flex items-center gap-2.5 text-sm">
-        <span aria-hidden className="grid size-7 shrink-0 place-items-center rounded-full bg-raised text-xs font-semibold text-muted-foreground uppercase">
-          {author.username[0]}
-        </span>
+        <Link href={`/u/${author.username}`} aria-hidden tabIndex={-1} className="shrink-0">
+          <Avatar handle={author.username} code={author.avatar} photo={author.avatar_path} size={28} />
+        </Link>
         <p className="min-w-0 flex-1 leading-snug">
-          <span className="font-semibold">@{author.username}</span> <span className="text-muted-foreground">had {reviews.length} dishes at</span>{" "}
+          <Link href={`/u/${author.username}`} className="font-semibold underline-offset-4 hover:underline">
+            @{author.username}
+          </Link>{" "}
+          <span className="text-muted-foreground">had {reviews.length} dishes at</span>{" "}
           <Link href={`/r/${dish.restaurant.slug}`} className="font-semibold wrap-anywhere hover:underline">
             {dish.restaurant.name}
           </Link>

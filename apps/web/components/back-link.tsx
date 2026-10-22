@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronLeftIcon } from "lucide-react";
-import { visit } from "@/lib/history";
+import { canGoBack, visit } from "@/lib/history";
 
 // Paths visited inside the app since this page load. Module state, so a fresh tab or a reload starts empty.
 let stack: string[] = [];
@@ -18,14 +18,15 @@ export function NavigationTracker() {
   return null;
 }
 
-// "Back" goes to wherever you came from in the app. Opened from a shared link (nothing to go back to), it goes to `href`.
+// "Back" goes to wherever you came from in the app. With nothing to go back to (a shared link), or when the
+// page before was a form you submitted, it goes to `href`: the page's logical parent.
 export function BackLink({ href }: { href: string }) {
   const router = useRouter();
   return (
     <Link
       href={href}
       onClick={(e) => {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || stack.length < 2) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0 || !canGoBack(stack)) return;
         e.preventDefault();
         router.back();
       }}

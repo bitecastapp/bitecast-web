@@ -76,12 +76,15 @@ begin
   exception when insufficient_privilege then null;
   end;
 
-  -- No voting on your own rating.
+  -- No voting on your own take.
   begin
     insert into public.votes (rating_id, kind) values (rid, 'facts');
     raise exception 'FAIL: self-vote accepted';
   exception when insufficient_privilege then null;
   end;
+
+  -- The dish keeps its overall score: this rating counts, a score change moves the average.
+  if (select rating_count from public.dishes where id = dosa) < 1 then raise exception 'FAIL: dish rating_count not kept'; end if;
 end $$;
 
 -- B votes Facts, switches to Cap, then removes the vote; counters follow.

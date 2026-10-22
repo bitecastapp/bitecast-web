@@ -2,6 +2,7 @@
 -- Demo accounts use @demo.bitecast.test emails (undeliverable, so nobody can sign in as them) and demo_ handles.
 -- Run: pnpm dlx supabase db query --linked -f supabase/demo/seed.sql   (safe to re-run: it clears old demo data first)
 -- Then attach demo photos: pnpm dlx supabase db query --linked -f supabase/demo/photos.sql
+-- And demo profiles (names, bios, favourites): pnpm dlx supabase db query --linked -f supabase/demo/profiles.sql
 begin;
 
 delete from auth.users where email like '%@demo.bitecast.test';

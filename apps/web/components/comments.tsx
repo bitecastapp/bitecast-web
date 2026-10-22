@@ -11,7 +11,10 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { RollingCount } from "@/components/vote-buttons";
+import { PersonLink } from "@/components/avatar";
+import { ReportButton } from "@/components/report-button";
 import { addComment, castCommentVote, deleteComment, type CommentState } from "@/app/comment-actions";
+import { toast } from "@/components/toaster";
 
 type Props = { ratingId: string; threads: Thread[]; votes: Record<string, CommentVote>; viewer: string | null };
 
@@ -83,10 +86,7 @@ function CommentItem({ comment: c, mine, viewer, onReply }: ItemProps) {
   return (
     <article className={cn(deleting && "opacity-50")}>
       <header className="flex items-center gap-2 text-sm">
-        <span aria-hidden className="grid size-6 place-items-center rounded-full bg-raised text-[0.6875rem] font-semibold text-muted-foreground uppercase">
-          {c.author.username[0]}
-        </span>
-        <span className="min-w-0 truncate font-semibold">@{c.author.username}</span>
+        <PersonLink handle={c.author.username} avatar={c.author.avatar} photo={c.author.avatar_path} />
         <time dateTime={c.created_at} className="shrink-0 text-faint">
           {timeAgo(c.created_at)}
         </time>
@@ -99,13 +99,19 @@ function CommentItem({ comment: c, mine, viewer, onReply }: ItemProps) {
             Reply
           </button>
         )}
+        {viewer && !own && <ReportButton targetType="comment" targetId={c.id} what="this comment" signedIn className="ml-auto" />}
         {own &&
           (confirming ? (
             <>
               <button
                 type="button"
                 disabled={deleting}
-                onClick={() => startDelete(() => deleteComment(c.id))}
+                onClick={() =>
+                  startDelete(async () => {
+                    await deleteComment(c.id);
+                    toast("Comment deleted");
+                  })
+                }
                 className="min-h-9 rounded-md px-2 font-semibold text-destructive hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
               >
                 Delete it
@@ -188,7 +194,11 @@ function CommentVotes({ comment: c, mine, mode }: { comment: Comment; mine?: Com
 type ComposerProps = { ratingId: string; parentId?: string; placeholder: string; autoFocus?: boolean; className?: string; onDone?: () => void };
 
 function Composer({ ratingId, parentId, placeholder, autoFocus, className, onDone }: ComposerProps) {
-  const [state, action, pending] = useActionState<CommentState, FormData>(addComment, {});
+  const [state, action, pending] = useActionState<CommentState, FormData>(async (prev, data) => {
+    const next = await addComment(prev, data);
+    if (next.ok !== prev.ok) toast(parentId ? "Reply posted" : "Comment posted");
+    return next;
+  }, {});
   const [body, setBody] = useState("");
   const [seenOk, setSeenOk] = useState(state.ok);
 

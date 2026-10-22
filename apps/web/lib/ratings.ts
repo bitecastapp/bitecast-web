@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { DishDiet } from "./diet";
 
 export type Vote = "facts" | "cap";
 export type Review = {
@@ -9,14 +10,15 @@ export type Review = {
   cap_count: number;
   comments_count: number;
   created_at: string;
-  author: { username: string };
-  dish: { name: string; veg: boolean; restaurant: { slug: string; name: string; area: string } };
+  author: { username: string; avatar: string | null; avatar_path: string | null };
+  dish: { id: string; name: string; diet: DishDiet; rating_count: number; avg_score: number | null; restaurant: { slug: string; name: string; area: string } };
   photos: { path: string; position: number }[];
 };
 export type Sort = "top" | "new";
+export type FeedSort = Sort | "following";
 
 const REVIEW_FIELDS =
-  "id, score, take, facts_count, cap_count, comments_count, created_at, author:profiles!ratings_user_id_fkey(username), dish:dishes(name, veg, restaurant:restaurants(slug, name, area)), photos:rating_photos(path, position)";
+  "id, score, take, facts_count, cap_count, comments_count, created_at, author:profiles!ratings_user_id_fkey(username, avatar, avatar_path), dish:dishes(id, name, diet, rating_count, avg_score, restaurant:restaurants(slug, name, area)), photos:rating_photos(path, position)";
 
 // Scores show one decimal (8.5, 9.0); a perfect 10 stays "10" so it fits the disc.
 export function formatScore(score: number) {
@@ -53,8 +55,11 @@ function sorted<T extends { photos: { position: number }[] }>(rows: T[]) {
 }
 
 // The home feed: reviews (ratings with a take), Top = net votes, New = newest.
-export async function getFeed(supabase: SupabaseClient, sort: Sort, limit = 30) {
+// The feed: everyone's takes by Top or New, or only takes from the people you follow (`authors`), newest first.
+export async function getFeed(supabase: SupabaseClient, sort: FeedSort, authors: string[] = [], limit = 30) {
+  if (sort === "following" && !authors.length) return [];
   let q = supabase.from("ratings").select(REVIEW_FIELDS).not("take", "is", null);
+  if (sort === "following") q = q.in("user_id", authors);
   q = sort === "top" ? q.order("net_votes", { ascending: false }).order("created_at", { ascending: false }) : q.order("created_at", { ascending: false });
   const { data, error } = await q.limit(limit).returns<Review[]>();
   if (error) throw error;
@@ -113,4 +118,18 @@ export function groupMeals(reviews: Review[]): Review[][] {
     else groups.push([r]);
   }
   return groups;
+}
+
+// Everything one person has rated, newest first: the profile's diary, and its takes (the ones with words).
+// shortcut: loads the latest 200 in one go; page it once someone rates more than that.
+export async function getUserRatings(supabase: SupabaseClient, userId: string) {
+  const { data, error } = await supabase
+    .from("ratings")
+    .select(REVIEW_FIELDS)
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(200)
+    .returns<Review[]>();
+  if (error) throw error;
+  return sorted(data);
 }
