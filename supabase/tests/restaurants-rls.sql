@@ -42,44 +42,50 @@ begin
   if (select count(*) from public.restaurants) < 10 then raise exception 'FAIL: seed restaurants missing'; end if;
 
   -- A normal add is stamped with the caller.
-  insert into public.dishes (restaurant_id, name) values (vb, 'Uppittu') returning id, created_by into new_id, owner;
+  insert into public.dishes (restaurant_id, name, veg) values (vb, 'Uppittu', true) returning id, created_by into new_id, owner;
   if owner is distinct from '00000000-0000-0000-0000-00000000000a' then raise exception 'FAIL: created_by not the caller'; end if;
 
   -- Can't claim someone else as creator (column not granted).
   begin
-    insert into public.dishes (restaurant_id, name, created_by) values (vb, 'Chow Chow Bath', '00000000-0000-0000-0000-00000000000b');
+    insert into public.dishes (restaurant_id, name, veg, created_by) values (vb, 'Chow Chow Bath', true, '00000000-0000-0000-0000-00000000000b');
     raise exception 'FAIL: wrote created_by';
   exception when insufficient_privilege then null;
   end;
 
   -- Duplicates at the same restaurant, any casing/spacing/punctuation.
   begin
-    insert into public.dishes (restaurant_id, name) values (vb, 'masala   DOSA!');
+    insert into public.dishes (restaurant_id, name, veg) values (vb, 'masala   DOSA!', true);
     raise exception 'FAIL: duplicate accepted';
   exception when unique_violation then null;
   end;
 
   -- Same name at another restaurant is fine.
-  insert into public.dishes (restaurant_id, name) values (tr, 'Masala Dosa');
+  insert into public.dishes (restaurant_id, name, veg) values (tr, 'Masala Dosa', true);
 
   -- Non-Latin names work and still dedupe.
-  insert into public.dishes (restaurant_id, name) values (vb, 'ಮಸಾಲೆ ದೋಸೆ');
+  insert into public.dishes (restaurant_id, name, veg) values (vb, 'ಮಸಾಲೆ ದೋಸೆ', true);
   begin
-    insert into public.dishes (restaurant_id, name) values (vb, 'ಮಸಾಲೆ  ದೋಸೆ');
+    insert into public.dishes (restaurant_id, name, veg) values (vb, 'ಮಸಾಲೆ  ದೋಸೆ', true);
     raise exception 'FAIL: Kannada duplicate accepted';
   exception when unique_violation then null;
   end;
 
   -- Bad names.
   begin
-    insert into public.dishes (restaurant_id, name) values (vb, '!!');
+    insert into public.dishes (restaurant_id, name, veg) values (vb, '!!', true);
     raise exception 'FAIL: punctuation-only name accepted';
   exception when check_violation then null;
   end;
   begin
-    insert into public.dishes (restaurant_id, name) values (vb, ' Untrimmed');
+    insert into public.dishes (restaurant_id, name, veg) values (vb, ' Untrimmed', true);
     raise exception 'FAIL: untrimmed name accepted';
   exception when check_violation then null;
+  end;
+  -- Veg or non-veg is required.
+  begin
+    insert into public.dishes (restaurant_id, name) values (vb, 'Mystery Plate');
+    raise exception 'FAIL: dish without veg/non-veg accepted';
+  exception when not_null_violation then null;
   end;
 
   -- No edits or deletes from the app.
@@ -109,7 +115,7 @@ begin
   if not exists (select 1 from public.restaurants) then raise exception 'FAIL: anon cannot read restaurants'; end if;
   if not exists (select 1 from public.dishes) then raise exception 'FAIL: anon cannot read dishes'; end if;
   begin
-    insert into public.dishes (restaurant_id, name) values ((select id from public.restaurants limit 1), 'Anon Dosa');
+    insert into public.dishes (restaurant_id, name, veg) values ((select id from public.restaurants limit 1), 'Anon Dosa', true);
     raise exception 'FAIL: anon added a dish';
   exception when insufficient_privilege then null;
   end;

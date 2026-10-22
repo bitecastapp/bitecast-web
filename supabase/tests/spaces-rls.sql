@@ -56,7 +56,7 @@ begin
   end;
 
   -- Assign an unassigned dish once.
-  insert into public.dishes (restaurant_id, name) values (vb, 'Plain Dosa') returning id into new_dish;
+  insert into public.dishes (restaurant_id, name, veg) values (vb, 'Plain Dosa', true) returning id into new_dish;
   update public.dishes set space_id = dosa where id = new_dish;
   get diagnostics n = row_count;
   if n <> 1 then raise exception 'FAIL: could not assign an unassigned dish'; end if;
@@ -73,7 +73,7 @@ begin
   if n <> 0 then raise exception 'FAIL: moved a seeded dish'; end if;
 
   -- Unassigning (back to null) is refused.
-  insert into public.dishes (restaurant_id, name) values (vb, 'Onion Dosa') returning id into new_dish;
+  insert into public.dishes (restaurant_id, name, veg) values (vb, 'Onion Dosa', true) returning id into new_dish;
   begin
     update public.dishes set space_id = null where id = new_dish;
     raise exception 'FAIL: set space to null';

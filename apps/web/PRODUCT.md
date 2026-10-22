@@ -12,7 +12,7 @@ web
 Young people in Bengaluru (students and early-career, many who moved from elsewhere in India) deciding what to eat, mostly on their phones, often while standing outside or scrolling in bed. *(inferred: age and situation)*
 
 ## Product Purpose
-Bitecast rates **individual dishes**, not restaurants. People give a dish 1–10 with a short hot take, argue about it (Facts / Cap reactions), and find what's actually worth eating. Success: someone opens it, finds the best version of the dish they're craving near them, and comes back to rate it.
+Bitecast rates **individual dishes**, not restaurants. People give a dish 1–10 with a short hot take, argue about it (Agree / Disagree reactions), and find what's actually worth eating. Success: someone opens it, finds the best version of the dish they're craving near them, and comes back to rate it.
 
 ## Positioning
 **Tastes like home**: for a dish with a home region, Bitecast shows how people *from* that region rate it ("8.7 from 12 Hyderabadis"). No restaurant-rating app can say whether the biryani passes the Hyderabadi test.
@@ -21,14 +21,14 @@ Bitecast rates **individual dishes**, not restaurants. People give a dish 1–10
 Bitecast is meant for all of India; Bengaluru is only the launch city. UI copy must not brand the product as a Bengaluru app (owner, 2026-10-21). Mobile-first PWA in the browser; native apps later. Each user picks one home region at onboarding (only Bengaluru exists at launch; more regions come later). Spaces are leaderboards per food (Biryani, Dosa...). Ranking uses a Bayesian average.
 
 ## Capabilities and Constraints
-- v1: email sign-in (magic link), username + home region onboarding, restaurants, dishes, Spaces, reviews with photos, Facts/Cap feed, Tastes like home, reporting.
+- v1: email sign-in (magic link), username + home region onboarding, restaurants, dishes, Spaces, reviews with photos, Agree/Disagree feed, Tastes like home, reporting.
 - One rating per user per dish; new accounts weigh less.
 - Undecided: logo and brand mark, any photography or illustration assets.
 
 ## Brand Commitments
 - Name: Bitecast.
 - Voice: playful, Gen-Z, celebrating home food. Never frame regions against each other.
-- Terms: "Spaces", "Facts" (agree), "Cap" (disagree), "Tastes like home".
+- Terms: "Spaces", "Agree" / "Disagree" (owner, 2026-10-22: professional wording, no slang), "Tastes like home".
 
 ## Evidence on Hand
 None yet: no real users, ratings, dishes, photos or logo. Do not invent counts, testimonials or restaurant claims; label any demo content as sample.

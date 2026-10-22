@@ -16,7 +16,7 @@ Launch: Bangalore, web app first (mobile-first PWA). Android/iOS apps come later
 2. Restaurants (seed list of popular Bangalore spots + user-added, with duplicate handling) and dishes (optional `origin_region`)
 3. Spaces: one leaderboard per food (Biryani, Dosa, ...), anyone can create one
 4. Reviews: rating 1–10, short hot take, photos. One review per user per dish.
-5. Feed with **Facts** (agree) / **Cap** (disagree) reactions
+5. Feed with **Agree** / **Disagree** votes on takes (stored internally as `facts` / `cap`)
 6. Tastes like home score on each dish
 7. Report button on reviews, dishes, Spaces
 

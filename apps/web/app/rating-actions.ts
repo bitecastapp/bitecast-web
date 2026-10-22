@@ -1,5 +1,6 @@
 "use server";
 
+import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { dishHref } from "@/lib/dishes";
@@ -43,15 +44,17 @@ export async function saveRating(_: SaveRatingState, formData: FormData): Promis
   redirect(dish ? dishHref(dish.restaurant.slug, dish.name) : "/");
 }
 
-// Facts / Cap / clear. The database blocks self-votes and keeps the counts.
+// Agree ("facts") / Disagree ("cap") / clear. The database blocks self-votes and keeps the counts.
 export async function castVote(ratingId: string, kind: Vote | null) {
   const { supabase, profile } = await getCurrentUser();
   if (!profile) redirect("/onboarding");
 
   if (!kind) {
     await supabase.from("votes").delete().eq("rating_id", ratingId);
-    return;
+  } else {
+    const { data } = await supabase.from("votes").update({ kind }).eq("rating_id", ratingId).select("rating_id");
+    if (!data?.length) await supabase.from("votes").insert({ rating_id: ratingId, kind });
   }
-  const { data } = await supabase.from("votes").update({ kind }).eq("rating_id", ratingId).select("rating_id");
-  if (!data?.length) await supabase.from("votes").insert({ rating_id: ratingId, kind });
+  // Re-read the page so counts and your vote come from the database, not just the optimistic guess.
+  refresh();
 }

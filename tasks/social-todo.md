@@ -8,3 +8,10 @@
 - [x] 6. Review page + Facts/Cap (toggle, switch, no self-vote)
 - [x] 7. Home feed Top / New
 - [ ] 8. Accessibility + break-ui pass; checkpoint with owner
+
+# Todo: Social core, slice (b) comments
+
+- [x] Schema: comments (one reply level enforced by trigger), cached comments_count, RLS + `supabase/tests/comments-rls.sql`
+- [x] Comment + reply + delete-own on the take page; count on feed rows
+- [x] Worst-case layout at 320px (500-char comment, long handles, Kannada, 6 replies)
+- [ ] Real end-to-end check by the owner (needs a signed-in session)

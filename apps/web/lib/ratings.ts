@@ -7,15 +7,40 @@ export type Review = {
   take: string | null;
   facts_count: number;
   cap_count: number;
+  comments_count: number;
   created_at: string;
   author: { username: string };
-  dish: { name: string; restaurant: { slug: string; name: string; area: string } };
+  dish: { name: string; veg: boolean; restaurant: { slug: string; name: string; area: string } };
   photos: { path: string; position: number }[];
 };
 export type Sort = "top" | "new";
 
 const REVIEW_FIELDS =
-  "id, score, take, facts_count, cap_count, created_at, author:profiles!ratings_user_id_fkey(username), dish:dishes(name, restaurant:restaurants(slug, name, area)), photos:rating_photos(path, position)";
+  "id, score, take, facts_count, cap_count, comments_count, created_at, author:profiles!ratings_user_id_fkey(username), dish:dishes(name, veg, restaurant:restaurants(slug, name, area)), photos:rating_photos(path, position)";
+
+// Scores show one decimal (8.5, 9.0); a perfect 10 stays "10" so it fits the disc.
+export function formatScore(score: number) {
+  return score === 10 ? "10" : score.toFixed(1);
+}
+
+// How far a score sits from ketchup (0) to mustard (1). Most scores land between 5 and 10,
+// so the blend runs over 4…9.5 to keep a 5 and a 6.5 visibly different.
+export function scoreHeat(score: number) {
+  return Math.min(1, Math.max(0, (score - 4) / 5.5));
+}
+
+// The score's colour: ketchup when low, mustard when high, blended in between.
+export function scoreColor(score: number) {
+  return `color-mix(in oklab, var(--ketchup), var(--mustard) ${Math.round(scoreHeat(score) * 100)}%)`;
+}
+
+// A one-word read of a score, shown beside the dish on a take.
+export function verdict(score: number) {
+  if (score >= 9) return { label: "Must try", tone: "must" } as const;
+  if (score >= 7) return { label: "Worth it", tone: "good" } as const;
+  if (score >= 5) return { label: "It's okay", tone: "meh" } as const;
+  return { label: "Skip it", tone: "skip" } as const;
+}
 
 // Public URL for a stored photo (the bucket is public-read).
 export function photoUrl(path: string) {
@@ -66,6 +91,26 @@ export async function getMyVotes(supabase: SupabaseClient, ratingIds: string[]) 
 export function summarize(scores: number[]) {
   const count = scores.length;
   const average = count ? scores.reduce((a, b) => a + b, 0) / count : null;
-  const spread = Array.from({ length: 10 }, (_, i) => scores.filter((s) => s === i + 1).length);
+  // Bars for 1…10; a half score counts with the whole number below it (8.5 → 8).
+  const spread = Array.from({ length: 10 }, (_, i) => scores.filter((s) => Math.floor(s) === i + 1).length);
   return { count, average, spread };
+}
+
+// Takes posted by the same person at the same place within a few hours read as one meal in the feed.
+// Each group sits where its first take appears; single takes stay as groups of one.
+const MEAL_WINDOW_MS = 6 * 60 * 60 * 1000;
+
+export function groupMeals(reviews: Review[]): Review[][] {
+  const groups: Review[][] = [];
+  for (const r of reviews) {
+    const meal = groups.find(
+      (g) =>
+        g[0].author.username === r.author.username &&
+        g[0].dish.restaurant.slug === r.dish.restaurant.slug &&
+        g.some((x) => Math.abs(Date.parse(x.created_at) - Date.parse(r.created_at)) <= MEAL_WINDOW_MS),
+    );
+    if (meal) meal.push(r);
+    else groups.push([r]);
+  }
+  return groups;
 }

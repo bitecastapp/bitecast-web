@@ -4,7 +4,8 @@ import { notFound, redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getDishById, getRestaurants } from "@/lib/restaurants";
 import { PageShell } from "@/components/page-shell";
-import { BackLink } from "@/app/r/[slug]/restaurant-view";
+import { BackLink } from "@/components/back-link";
+import { DietMark } from "@/components/diet-mark";
 import { dishHref } from "@/lib/dishes";
 import { DishPicker } from "./dish-picker";
 import { RateForm } from "./rate-form";
@@ -29,7 +30,7 @@ async function Rate({ searchParams }: Pick<PageProps<"/rate">, "searchParams">) 
   if (typeof dishId !== "string") {
     return (
       <>
-        <BackLink href="/">Feed</BackLink>
+        <BackLink href="/" />
         <h1 className="mt-2 mb-6 text-2xl leading-tight font-bold tracking-tight">What did you eat?</h1>
         <DishPicker restaurants={await getRestaurants(supabase)} />
       </>
@@ -47,9 +48,10 @@ async function Rate({ searchParams }: Pick<PageProps<"/rate">, "searchParams">) 
 
   return (
     <>
-      <BackLink href={dishHref(dish.restaurant.slug, dish.name)}>{dish.restaurant.name}</BackLink>
+      <BackLink href={dishHref(dish.restaurant.slug, dish.name)} />
       <h1 className="mt-2 text-2xl leading-snug font-bold tracking-tight wrap-anywhere">How was the {dish.name}?</h1>
       <p className="mt-1 mb-7 text-muted-foreground">
+        <DietMark veg={dish.veg} className="mr-1.5 align-[-0.1em]" />
         at {dish.restaurant.name}, {dish.restaurant.area}
         {mine && " · you've rated this before, saving updates it"}
       </p>

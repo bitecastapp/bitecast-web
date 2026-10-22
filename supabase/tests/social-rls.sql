@@ -42,6 +42,13 @@ begin
   exception when check_violation then null;
   end;
   begin
+    update public.ratings set score = 7.3 where id = rid;
+    raise exception 'FAIL: score 7.3 accepted (half steps only)';
+  exception when check_violation then null;
+  end;
+  update public.ratings set score = 7.5 where id = rid;
+  if (select score from public.ratings where id = rid) <> 7.5 then raise exception 'FAIL: half score not kept'; end if;
+  begin
     update public.ratings set take = ' padded' where id = rid;
     raise exception 'FAIL: untrimmed take accepted';
   exception when check_violation then null;
@@ -139,7 +146,7 @@ begin
   if not exists (select 1 from public.rating_photos) then raise exception 'FAIL: anon cannot read photos'; end if;
   if not exists (select 1 from public.profiles) then raise exception 'FAIL: anon cannot read profiles'; end if;
   if not exists (select 1 from public.dishes) then raise exception 'FAIL: anon cannot read dishes'; end if;
-  if (select facts_count from public.ratings where take is not null limit 1) <> 1 then raise exception 'FAIL: anon sees wrong count'; end if;
+  if (select facts_count from public.ratings where user_id = '00000000-0000-0000-0000-00000000000a' and take is not null) <> 1 then raise exception 'FAIL: anon sees wrong count'; end if;
   begin
     perform 1 from public.votes;
     raise exception 'FAIL: anon can read votes';

@@ -3,7 +3,7 @@
 import { startTransition, useActionState, useRef, useState } from "react";
 import { ImagePlusIcon, XIcon } from "lucide-react";
 import type { DishDetail } from "@/lib/restaurants";
-import { photoUrl } from "@/lib/ratings";
+import { formatScore, photoUrl, scoreColor, verdict } from "@/lib/ratings";
 import { resizeToJpeg } from "@/lib/resize-image";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -135,54 +135,77 @@ export function RateForm({ dish, userId, existing }: { dish: DishDetail; userId:
   );
 }
 
-// The score as a signal meter: 10 rising bars that light up to your score, rippling from your last pick.
+const STEPS = Array.from({ length: 19 }, (_, i) => 1 + i / 2); // 1, 1.5 … 10
+
+// The score as a signal meter: 19 rising bars (half steps) that light up ketchup-to-mustard as you go.
+// A transparent range input covers the bars, so tapping, dragging and arrow keys all pick a score.
 function ScoreMeter({ score, onChange }: { score: number; onChange: (n: number) => void }) {
   const [from, setFrom] = useState(score);
+  const pick = (n: number) => {
+    setFrom(score);
+    onChange(n);
+  };
   return (
-    <fieldset>
-      <legend className="sr-only">Your score</legend>
-      <div className="mb-3 flex items-baseline justify-between">
-        <span className="text-sm font-semibold">Your score</span>
-        <span aria-hidden className="inline-flex overflow-hidden text-3xl leading-none font-semibold tabular-nums">
-          <span key={score} className={cn(score && "animate-[roll-up_180ms_var(--ease-out)]", !score && "text-faint")}>
-            {score || "–"}
+    <div>
+      <div className="mb-3 flex items-end justify-between gap-3">
+        <label htmlFor="score" className="text-sm font-semibold">
+          Your score
+        </label>
+        <span aria-hidden className="flex items-baseline gap-2">
+          {score > 0 && <span className="text-sm font-semibold text-muted-foreground">{verdict(score).label}</span>}
+          <span className="inline-flex overflow-hidden text-3xl leading-none font-bold tabular-nums">
+            <span
+              key={score}
+              className={cn(score ? "animate-[roll-up_180ms_var(--ease-out)] bg-(image:--score-gradient) bg-clip-text text-transparent" : "text-faint")}
+            >
+              {score ? formatScore(score) : "–"}
+            </span>
+            <span className="self-end text-base font-semibold text-faint">/10</span>
           </span>
-          <span className="text-base text-faint">/10</span>
         </span>
       </div>
-      <div className="flex h-32 items-stretch gap-1.5">
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => {
-          const lit = n <= score;
-          // Bars that change state ripple outward from the previous score, 22ms apart.
-          const changed = (n > from && n <= score) || (n > score && n <= from);
-          const delay = changed ? Math.abs(n - (score > from ? from + 1 : from)) * 22 : 0;
-          return (
-            <label key={n} className="group flex h-full flex-1 cursor-pointer flex-col justify-end gap-1.5">
-              <input
-                type="radio"
-                name="score"
-                value={n}
-                checked={score === n}
-                onChange={() => {
-                  setFrom(score);
-                  onChange(n);
-                }}
-                className="peer sr-only"
-              />
-              <span className="flex flex-1 items-end">
+      <div className="relative rounded-md has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-ring has-[:focus-visible]:ring-offset-4 has-[:focus-visible]:ring-offset-background">
+        <div aria-hidden className="flex h-32 items-end gap-1">
+          {STEPS.map((v) => {
+            const lit = v <= score;
+            // Bars that change state ripple outward from the previous score, 12ms per half step.
+            const changed = (v > from && v <= score) || (v > score && v <= from);
+            const delay = changed ? Math.abs(v - from) * 24 : 0;
+            return (
               <span
-                className={cn(
-                  "w-full rounded-t-[4px] transition-colors duration-150 ease-[var(--ease-out)] peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-background",
-                  lit ? "bg-ketchup" : "bg-raised [@media(hover:hover)_and_(pointer:fine)]:group-hover:bg-[#3a3042]",
-                )}
-                style={{ height: `${n * 10}%`, transitionDelay: `${delay}ms` }}
+                key={v}
+                className={cn("flex-1 rounded-t-[3px] transition-colors duration-150 ease-[var(--ease-out)]", !lit && "bg-raised")}
+                style={{
+                  height: `${v * 10}%`,
+                  transitionDelay: `${delay}ms`,
+                  backgroundColor: lit ? scoreColor(v) : undefined,
+                }}
               />
-              </span>
-              <span className={cn("text-center text-xs tabular-nums", score === n ? "font-semibold text-foreground" : "text-faint")}>{n}</span>
-            </label>
-          );
-        })}
+            );
+          })}
+        </div>
+        <input
+          id="score"
+          type="range"
+          name={score ? "score" : undefined}
+          min={1}
+          max={10}
+          step={0.5}
+          value={score || 1}
+          aria-valuetext={score ? `${formatScore(score)} out of 10, ${verdict(score).label}` : "Not scored yet"}
+          onChange={(e) => pick(Number(e.target.value))}
+          // The first tap on 1 doesn't change the input's value, so it fires no change event.
+          onClick={(e) => !score && pick(Number(e.currentTarget.value))}
+          className="absolute inset-0 size-full cursor-pointer appearance-none opacity-0 [&::-moz-range-thumb]:size-px [&::-webkit-slider-thumb]:size-px [&::-webkit-slider-thumb]:appearance-none"
+        />
       </div>
-    </fieldset>
+      <div aria-hidden className="mt-1.5 flex gap-1 text-center text-xs text-faint tabular-nums">
+        {STEPS.map((v) => (
+          <span key={v} className={cn("flex-1", Math.floor(score) === v && "font-semibold text-foreground")}>
+            {Number.isInteger(v) ? v : ""}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }

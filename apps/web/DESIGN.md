@@ -81,7 +81,7 @@ Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist ver
 
 **Key Characteristics:**
 - Dark Studio ground, cream text, grey-purple secondary text.
-- Ketchup means "score" and "the main action". Mustard means "Facts" and "you are here" (active tab, active sort, focus).
+- Ketchup means "score" and "the main action". Mustard means "Agree" and "you are here" (active tab, active sort, focus).
 - Geist for UI; Urbanist only for the wordmark.
 - Lists separated by hairlines, not cards. No shadows, no outlines on content, no tilts.
 
@@ -91,11 +91,11 @@ Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist ver
 - **Raised** (#2A2231): fields, tiles, avatars, hover. **Paper** (#211A27): reserved for future sheets.
 - **Spotlight** (#FFF4EA): primary text. **Muted ink** (#B3A8B9) secondary text; **Faint** (#8E8296, 4.9:1) timestamps, counts, overlines.
 - **Hairline** (#2F2737): dividers. **Field border** (#6E6377, 3.28:1): input outlines.
-- **Ketchup** (#FF4B3A): bitten score discs, the average, lit meter bars, the on-air light, Cap when chosen, primary buttons (Studio text, 5.6:1).
-- **Mustard** (#FFC23C): Facts when chosen, the active tab underline, active sort, focus rings, the one highlighted word on sign-in.
+- **Ketchup** (#FF4B3A): bitten score discs, the average, lit meter bars, the on-air light, Disagree when chosen, primary buttons (Studio text, 5.6:1).
+- **Mustard** (#FFC23C): Agree when chosen, the active tab underline, active sort, focus rings, the one highlighted word on sign-in.
 
 ### Named Rules
-**The Meaning Rule.** Ketchup and Mustard appear only where they mean something (score/action, Facts/current). Never decoration.
+**The Meaning Rule.** Ketchup and Mustard appear only where they mean something (score/action, Agree/current). Never decoration.
 **The No-Chrome Rule.** No shadows, no outlined cards, no tilted or stamped elements. Structure comes from spacing and hairlines.
 
 ## Typography
@@ -115,10 +115,12 @@ One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the
 
 ## Components
 
-- **ReviewCard** (`components/review-card.tsx`): a take as a list item: avatar initial, @handle, Ketchup score disc, relative time; dish · place; the take (clamped to 6 lines in lists); a 3:4 photo thumbnail on the right ("+N"); Facts/Cap. On the review page: unclamped with a photo swipe row.
-- **VoteButtons** (`components/vote-buttons.tsx`): arrow icon + label + count, muted until chosen (Facts → Mustard, Cap → Ketchup, filled arrow).
+- **ReviewCard** (`components/review-card.tsx`): a take as a list item: avatar initial, @handle, Ketchup score disc, relative time; dish · place; the take (clamped to 6 lines in lists); a 3:4 photo thumbnail on the right ("+N"); Agree/Disagree. On the review page: unclamped with a photo swipe row.
+- **VoteButtons** (`components/vote-buttons.tsx`): one joined pill, "Agree 214 | Disagree 12" (13px semibold), hairline border on Raised. The chosen half fills from its outer edge (Agree → Mustard, Disagree → Ketchup, Studio text). Beside it, "95% agree" with a 40px agreement bar. Signed out: same look, links to sign-in. Own take: counts only.
 - **Dish page**: title + photo poster, an Average block with a thin-bar 1–10 histogram between hairlines, the Rate button, then takes.
 - **Rate form**: 1–10 tiles (selected → Ketchup), take textarea with counter, up to 4 photo squares.
+- **Comments** (`components/comments.tsx`): overline "Comments · N", a composer, then threads: avatar initial, @handle, time, body; replies indented one level behind a 1px hairline. Reply opens an inline composer; Delete asks "Delete it / Keep" first. Comments that appear after the page loaded rise in (260ms); the rest stay still.
+- **Comment count** on every take row (speech-bubble icon + number) links to `#comments`.
 - **Wordmark / BroadcastMark** (`components/brand.tsx`), **Screen**, **PageShell** (with an `action` slot), **Row**.
 
 ## What makes it Bitecast, not Letterboxd
@@ -126,7 +128,7 @@ One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the
 - **Bitten score disc:** scores sit in a Ketchup circle with a bite taken out of its top-right (after the logo's bites).
 - **Signal meter:** rating is 10 rising bars, like broadcast signal strength; the bars light up to your score.
 - **On air:** a small Ketchup light pulses beside "New" on the feed.
-- **Broadcast votes:** choosing Facts or Cap sends two arcs off the arrow.
+- **Agreement bar:** every take shows how much people agree with it, not just raw counts.
 
 ## Motion
 
@@ -134,7 +136,7 @@ Curves: `--ease-out` cubic-bezier(0.23, 1, 0.32, 1) for UI, `--ease-in-out` cubi
 
 | Moment | Purpose | Motion |
 |---|---|---|
-| Facts / Cap | Feedback | Arrow presses to 0.85 (150ms); two arcs scale 0.55→1.35 and fade (480ms, 70ms apart); count rolls up or down 70% of its height (180ms). Transitions on the button, so rapid taps retarget. |
+| Agree / Disagree | Feedback | The chosen half fills from its outer edge (scaleX 0→1, 200ms, --ease-out); counts roll up or down (180ms); the agreement bar slides to the new share (300ms). Transitions, not keyframes, so rapid taps retarget. After saving, the page re-reads the real counts. |
 | Signal meter | State indication | Bars that change colour ripple outward from the previous score, 22ms apart (150ms colour transition each); the big number rolls up (180ms). |
 | Score spread (dish page) | Preventing a jarring change | Bars grow from the baseline (320ms, 25ms stagger). |
 | Tabs | Spatial consistency | The Mustard underline is one named view transition that slides between tabs (220ms, ease-in-out). |

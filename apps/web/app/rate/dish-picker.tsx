@@ -34,7 +34,7 @@ export function DishPicker({ restaurants }: { restaurants: Restaurant[] }) {
       <ul className="divide-y divide-border" aria-live="polite">
         {dishes.map((d) => (
           <li key={d.id}>
-            <Row href={`/rate?dish=${d.id}`} title={d.name} meta={`${d.place.name} · ${d.place.area}`} />
+            <Row href={`/rate?dish=${d.id}`} veg={d.veg} title={d.name} meta={`${d.place.name} · ${d.place.area}`} />
           </li>
         ))}
       </ul>

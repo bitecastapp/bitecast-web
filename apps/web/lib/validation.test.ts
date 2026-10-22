@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dishNameSchema, emailSchema, ratingSchema, usernameSchema } from "./validation";
+import { commentSchema, dishNameSchema, emailSchema, ratingSchema, usernameSchema } from "./validation";
 
 describe("usernameSchema", () => {
   it.each([
@@ -50,11 +50,25 @@ describe("ratingSchema", () => {
     expect(ratingSchema.parse({ score: 10, take: "  peak  " }).take).toBe("peak");
   });
 
-  it.each([0, 11, 7.5, "x"])("rejects score %j", (score) => {
+  it("accepts half steps", () => {
+    expect(ratingSchema.parse({ score: "8.5", take: "" }).score).toBe(8.5);
+  });
+
+  it.each([0, 0.5, 11, 7.25, "x"])("rejects score %j", (score) => {
     expect(ratingSchema.safeParse({ score, take: "" }).success).toBe(false);
   });
 
   it("rejects takes over 500 characters", () => {
     expect(ratingSchema.safeParse({ score: 5, take: "x".repeat(501) }).success).toBe(false);
+  });
+});
+
+describe("commentSchema", () => {
+  it("trims", () => {
+    expect(commentSchema.parse("  big if true  ")).toBe("big if true");
+  });
+
+  it.each(["", "   ", "x".repeat(501)])("rejects %j", (input) => {
+    expect(commentSchema.safeParse(input).success).toBe(false);
   });
 });

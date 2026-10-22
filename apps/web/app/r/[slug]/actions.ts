@@ -15,10 +15,12 @@ export async function addDish(_: AddDishState, formData: FormData): Promise<AddD
   const raw = String(formData.get("name") ?? "");
   const name = dishNameSchema.safeParse(raw);
   if (!name.success) return { name: raw, error: name.error.issues[0].message };
+  const diet = formData.get("diet");
+  if (diet !== "veg" && diet !== "non-veg") return { name: raw, error: "Pick veg or non-veg." };
 
   const { data, error } = await supabase
     .from("dishes")
-    .insert({ restaurant_id: restaurantId, name: name.data })
+    .insert({ restaurant_id: restaurantId, name: name.data, veg: diet === "veg" })
     .select("name, restaurant:restaurants(slug)")
     .single<{ name: string; restaurant: { slug: string } }>();
 

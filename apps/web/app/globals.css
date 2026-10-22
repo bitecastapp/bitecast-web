@@ -61,6 +61,8 @@
   --studio: #17111c;
   --ketchup: #ff4b3a;
   --mustard: #ffc23c;
+  /* Scores: ketchup rising into mustard, the two brand colours in one fill. */
+  --score-gradient: linear-gradient(225deg, var(--mustard) 10%, var(--ketchup) 90%);
   --spotlight: #fff4ea;
   --paper: #211a27; /* raised surfaces on the Studio ground */
   --raised: #2a2231;
@@ -170,6 +172,18 @@
   button,
   a {
     touch-action: manipulation;
+  }
+  /* Tailwind v4 gives buttons the default arrow; anything you can press shows the hand. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  label:has(> input[type="radio"], > input[type="checkbox"]),
+  summary,
+  select,
+  input[type="range"] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
   }
 }
 
