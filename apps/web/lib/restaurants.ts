@@ -39,3 +39,14 @@ export async function getDish(supabase: SupabaseClient, restaurantSlug: string, 
   if (error) throw error;
   return data;
 }
+
+export async function getDishById(supabase: SupabaseClient, id: string) {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) return null;
+  const { data, error } = await supabase
+    .from("dishes")
+    .select("id, name, restaurant:restaurants(slug, name, area)")
+    .eq("id", id)
+    .maybeSingle<DishDetail>();
+  if (error) throw error;
+  return data;
+}

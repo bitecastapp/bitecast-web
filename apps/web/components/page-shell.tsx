@@ -1,15 +1,18 @@
-import Link from "next/link";
+import { ViewTransition } from "react";
+import { Wordmark } from "@/components/brand";
 
-// Shell for browsing screens: wordmark home link, then a single readable column.
-export function PageShell({ children }: { children: React.ReactNode }) {
+// Shell for browsing screens: wordmark (+ an optional header action), then one readable column.
+export function PageShell({ children, action }: { children: React.ReactNode; action?: React.ReactNode }) {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-6 pt-[max(env(safe-area-inset-top),1.25rem)] pb-[max(env(safe-area-inset-bottom),1.5rem)]">
-      <header className="flex h-11 items-center">
-        <Link href="/" className="-mx-1 rounded-md px-1 text-xl font-extrabold tracking-tight">
-          bitecast
-        </Link>
+    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col px-5 pt-[max(env(safe-area-inset-top),0.75rem)] pb-[max(env(safe-area-inset-bottom),1.5rem)]">
+      <header className="flex h-12 items-center justify-between gap-3">
+        <Wordmark />
+        {action}
       </header>
-      <div className="mt-4 flex flex-1 flex-col">{children}</div>
+      {/* Content rises in on arrival; default="none" keeps it still during unrelated transitions (e.g. tab switches). */}
+      <ViewTransition enter="rise" default="none">
+        <div className="mt-3 flex flex-1 flex-col">{children}</div>
+      </ViewTransition>
     </main>
   );
 }

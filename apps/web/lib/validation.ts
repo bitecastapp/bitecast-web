@@ -28,3 +28,13 @@ export const dishNameSchema = z
       .max(60, "Keep it under 60 characters.")
       .refine((s) => dishKey(s) !== "", "Use letters, not just symbols."),
   );
+
+// Mirrors public.ratings checks: score 1–10, optional take (trimmed, ≤500).
+export const ratingSchema = z.object({
+  score: z.coerce.number().int("Pick a whole number.").min(1, "Pick a score from 1 to 10.").max(10, "Pick a score from 1 to 10."),
+  take: z
+    .string()
+    .transform((s) => s.trim())
+    .pipe(z.string().max(500, "Keep the take under 500 characters."))
+    .transform((s) => s || null),
+});

@@ -100,19 +100,17 @@ begin
   end;
 end $$;
 
--- Signed-out visitors can't read either table.
+-- Signed-out visitors: read yes, write no.
 reset role;
 set local role anon;
 do $$
 begin
+  -- Public to read since 2026-10-21; writing still needs a session.
+  if not exists (select 1 from public.restaurants) then raise exception 'FAIL: anon cannot read restaurants'; end if;
+  if not exists (select 1 from public.dishes) then raise exception 'FAIL: anon cannot read dishes'; end if;
   begin
-    perform 1 from public.restaurants;
-    raise exception 'FAIL: anon can read restaurants';
-  exception when insufficient_privilege then null;
-  end;
-  begin
-    perform 1 from public.dishes;
-    raise exception 'FAIL: anon can read dishes';
+    insert into public.dishes (restaurant_id, name) values ((select id from public.restaurants limit 1), 'Anon Dosa');
+    raise exception 'FAIL: anon added a dish';
   exception when insufficient_privilege then null;
   end;
 end $$;

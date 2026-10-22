@@ -1,7 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PATHS = ["/login", "/auth", ...(process.env.NODE_ENV === "production" ? [] : ["/dev"])];
+// Everything is public to read except these, which need a session (writing is guarded by RLS regardless).
+const PRIVATE_PATHS = ["/onboarding", "/rate", "/settings"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
@@ -29,10 +30,10 @@ export async function updateSession(request: NextRequest) {
   // Nothing between createServerClient and getClaims: this refreshes the session cookie.
   const { data } = await supabase.auth.getClaims();
   const signedIn = Boolean(data?.claims);
-  const isPublic = PUBLIC_PATHS.some((p) => request.nextUrl.pathname.startsWith(p));
+  const isPrivate = PRIVATE_PATHS.some((p) => request.nextUrl.pathname.startsWith(p));
 
   // Optimistic redirect only; pages and RLS do the real checks.
-  if (!signedIn && !isPublic) {
+  if (!signedIn && isPrivate) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     url.search = "";

@@ -1,173 +1,151 @@
 ---
 name: Bitecast
-description: A dish-by-dish guide to what's actually worth eating.
+description: Broadcast your bites. Rate the dish, not the place.
 colors:
-  mint-ground: "oklch(0.97 0.008 150)"
-  glass: "oklch(0.99 0.004 150)"
-  lattice: "oklch(0.46 0.09 148)"
-  pane-live: "oklch(0.93 0.04 150)"
-  bloom: "oklch(0.58 0.19 33)"
-  leaf-ink: "oklch(0.29 0.045 155)"
-  muted-ink: "oklch(0.45 0.03 155)"
-  field-border: "oklch(0.6 0.03 150)"
-  hairline: "oklch(0.86 0.02 150)"
-  wash: "oklch(0.93 0.02 150)"
-  error: "oklch(0.52 0.19 28)"
+  studio: "#17111c"
+  ketchup: "#ff4b3a"
+  mustard: "#ffc23c"
+  spotlight: "#fff4ea"
+  paper: "#211a27"
+  raised: "#2a2231"
+  hairline: "#2f2737"
+  muted-ink: "#b3a8b9"
+  faint: "#8e8296"
+  field-border: "#6e6377"
+  error: "#ff8a7d"
 typography:
-  display:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "2.75rem"
-    fontWeight: 800
-    lineHeight: 1.02
-    letterSpacing: "-0.035em"
-  headline:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "2rem"
-    fontWeight: 800
-    lineHeight: 1.25
-    letterSpacing: "-0.025em"
+  wordmark:
+    fontFamily: "Urbanist, sans-serif"
+    fontSize: "1.375rem"
+    fontWeight: 900
+    letterSpacing: "-0.04em"
   title:
-    fontFamily: "Manrope, sans-serif"
+    fontFamily: "Geist, sans-serif"
+    fontSize: "1.75rem"
+    fontWeight: 700
+    lineHeight: 1.2
+    letterSpacing: "-0.02em"
+  headline:
+    fontFamily: "Geist, sans-serif"
     fontSize: "1.5rem"
-    fontWeight: 800
+    fontWeight: 700
   body:
-    fontFamily: "Manrope, sans-serif"
-    fontSize: "1rem"
+    fontFamily: "Geist, sans-serif"
+    fontSize: "0.9375rem"
     fontWeight: 400
-    lineHeight: 1.5
+    lineHeight: 1.6
   label:
-    fontFamily: "Manrope, sans-serif"
+    fontFamily: "Geist, sans-serif"
     fontSize: "0.875rem"
-    fontWeight: 500
+    fontWeight: 600
+  overline:
+    fontFamily: "Geist, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 600
+    letterSpacing: "0.08em"
 rounded:
-  control: "12px"
+  control: "6px"
+  pill: "9999px"
 spacing:
-  gutter: "24px"
-  gutter-desktop: "48px"
-  stack: "24px"
+  gutter: "20px"
 components:
   button-primary:
-    backgroundColor: "{colors.leaf-ink}"
-    textColor: "{colors.mint-ground}"
+    backgroundColor: "{colors.ketchup}"
+    textColor: "{colors.studio}"
     rounded: "{rounded.control}"
-    height: "52px"
-    padding: "12px 20px"
+    height: "44px"
   button-secondary:
-    backgroundColor: "{colors.wash}"
-    textColor: "{colors.leaf-ink}"
+    backgroundColor: "{colors.raised}"
+    textColor: "{colors.spotlight}"
     rounded: "{rounded.control}"
-    height: "52px"
-  button-ghost:
-    textColor: "{colors.leaf-ink}"
-    rounded: "{rounded.control}"
-    height: "52px"
+    height: "44px"
   input:
-    backgroundColor: "{colors.glass}"
-    textColor: "{colors.leaf-ink}"
+    backgroundColor: "{colors.raised}"
+    textColor: "{colors.spotlight}"
     rounded: "{rounded.control}"
-    height: "52px"
-    padding: "0 14px"
-  choice-row:
-    backgroundColor: "{colors.glass}"
-    textColor: "{colors.leaf-ink}"
-    rounded: "{rounded.control}"
-    height: "56px"
-  choice-row-selected:
-    backgroundColor: "{colors.pane-live}"
-    textColor: "{colors.leaf-ink}"
+    height: "48px"
+  score:
+    backgroundColor: "{colors.ketchup}"
+    textColor: "{colors.studio}"
+    rounded: "{rounded.pill}"
+    size: "28px"
 ---
 
 # Design System: Bitecast
 
 ## Overview
 
-**Creative North Star: "The Glasshouse"**
+**Creative North Star: "Letterboxd for dishes"**
 
-Bitecast is a Lalbagh-style glasshouse on a calm mint ground. A thin leaf-green arch with window panes sits at the top of every screen. Each step you finish leaves a small red flower in its own pane, and the pane you're on glows pale mint with a fresh sprout. Everything else is quiet: one typeface, one dark leaf ink, generous space, standard controls.
-
-The glasshouse is the one thing on the screen with character. Copy and controls stay plain so it can be.
-
-Chosen by the owner on 2026-10-21 for being "more refreshing and minimal but more interesting". It replaced an earlier cricket-scoreboard system.
+Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist version as "AI slop". The brand stays (owner's brand sheet: the "bitecast." wordmark, Studio / Ketchup / Mustard / Spotlight), but it is used the way Letterboxd uses its colours: a dark ground, small precise type, hairline structure, and colour only where it carries meaning.
 
 **Key Characteristics:**
-- Mint ground, glass-white surfaces, dark leaf ink.
-- One arch, the same size and position on every screen.
-- Bloom red only for flowers and one emphasised word.
-- Flat: no shadows, no gradients.
-- One motion: the bloom.
+- Dark Studio ground, cream text, grey-purple secondary text.
+- Ketchup means "score" and "the main action". Mustard means "Facts" and "you are here" (active tab, active sort, focus).
+- Geist for UI; Urbanist only for the wordmark.
+- Lists separated by hairlines, not cards. No shadows, no outlines on content, no tilts.
 
 ## Colors
 
-Fresh greens with a single red.
-
-### Primary
-- **Leaf Ink** (oklch(0.29 0.045 155)): all text, primary buttons, focus rings.
-
-### Secondary
-- **Bloom** (oklch(0.58 0.19 33)): flowers in the glasshouse and one emphasised word per screen (like "dish"). 4.31:1 on the ground, so **large text only** (24px+ or bold 18.66px+).
-
-### Neutral
-- **Mint Ground** (oklch(0.97 0.008 150)): page background. Also the browser theme color (#f2f6f1).
-- **Glass** (oklch(0.99 0.004 150)): inside the arch, inputs, choice rows.
-- **Lattice** (oklch(0.46 0.09 148)): the arch's lines.
-- **Pane Live** (oklch(0.93 0.04 150)): the current step's pane and the selected choice row.
-- **Muted Ink** (oklch(0.45 0.03 155)): supporting copy, 6.3:1 or better.
-- **Field Border** (oklch(0.6 0.03 150)): input and choice-row borders, 3.57:1 against the ground.
+- **Studio** (#17111C): the page.
+- **Raised** (#2A2231): fields, tiles, avatars, hover. **Paper** (#211A27): reserved for future sheets.
+- **Spotlight** (#FFF4EA): primary text. **Muted ink** (#B3A8B9) secondary text; **Faint** (#8E8296, 4.9:1) timestamps, counts, overlines.
+- **Hairline** (#2F2737): dividers. **Field border** (#6E6377, 3.28:1): input outlines.
+- **Ketchup** (#FF4B3A): bitten score discs, the average, lit meter bars, the on-air light, Cap when chosen, primary buttons (Studio text, 5.6:1).
+- **Mustard** (#FFC23C): Facts when chosen, the active tab underline, active sort, focus rings, the one highlighted word on sign-in.
 
 ### Named Rules
-**The One Bloom Rule.** Red is for flowers and at most one word per screen. Never for buttons, links, or errors.
+**The Meaning Rule.** Ketchup and Mustard appear only where they mean something (score/action, Facts/current). Never decoration.
+**The No-Chrome Rule.** No shadows, no outlined cards, no tilted or stamped elements. Structure comes from spacing and hairlines.
 
 ## Typography
 
-**Font:** Manrope, self-hosted via next/font.
+**UI:** Geist. **Wordmark:** Urbanist 900 (swap for the owner's logo files when available).
 
-**Character:** a friendly geometric sans, heavy at the top and light in the body.
-
-### Hierarchy
-- **Display** (800, 2.75rem; 3.75rem on desktop; 1.02 line height): the login tagline only.
-- **Headline** (800, 2rem): one per screen ("Check your inbox", "Where's home?").
-- **Title** (800, 1.5rem): the handle on home.
-- **Body** (400, 1rem, 1.5): supporting copy.
-- **Label** (500, 0.875rem): field labels, hints, secondary notes.
+- **Title** (700, 1.75rem): dish names, sign-in headline.
+- **Headline** (700, 1.5rem): other page titles.
+- **Body** (400, 0.9375rem, 1.6): takes and reading text.
+- **Label** (600, 0.875rem): usernames, tabs, buttons.
+- **Overline** (600, 0.75rem, 0.08em, uppercase, Faint): section labels ("Takes · 2", "Average", neighbourhoods).
+- Numbers are tabular wherever they line up.
 
 ## Layout
 
-On phones: a 24px gutter with safe-area insets. The header (wordmark only) sits above the arch, which scales to the width but never grows taller than 34% of the screen height. Content follows with a 28px gap, and the main action sits at the bottom in thumb reach. From the `md` breakpoint it becomes two equal columns, with header and arch on the left and content (max 384px) on the right, vertically centred.
-
-## Elevation & Depth
-
-Flat. Depth comes only from the arch framing the glass.
-
-## Shapes
-
-12px corners on all controls. The arch is a 1.5px hairline; the inner lattice draws at 50% opacity. Focus is a 2px leaf-ink ring with a 2px ground-coloured gap.
+One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the Rate button right (no floating buttons). Tabs are text with a Mustard underline. Sign-up screens are a narrow column with a small broadcast mark (waves = progress) in the header.
 
 ## Components
 
-- **Glasshouse** (`components/glasshouse.tsx`): the arch with four lower panes, one per sign-up step (email, inbox, handle, home). `step` marks the live pane; panes before it are in bloom; `step={5}` blooms all four.
-- **Screen** (`components/screen.tsx`): header + glasshouse + content, the shell for every screen.
-- **Buttons:** shadcn Button, `xl` size (52px minimum, and the label wraps if text is enlarged). Primary is leaf ink, secondary is wash, ghost is for back and cancel.
-- **Inputs:** 52px tall, glass fill, 16px text (no iOS zoom).
-- **Choice rows:** 56px minimum, glass fill, field border; selected rows fill pane-live with a check icon.
-- **PageShell** (`components/page-shell.tsx`): the browsing screens' shell: wordmark linking home, then one column (max 576px). The glasshouse arch is for sign-up screens only.
-- **Row** (`components/row.tsx`): a 64px-minimum tappable list row (bold title, muted detail line, lattice chevron). Lists separate rows with `divide-y` hairlines; the hover fill is rounded inside them.
-- **Section label:** 14px bold lattice text, optionally trailed by a hairline (neighbourhood headings, "3 dishes"). Never above an h1.
-- **Search field:** a 52px glass input with a leading search icon and a 40px clear button; results replace the grouped list while there's a query.
-- **Back link:** 44px-tall lattice text link with a chevron, at the top left of detail screens.
+- **ReviewCard** (`components/review-card.tsx`): a take as a list item: avatar initial, @handle, Ketchup score disc, relative time; dish · place; the take (clamped to 6 lines in lists); a 3:4 photo thumbnail on the right ("+N"); Facts/Cap. On the review page: unclamped with a photo swipe row.
+- **VoteButtons** (`components/vote-buttons.tsx`): arrow icon + label + count, muted until chosen (Facts → Mustard, Cap → Ketchup, filled arrow).
+- **Dish page**: title + photo poster, an Average block with a thin-bar 1–10 histogram between hairlines, the Rate button, then takes.
+- **Rate form**: 1–10 tiles (selected → Ketchup), take textarea with counter, up to 4 photo squares.
+- **Wordmark / BroadcastMark** (`components/brand.tsx`), **Screen**, **PageShell** (with an `action` slot), **Row**.
 
-### Motion: the bloom
-- The live pane fills in (400ms ease-out).
-- A sprout draws itself up (700ms, cubic-bezier(0.16,1,0.3,1)).
-- Finished panes pop their flower (420ms, small overshoot), staggered 90ms per pane.
-- Content rises 12px on step change (420–500ms).
-- Everything collapses to near-instant under reduced motion.
+## What makes it Bitecast, not Letterboxd
+
+- **Bitten score disc:** scores sit in a Ketchup circle with a bite taken out of its top-right (after the logo's bites).
+- **Signal meter:** rating is 10 rising bars, like broadcast signal strength; the bars light up to your score.
+- **On air:** a small Ketchup light pulses beside "New" on the feed.
+- **Broadcast votes:** choosing Facts or Cap sends two arcs off the arrow.
+
+## Motion
+
+Curves: `--ease-out` cubic-bezier(0.23, 1, 0.32, 1) for UI, `--ease-in-out` cubic-bezier(0.77, 0, 0.175, 1) for things moving on screen. Never ease-in. Under reduced motion every animation and view transition collapses to an instant change (the meter, counts and tabs still change state).
+
+| Moment | Purpose | Motion |
+|---|---|---|
+| Facts / Cap | Feedback | Arrow presses to 0.85 (150ms); two arcs scale 0.55→1.35 and fade (480ms, 70ms apart); count rolls up or down 70% of its height (180ms). Transitions on the button, so rapid taps retarget. |
+| Signal meter | State indication | Bars that change colour ripple outward from the previous score, 22ms apart (150ms colour transition each); the big number rolls up (180ms). |
+| Score spread (dish page) | Preventing a jarring change | Bars grow from the baseline (320ms, 25ms stagger). |
+| Tabs | Spatial consistency | The Mustard underline is one named view transition that slides between tabs (220ms, ease-in-out). |
+| Page arrival | Preventing a jarring change | Content rises 10px and fades in (260ms) via `<ViewTransition enter="rise">` in PageShell. |
+| On air | State indication | Opacity pulse, 1.6s loop; static under reduced motion. |
 
 ## Do's and Don'ts
 
-- Do keep the arch the same size and place on every screen.
-- Do mark progress with a pane, never a progress bar.
-- Don't add food photography, cards, shadows or gradients as chrome.
-- Don't use bloom red for small text, buttons or errors.
-- Don't put a label or kicker above a headline.
-- Don't frame regions against each other.
-- Don't name a city in UI copy: Bitecast is pan-India and only launches in Bengaluru. City names appear only as data (home regions, restaurant locations).
+- Do let the take be plain, readable text. The words are the content.
+- Do keep colour for meaning only.
+- Don't bring back shadows, thick outlines, stickers, tilts, highlighter swipes or alternating card colours.
+- Don't write quirky filler copy; say what happens.
+- Don't put a label or kicker above a headline. Overlines label sections, never page titles.
+- Don't name a city in UI copy, or frame regions against each other.

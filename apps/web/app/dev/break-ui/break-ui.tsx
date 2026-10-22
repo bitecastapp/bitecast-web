@@ -9,7 +9,9 @@ import { OnboardingForm, type Region } from "@/app/onboarding/onboarding-form";
 import { HomeView } from "@/app/home-view";
 import { RestaurantView } from "@/app/r/[slug]/restaurant-view";
 import { DishView } from "@/app/r/[slug]/[dish]/dish-view";
+import { RateForm } from "@/app/rate/rate-form";
 import type { Restaurant } from "@/lib/restaurants";
+import type { Review } from "@/lib/ratings";
 
 let n = 0;
 const id = () => `00000000-0000-4000-8000-${String(++n).padStart(12, "0")}`;
@@ -37,6 +39,40 @@ const WORST_PLACES = [
   place("Café Noir", "Indiranagar", []),
   place("Jo", "HSR", ["Idli"]),
 ];
+
+const review = (take: string, score: number, author: string, p: Restaurant, facts = 0, cap = 0): Review => ({
+  id: id(),
+  score,
+  take,
+  facts_count: facts,
+  cap_count: cap,
+  created_at: "2026-10-21T10:00:00Z",
+  author: { username: author },
+  dish: { name: p.dishes[0]?.name ?? "Dish", restaurant: p },
+  photos: [],
+});
+
+// Sample takes (labelled fixtures, never real data).
+function makeReviews(data: string, places: Restaurant[]): Review[] {
+  if (!places.length || data === "empty") return [];
+  if (data === "worst")
+    return [
+      review("x ".repeat(249).trim() + " Honestly, " + "this is a long one. ".repeat(10).trim().slice(0, 1), 10, "mohammed_abdulrahman", places[0], 12345, 9876),
+      review("Mid.", 1, "jo", places[places.length - 1]),
+    ];
+  return [
+    review("Ghee podi idli at 7am is a personality trait now.", 9, "idli_insider", places[0], 214, 12),
+    review("Overrated. The chutney is carrying this dosa on its back.", 5, "hot_takes_hari", places[1] ?? places[0], 48, 96),
+  ];
+}
+
+// Built once at module load so server and browser render the same ids (no hydration mismatch).
+const REVIEWS: Record<string, Review[]> = {
+  demo: makeReviews("demo", DEMO_PLACES),
+  worst: makeReviews("worst", WORST_PLACES),
+  one: [],
+  empty: [],
+};
 
 const LONG_EMAIL = "aleksandra.wisniewska-kowalczyk+bitecast@northwind-industries-holdings.example.com";
 
@@ -74,7 +110,7 @@ const FIXTURES = {
 };
 
 type DataKey = keyof typeof FIXTURES;
-const SCREENS = ["login", "onboarding", "home", "restaurant", "dish"] as const;
+const SCREENS = ["login", "onboarding", "home", "restaurant", "dish", "rate"] as const;
 
 export function BreakUi() {
   const params = useSearchParams();
@@ -87,11 +123,16 @@ export function BreakUi() {
     <>
       {screen === "login" && <LoginScreen key={key} initialState={f.login} />}
       {screen === "onboarding" && <OnboardingForm key={key} regions={f.regions} />}
-      {screen === "home" && <HomeView profile={f.profile} restaurants={f.places} />}
+      {screen === "home" && <HomeView profile={f.profile} restaurants={f.places} feed={{ sort: "top", reviews: REVIEWS[data] ?? [], votes: {} }} />}
       {screen === "restaurant" && (f.places[0] ? <RestaurantView restaurant={f.places[0]} /> : <p className="p-6">No place in this fixture.</p>)}
+      {screen === "rate" && f.places[0]?.dishes[0] && (
+        <div className="mx-auto max-w-xl p-5">
+          <RateForm dish={{ ...f.places[0].dishes[0], restaurant: f.places[0] }} userId="fixture" existing={null} />
+        </div>
+      )}
       {screen === "dish" &&
         (f.places[0]?.dishes[0] ? (
-          <DishView dish={{ ...f.places[0].dishes[0], restaurant: f.places[0] }} />
+          <DishView dish={{ ...f.places[0].dishes[0], restaurant: f.places[0] }} ratings={REVIEWS[data] ?? []} viewer={f.profile.username} />
         ) : (
           <p className="p-6">No dish in this fixture.</p>
         ))}

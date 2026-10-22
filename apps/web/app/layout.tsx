@@ -1,25 +1,24 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import { Geist, Urbanist } from "next/font/google";
 import "./globals.css";
 
-const manrope = Manrope({
-  variable: "--font-manrope",
-  subsets: ["latin"],
-});
+// Urbanist only sets the wordmark; Geist is the UI face.
+const urbanist = Urbanist({ variable: "--font-urbanist", subsets: ["latin"], weight: ["800", "900"] });
+const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Bitecast",
-  description: "Rate the dish, not the place. A dish-by-dish guide to what's actually worth eating.",
+  description: "Broadcast your bites. Rate the dish, not the place."
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f2f6f1",
+  themeColor: "#17111c",
   viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${manrope.variable} h-full antialiased`}>
+    <html lang="en" className={`${urbanist.variable} ${geist.variable} h-full antialiased`}>
       <body className="flex min-h-dvh flex-col bg-background">{children}</body>
     </html>
   );

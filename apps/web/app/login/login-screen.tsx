@@ -26,7 +26,7 @@ export function LoginScreen({ initialState = { status: "idle" } }: { initialStat
       {sent ? (
         <div key="sent" className="flex flex-1 animate-[rise_500ms_var(--ease-out-expo)_both] flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <h1 ref={sentHeading} tabIndex={-1} className="text-[2rem] leading-tight font-extrabold tracking-tight outline-none">
+            <h1 ref={sentHeading} tabIndex={-1} className="text-2xl leading-tight font-bold tracking-tight outline-none">
               Check your inbox
             </h1>
             <p className="text-muted-foreground">
@@ -51,8 +51,8 @@ export function LoginScreen({ initialState = { status: "idle" } }: { initialStat
       ) : (
         <form key="form" action={action} className="flex flex-1 flex-col gap-6" noValidate>
           <div className="flex flex-col gap-3">
-            <h1 className="text-[2.75rem] leading-[1.02] font-extrabold tracking-[-0.035em] md:text-6xl">
-              Rate the <span className="text-bloom">dish</span>,<br />
+            <h1 className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em]">
+              Rate the <span className="text-mustard">dish</span>,<br />
               not the place.
             </h1>
             <p className="text-muted-foreground">A dish-by-dish guide to what&apos;s actually worth eating.</p>
@@ -76,7 +76,7 @@ export function LoginScreen({ initialState = { status: "idle" } }: { initialStat
                 aria-invalid={state.status === "error" || undefined}
                 aria-describedby={state.status === "error" ? "email-error" : "email-hint"}
                 required
-                className="h-13 bg-glass px-3.5 text-base"
+                className="h-12 bg-raised px-3.5 text-base"
               />
               {state.status === "error" ? (
                 <FieldError id="email-error">{state.message}</FieldError>

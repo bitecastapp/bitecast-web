@@ -65,7 +65,7 @@ export function AddDish({ restaurantId, restaurantSlug, restaurantName, dishes }
           placeholder="e.g. Set Dosa"
           aria-invalid={Boolean(duplicate || serverError) || undefined}
           aria-describedby="dish-help"
-          className="h-13 bg-glass px-3.5 text-base"
+          className="h-12 bg-raised px-3.5 text-base"
         />
         {duplicate ? (
           <FieldError id="dish-help">

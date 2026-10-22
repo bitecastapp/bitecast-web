@@ -66,13 +66,13 @@ begin
   end;
 end $$;
 
--- Anonymous visitors cannot read profiles.
+-- Profiles are public to read (owner decision 2026-10-21), but anonymous visitors can't write them.
 reset role;
 set local role anon;
 do $$
 begin
-  perform 1 from public.profiles;
-  raise exception 'FAIL: anon can read profiles';
+  insert into public.profiles (id, username, home_region) values (gen_random_uuid(), 'anon_user', 'bengaluru');
+  raise exception 'FAIL: anon created a profile';
 exception when insufficient_privilege then null;
 end $$;
 

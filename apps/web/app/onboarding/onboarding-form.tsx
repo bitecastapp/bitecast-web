@@ -61,7 +61,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
           {step === 1 ? (
             <>
               <div className="flex flex-col gap-3">
-                <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] leading-tight font-extrabold tracking-tight outline-none">
+                <h1 ref={headingRef} tabIndex={-1} className="text-2xl leading-tight font-bold tracking-tight outline-none">
                   Pick your handle
                 </h1>
                 <p className="text-muted-foreground">It&apos;s how you show up on every dish you rate.</p>
@@ -84,7 +84,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
                     placeholder="dosa_devotee"
                     aria-invalid={usernameError ? true : undefined}
                     aria-describedby="username-help"
-                    className="h-13 bg-glass px-3.5 text-base"
+                    className="h-12 bg-raised px-3.5 text-base"
                   />
                   {usernameError ? (
                     <FieldError id="username-help">{usernameError}</FieldError>
@@ -97,7 +97,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
           ) : (
             <>
               <div className="flex flex-col gap-3">
-                <h1 ref={headingRef} tabIndex={-1} className="text-[2rem] leading-tight font-extrabold tracking-tight outline-none">
+                <h1 ref={headingRef} tabIndex={-1} className="text-2xl leading-tight font-bold tracking-tight outline-none">
                   Where&apos;s home?
                 </h1>
                 <p className="text-muted-foreground">
@@ -113,7 +113,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
                       key={r.slug}
                       className={cn(
                         "flex min-h-14 cursor-pointer items-center justify-between gap-3 rounded-lg border px-4 py-3 text-base font-semibold transition-colors duration-200 has-focus-visible:ring-3 has-focus-visible:ring-ring has-focus-visible:ring-offset-2 has-focus-visible:ring-offset-background",
-                        region === r.slug ? "border-primary bg-pane-live" : "border-input bg-glass hover:bg-muted",
+                        region === r.slug ? "border-mustard bg-raised" : "border-input hover:bg-raised",
                       )}
                     >
                       <input

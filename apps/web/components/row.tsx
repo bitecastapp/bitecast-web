@@ -12,7 +12,7 @@ export function Row({ href, title, meta }: { href: string; title: React.ReactNod
         {typeof title === "string" ? <span className="block text-base font-bold wrap-anywhere">{title}</span> : title}
         <span className="mt-0.5 block text-sm wrap-anywhere text-muted-foreground">{meta}</span>
       </span>
-      <ChevronRightIcon aria-hidden className="size-5 shrink-0 text-lattice" />
+      <ChevronRightIcon aria-hidden className="size-5 shrink-0 text-foreground" />
     </Link>
   );
 }

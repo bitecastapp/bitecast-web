@@ -7,12 +7,17 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-manrope);
-  --font-heading: var(--font-manrope);
-  --color-glass: var(--glass);
-  --color-lattice: var(--lattice);
-  --color-pane-live: var(--pane-live);
-  --color-bloom: var(--bloom);
+  --font-sans: var(--font-geist);
+  --font-heading: var(--font-geist);
+  --font-brand: var(--font-urbanist);
+  --color-raised: var(--raised);
+  --color-hairline: var(--hairline);
+  --color-faint: var(--faint);
+  --color-studio: var(--studio);
+  --color-ketchup: var(--ketchup);
+  --color-mustard: var(--mustard);
+  --color-spotlight: var(--spotlight);
+  --color-paper: var(--paper);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -52,36 +57,40 @@
 }
 
 :root {
-  /* Glasshouse world: mint ground, glass panes, leaf-green lattice, one bloom red. */
-  --glass: oklch(0.99 0.004 150);
-  --lattice: oklch(0.46 0.09 148);
-  --pane-live: oklch(0.93 0.04 150);
-  --bloom: oklch(0.58 0.19 33);
+  /* Brand colours (owner's brand sheet), used Letterboxd-style: dark ground, colour only where it means something. */
+  --studio: #17111c;
+  --ketchup: #ff4b3a;
+  --mustard: #ffc23c;
+  --spotlight: #fff4ea;
+  --paper: #211a27; /* raised surfaces on the Studio ground */
+  --raised: #2a2231;
+  --hairline: #2f2737;
+  --faint: #8e8296; /* tertiary text: timestamps, counts (4.9:1 on Studio) */
 
-  --background: oklch(0.97 0.008 150);
-  --foreground: oklch(0.29 0.045 155);
-  --card: oklch(0.99 0.004 150);
-  --card-foreground: oklch(0.29 0.045 155);
-  --popover: oklch(0.99 0.004 150);
-  --popover-foreground: oklch(0.29 0.045 155);
-  --primary: oklch(0.29 0.045 155);
-  --primary-foreground: oklch(0.97 0.008 150);
-  --secondary: oklch(0.93 0.02 150);
-  --secondary-foreground: oklch(0.29 0.045 155);
-  --muted: oklch(0.93 0.02 150);
-  --muted-foreground: oklch(0.45 0.03 155);
-  --accent: oklch(0.93 0.02 150);
-  --accent-foreground: oklch(0.29 0.045 155);
-  --destructive: oklch(0.52 0.19 28);
-  --border: oklch(0.86 0.02 150);
-  --input: oklch(0.6 0.03 150);
-  --ring: oklch(0.29 0.045 155);
+  --background: var(--studio);
+  --foreground: var(--spotlight);
+  --card: var(--paper);
+  --card-foreground: var(--spotlight);
+  --popover: var(--raised);
+  --popover-foreground: var(--spotlight);
+  --primary: var(--ketchup);
+  --primary-foreground: var(--studio);
+  --secondary: var(--raised);
+  --secondary-foreground: var(--spotlight);
+  --muted: var(--raised);
+  --muted-foreground: #b3a8b9;
+  --accent: var(--raised);
+  --accent-foreground: var(--spotlight);
+  --destructive: #ff8a7d;
+  --border: var(--hairline);
+  --input: #6e6377; /* field outlines: 3.2:1 on Studio */
+  --ring: var(--mustard);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
-  --radius: 0.75rem;
+  --radius: 0.5rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -92,6 +101,8 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* strong ease-out for UI */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* things moving on screen */
 }
 
 .dark {
@@ -146,11 +157,15 @@
     -webkit-text-size-adjust: 100%;
   }
   ::selection {
-    background: var(--pane-live);
-    color: var(--foreground);
+    background: var(--mustard);
+    color: var(--studio);
   }
-  input {
-    caret-color: var(--bloom);
+  html {
+    color-scheme: dark;
+  }
+  input,
+  textarea {
+    caret-color: var(--ketchup);
   }
   button,
   a {
@@ -158,22 +173,59 @@
   }
 }
 
-/* The bloom: a sprout draws itself up, then its flower pops open. */
-@keyframes sprout {
-  from { stroke-dashoffset: 1; }
-}
-@keyframes bloom {
-  0% { transform: scale(0); }
-  70% { transform: scale(1.15); }
-}
-@keyframes pane-lit {
-  from { fill-opacity: 0; }
+/* Broadcast waves light up one by one. */
+@keyframes wave-on {
+  from { opacity: 0.18; }
 }
 @keyframes rise {
   from { transform: translateY(12px); }
 }
+/* A vote "broadcasts": arcs ripple out from the arrow once. */
+@keyframes broadcast {
+  from { opacity: 0.9; transform: scale(0.55); }
+  to { opacity: 0; transform: scale(1.35); }
+}
+/* Counts roll to their new value. */
+@keyframes roll-up {
+  from { opacity: 0; transform: translateY(70%); }
+}
+@keyframes roll-down {
+  from { opacity: 0; transform: translateY(-70%); }
+}
+/* Score spread bars grow from the baseline. */
+@keyframes bar-grow {
+  from { transform: scaleY(0); }
+}
+/* The "on air" light next to New. */
+@keyframes on-air {
+  50% { opacity: 0.3; }
+}
+
+/* Page content rises in as it arrives (React <ViewTransition enter="rise">). */
+::view-transition-new(.rise) {
+  animation: 260ms var(--ease-out) both rise-in;
+}
+::view-transition-old(.fall) {
+  animation: 120ms ease-out both fade-out;
+}
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+/* The active-tab underline slides between tabs. */
+::view-transition-group(.tab-line) {
+  animation-duration: 220ms;
+  animation-timing-function: var(--ease-in-out);
+}
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
   *, ::before, ::after {
     animation-duration: 1ms !important;
     transition-duration: 1ms !important;

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { dishNameSchema, emailSchema, usernameSchema } from "./validation";
+import { dishNameSchema, emailSchema, ratingSchema, usernameSchema } from "./validation";
 
 describe("usernameSchema", () => {
   it.each([
@@ -38,5 +38,23 @@ describe("dishNameSchema", () => {
 
   it("accepts non-Latin names", () => {
     expect(dishNameSchema.parse("ಮಸಾಲೆ ದೋಸೆ")).toBe("ಮಸಾಲೆ ದೋಸೆ");
+  });
+});
+
+describe("ratingSchema", () => {
+  it("accepts a bare score and empties the take to null", () => {
+    expect(ratingSchema.parse({ score: "8", take: "   " })).toEqual({ score: 8, take: null });
+  });
+
+  it("trims takes", () => {
+    expect(ratingSchema.parse({ score: 10, take: "  peak  " }).take).toBe("peak");
+  });
+
+  it.each([0, 11, 7.5, "x"])("rejects score %j", (score) => {
+    expect(ratingSchema.safeParse({ score, take: "" }).success).toBe(false);
+  });
+
+  it("rejects takes over 500 characters", () => {
+    expect(ratingSchema.safeParse({ score: 5, take: "x".repeat(501) }).success).toBe(false);
   });
 });
