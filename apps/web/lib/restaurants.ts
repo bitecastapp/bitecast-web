@@ -31,13 +31,16 @@ export async function getRestaurant(supabase: SupabaseClient, slug: string) {
   return data;
 }
 
+// The dish page also wants the food list it ranks in (and that food's home region, for Tastes like home).
+export type DishPageDish = DishDetail & { space: { id: string; name: string; region: { demonym: string } | null } | null };
+
 export async function getDish(supabase: SupabaseClient, restaurantSlug: string, key: string) {
   const { data, error } = await supabase
     .from("dishes")
-    .select("id, name, diet, rating_count, avg_score, restaurant:restaurants!inner(slug, name, area)")
+    .select("id, name, diet, rating_count, avg_score, restaurant:restaurants!inner(slug, name, area), space:spaces(id, name, region:regions(demonym))")
     .eq("restaurant.slug", restaurantSlug)
     .eq("name_key", key)
-    .maybeSingle<DishDetail>();
+    .maybeSingle<DishPageDish>();
   if (error) throw error;
   return data;
 }

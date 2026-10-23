@@ -1,5 +1,6 @@
 import { ViewTransition } from "react";
 import { Wordmark } from "@/components/brand";
+import { SiteFooter } from "@/components/site-footer";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -21,6 +22,7 @@ export function PageShell({ children, action, wide }: Props) {
       <ViewTransition enter="rise" default="none">
         <div className={cn("mx-auto mt-3 flex w-full flex-1 flex-col px-5 lg:mt-6 lg:px-8", wide ? "max-w-6xl" : "max-w-xl")}>{children}</div>
       </ViewTransition>
+      <SiteFooter />
     </main>
   );
 }

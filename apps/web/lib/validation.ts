@@ -94,7 +94,14 @@ export const profileSchema = z.object({
     )
     .transform((s) => s || null),
   gender: optionalChoice(["female", "male", "non_binary", "prefer_not_to_say"], "Pick a gender from the list."),
+  // The database checks it's a real region (foreign key) and the 30-day limit.
+  home_region: z.string().regex(/^[a-z0-9-]+$/, "Pick a home region from the list."),
 });
+
+// Sign-up's "About you" step: name, food preference and gender are optional; the birthday is required (13+).
+export const signupDetailsSchema = profileSchema
+  .pick({ display_name: true, diet: true, date_of_birth: true, gender: true })
+  .refine((d) => d.date_of_birth !== null, { message: "Add your date of birth.", path: ["date_of_birth"] });
 
 // Mirrors set_favourites: up to 4 of your own ratings, each once.
 export const favouritesSchema = z
@@ -117,6 +124,10 @@ export const reportSchema = z.object({
   reason: z.enum(["spam", "offensive", "harassment", "misleading", "other"], "Pick a reason."),
   note: optionalText(300, "Keep the note under 300 characters."),
 });
+
+// Mirrors the profiles visibility checks: who sees your "Want to try" list and your Diary.
+const visibility = z.enum(["everyone", "followers", "only_me"], "Pick who can see it.");
+export const privacySchema = z.object({ saves_visibility: visibility, diary_visibility: visibility });
 
 // Mirrors public.profile_private preference checks.
 export const preferencesSchema = z.object({

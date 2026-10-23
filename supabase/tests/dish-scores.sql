@@ -6,8 +6,8 @@ insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-00000000000a', 'rls-a@test.local'),
   ('00000000-0000-0000-0000-00000000000b', 'rls-b@test.local');
 insert into public.profiles (id, username, home_region) values
-  ('00000000-0000-0000-0000-00000000000a', 'rls_a', 'bengaluru'),
-  ('00000000-0000-0000-0000-00000000000b', 'rls_b', 'bengaluru');
+  ('00000000-0000-0000-0000-00000000000a', 'rls_a', 'karnataka'),
+  ('00000000-0000-0000-0000-00000000000b', 'rls_b', 'karnataka');
 
 create temp table ids (k text primary key, v uuid) on commit drop;
 grant all on ids to authenticated, anon;

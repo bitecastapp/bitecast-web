@@ -3,7 +3,7 @@
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import { preferencesSchema } from "@/lib/validation";
+import { preferencesSchema, privacySchema } from "@/lib/validation";
 
 export type DeleteAccountState = { error?: string };
 
@@ -42,4 +42,18 @@ export async function savePreferences(prev: PreferencesState, formData: FormData
   if (error) return { error: "Couldn't save that just now. Try again in a moment." };
   refresh();
   return { saved: (prev.saved ?? 0) + 1 }; // a new number each time, so the form can say "Saved"
+}
+
+export type PrivacyState = { error?: string; saved?: number };
+
+// Who can see your "Want to try" list and Diary. Stored on your profile; the database enforces Want to try.
+export async function savePrivacy(prev: PrivacyState, formData: FormData): Promise<PrivacyState> {
+  const { supabase, userId, profile } = await getCurrentUser();
+  if (!profile) redirect("/onboarding");
+  const parsed = privacySchema.safeParse({ saves_visibility: formData.get("saves_visibility"), diary_visibility: formData.get("diary_visibility") });
+  if (!parsed.success) return { error: parsed.error.issues[0].message };
+  const { error } = await supabase.from("profiles").update(parsed.data).eq("id", userId);
+  if (error) return { error: "Couldn't save that just now. Try again in a moment." };
+  refresh();
+  return { saved: (prev.saved ?? 0) + 1 };
 }

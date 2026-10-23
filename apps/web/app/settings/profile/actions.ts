@@ -22,6 +22,7 @@ export async function updateProfile(_: ProfileFormState, formData: FormData): Pr
     instagram: field("instagram"),
     date_of_birth: field("date_of_birth"),
     gender: field("gender"),
+    home_region: field("home_region"),
   });
   if (!parsed.success) return { error: parsed.error.issues[0].message };
   const { date_of_birth, gender, ...details } = parsed.data;
@@ -33,6 +34,8 @@ export async function updateProfile(_: ProfileFormState, formData: FormData): Pr
   }
 
   const { error } = await supabase.from("profiles").update({ ...details, avatar_path }).eq("id", userId);
+  // 23514 from the region trigger: changed in the last 30 days (the form says when, so this is a fallback).
+  if (error?.code === "23514" && error.message.includes("home region")) return { error: "You changed your home region less than 30 days ago. Try again later." };
   if (error) return { error: "Couldn't save that just now. Try again in a moment." };
 
   // user_id fills itself from the session (only these two columns are writable).

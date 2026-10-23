@@ -1,5 +1,7 @@
 import Link from "next/link";
-import type { DishDetail } from "@/lib/restaurants";
+import { ChevronRightIcon, TrophyIcon } from "lucide-react";
+import type { DishDetail, DishPageDish } from "@/lib/restaurants";
+import { listHref, type Ranking } from "@/lib/rankings";
 import { formatScore, photoUrl, scoreColor, summarize, type Review, type Sort, type Vote } from "@/lib/ratings";
 import { dishHref } from "@/lib/dishes";
 import { cn } from "@/lib/utils";
@@ -8,9 +10,10 @@ import { ReviewCard } from "@/components/review-card";
 import { BackLink } from "@/components/back-link";
 import { DietMark } from "@/components/diet-mark";
 import { ReportButton } from "@/components/report-button";
+import { TastesLikeHome } from "@/components/tastes-like-home";
 
 type Props = {
-  dish: DishDetail;
+  dish: DishDetail & Partial<Pick<DishPageDish, "space">>;
   ratings?: Review[];
   votes?: Record<string, Vote>;
   viewer?: string | null;
@@ -18,10 +21,11 @@ type Props = {
   rateNext?: React.ReactNode; // after you've rated this dish: the rest of the place's menu
   save?: React.ReactNode; // the "Want to try" button
   wanted?: number; // how many people have it on their "Want to try" list
+  ranking?: Ranking | null; // its place in its food list, and Tastes like home
 };
 
 // Like a Letterboxd film page: title + poster, average and spread, your rating, then the takes.
-export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort = "top", rateNext, save, wanted = 0 }: Props) {
+export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort = "top", rateNext, save, wanted = 0, ranking }: Props) {
   const { count, average, spread } = summarize(ratings.map((r) => r.score));
   const peak = Math.max(1, ...spread);
   const mine = viewer ? ratings.find((r) => r.author.username === viewer) : undefined;
@@ -81,6 +85,19 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
               ))}
             </div>
           </section>
+          {dish.space && (
+            <div className="mt-3 flex flex-col gap-1.5">
+              <Link
+                href={listHref(dish.space.name)}
+                className="inline-flex min-h-9 w-fit items-center gap-1.5 rounded-md text-sm font-semibold underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              >
+                <TrophyIcon aria-hidden className="size-4 shrink-0 text-mustard" />
+                {ranking?.rank ? `#${ranking.rank} in ${dish.space.name}` : `In the ${dish.space.name} ranking`}
+                <ChevronRightIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
+              </Link>
+              {ranking && <TastesLikeHome avg={ranking.home_avg} count={ranking.home_count} demonym={dish.space.region?.demonym} />}
+            </div>
+          )}
 
           <div className="mt-4 flex flex-wrap gap-2">
             <Link

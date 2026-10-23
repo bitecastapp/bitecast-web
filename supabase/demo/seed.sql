@@ -13,7 +13,7 @@ from unnest(array['demo_idli_insider', 'demo_hot_takes', 'demo_dosa_devotee', 'd
                   'demo_filter_kaapi', 'demo_late_night', 'demo_crispy_edges', 'demo_ghee_please']) as h;
 
 insert into public.profiles (id, username, home_region)
-select id, split_part(email, '@', 1), 'bengaluru' from auth.users where email like '%@demo.bitecast.test';
+select id, split_part(email, '@', 1), 'karnataka' from auth.users where email like '%@demo.bitecast.test';
 
 -- Ratings: (handle, restaurant slug, dish, score, take or null for score-only, hours ago)
 insert into public.ratings (user_id, dish_id, score, take, created_at, updated_at)

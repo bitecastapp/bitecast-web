@@ -16,7 +16,7 @@ export function DeleteAccount({ handle }: { handle: string }) {
   const matches = typed.trim().replace(/^@/, "").toLowerCase() === handle;
 
   return (
-    <div className="mt-3 rounded-xl border border-destructive/40 p-4">
+    <div className="rounded-2xl border border-destructive/40 p-4 sm:p-5">
       <p className="font-semibold">Delete your account</p>
       <p className="mt-1 text-sm text-muted-foreground">
         Removes your profile, ratings, takes, photos, comments, votes, favourites, follows and saved dishes. This can&apos;t be undone.

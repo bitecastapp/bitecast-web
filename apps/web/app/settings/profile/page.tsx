@@ -12,7 +12,7 @@ export const metadata: Metadata = { title: "Edit profile · Bitecast" };
 
 export default function EditProfilePage() {
   return (
-    <PageShell>
+    <PageShell wide>
       <Suspense fallback={<PageLoader />}>
         <EditProfile />
       </Suspense>
@@ -23,8 +23,19 @@ export default function EditProfilePage() {
 async function EditProfile() {
   const { supabase, userId, profile } = await getCurrentUser();
   if (!profile) redirect("/onboarding");
-  const [me, secret] = await Promise.all([getProfileByHandle(supabase, profile.username), getPrivateDetails(supabase, userId)]);
+  const [me, secret, regions, home] = await Promise.all([
+    getProfileByHandle(supabase, profile.username),
+    getPrivateDetails(supabase, userId),
+    supabase.from("regions").select("slug, name").order("name").returns<{ slug: string; name: string }[]>(),
+    supabase.from("profiles").select("home_region_changed_at").eq("id", userId).single<{ home_region_changed_at: string | null }>(),
+  ]);
   if (!me) redirect("/onboarding");
+  if (regions.error) throw regions.error;
+  if (home.error) throw home.error;
+  // The home region can change once every 30 days (enforced by the database); say when it unlocks.
+  const changed = home.data.home_region_changed_at;
+  const unlocks = changed ? new Date(new Date(changed).getTime() + 30 * 86_400_000) : null;
+  const regionLockedUntil = unlocks && unlocks > new Date() ? unlocks.toLocaleDateString("en-IN", { day: "numeric", month: "long", timeZone: "Asia/Kolkata" }) : null;
 
   return (
     <>
@@ -33,6 +44,8 @@ async function EditProfile() {
       <ProfileForm
         userId={userId}
         handle={me.username}
+        regions={regions.data}
+        regionLockedUntil={regionLockedUntil}
         initial={{
           display_name: me.display_name ?? "",
           bio: me.bio ?? "",
@@ -42,6 +55,7 @@ async function EditProfile() {
           instagram: me.instagram ?? "",
           date_of_birth: secret?.date_of_birth ?? "",
           gender: secret?.gender ?? "",
+          home_region: profile.home_region,
         }}
       />
     </>

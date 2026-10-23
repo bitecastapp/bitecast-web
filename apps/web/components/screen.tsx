@@ -1,7 +1,7 @@
 import { BroadcastMark, Wordmark } from "@/components/brand";
 
 type ScreenProps = {
-  /** Sign-up step: 1 email, 2 inbox, 3 handle, 4 home, 5 done. Each finished step lights a wave. */
+  /** Sign-up step: 1 email, 2 inbox, 3 handle, 4 about you, 5 home. Each finished step lights a wave (three at most). */
   step: number;
   children: React.ReactNode;
 };

@@ -2,11 +2,12 @@
 
 import { startTransition, useDeferredValue, useState, ViewTransition } from "react";
 import Link from "next/link";
-import { ChevronDownIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
+import { ChevronDownIcon, CrownIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import type { Restaurant } from "@/lib/restaurants";
 import type { DishDiet, ShowDiet } from "@/lib/diet";
 import { groupMeals, type FeedSort, type Review, type Vote } from "@/lib/ratings";
+import { listHref, type Leader } from "@/lib/rankings";
 import { ReviewCard } from "@/components/review-card";
 import { MealCard } from "@/components/meal-card";
 import { DietMark } from "@/components/diet-mark";
@@ -18,13 +19,13 @@ import { Input } from "@/components/ui/input";
 import { PageShell } from "@/components/page-shell";
 import { Row, dishCount } from "@/components/row";
 
-type View = "takes" | "dishes" | "places";
+type View = "takes" | "rankings" | "dishes" | "places";
 type Feed = { sort: FeedSort; reviews: Review[]; votes: Record<string, Vote> };
 type DishGroup = { key: string; name: string; spots: { id: string; name: string; diet: DishDiet; avg: number | null; count: number; place: Restaurant }[] };
 
-type HomeProps = { profile: Profile | null; restaurants: Restaurant[]; feed: Feed; showDiet?: ShowDiet; notice?: string };
+type HomeProps = { profile: Profile | null; restaurants: Restaurant[]; feed: Feed; leaders?: Leader[]; showDiet?: ShowDiet; notice?: string };
 
-export function HomeView({ profile, restaurants, feed, showDiet = "all", notice }: HomeProps) {
+export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = "all", notice }: HomeProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("takes");
   const q = dishKey(useDeferredValue(query));
@@ -107,7 +108,7 @@ export function HomeView({ profile, restaurants, feed, showDiet = "all", notice 
 
           {!q && (
             <div role="group" aria-label="Show" className="mt-4 flex gap-6 border-b border-hairline">
-              {(["takes", "dishes", "places"] as const).map((v) => (
+              {(["takes", "rankings", "dishes", "places"] as const).map((v) => (
                 <button
                   key={v}
                   type="button"
@@ -134,6 +135,8 @@ export function HomeView({ profile, restaurants, feed, showDiet = "all", notice 
               <Results q={q} restaurants={restaurants} />
             ) : view === "takes" ? (
               <Takes feed={feed} viewer={profile?.username ?? null} />
+            ) : view === "rankings" ? (
+              <Rankings leaders={leaders} />
             ) : view === "dishes" ? (
               <Dishes groups={groupDishes(restaurants)} />
             ) : (
@@ -148,6 +151,33 @@ export function HomeView({ profile, restaurants, feed, showDiet = "all", notice 
         </aside>
       </div>
     </PageShell>
+  );
+}
+
+// One row per food list: "Top Dosa", with its current #1 (crowned) and how many dishes compete.
+function Rankings({ leaders }: { leaders: Leader[] }) {
+  if (!leaders.length) return <p className="text-muted-foreground">No rankings yet. They fill in as people rate.</p>;
+  return (
+    <ul className="stagger divide-y divide-border">
+      {leaders.map(({ list, count, leader }) => (
+        <li key={list.id}>
+          <Row
+            href={listHref(list.name)}
+            title={`Top ${list.name}`}
+            meta={
+              leader ? (
+                <>
+                  <CrownIcon aria-label="Number one:" className="mr-1 inline size-3.5 align-[-2px] text-mustard" />
+                  {leader.name}, {leader.restaurant.name} · {dishCount(count)}
+                </>
+              ) : (
+                `${dishCount(count)} · none rated yet`
+              )
+            }
+          />
+        </li>
+      ))}
+    </ul>
   );
 }
 

@@ -17,8 +17,9 @@ export function Wordmark({ className, href = "/" }: { className?: string; href?:
   );
 }
 
-// The app icon's "b" with three broadcast waves. `lit` waves (0–3) glow Ketchup.
-export function BroadcastMark({ lit, className }: { lit: number; className?: string }) {
+// The app icon's "b" with three broadcast waves. `lit` waves (0–3) glow Ketchup; `pulse` loops them outward
+// one after another, like a signal going out (the loader).
+export function BroadcastMark({ lit, pulse, className }: { lit: number; pulse?: boolean; className?: string }) {
   const waves = ["M118 66a22 22 0 0 1 22 22", "M118 44a44 44 0 0 1 44 44", "M118 22a66 66 0 0 1 66 66"];
   return (
     <svg viewBox="0 0 200 200" aria-hidden className={cn("h-auto w-full", className)}>
@@ -33,8 +34,14 @@ export function BroadcastMark({ lit, className }: { lit: number; className?: str
           fill="none"
           strokeWidth={14}
           strokeLinecap="round"
-          className={i < lit ? "animate-[wave-on_420ms_ease-out_both] stroke-ketchup" : "stroke-spotlight/15"}
-          style={{ animationDelay: `${i * 110}ms` }}
+          className={
+            pulse
+              ? "animate-[wave-pulse_1.4s_var(--ease-in-out)_infinite] stroke-ketchup"
+              : i < lit
+                ? "animate-[wave-on_420ms_ease-out_both] stroke-ketchup"
+                : "stroke-spotlight/15"
+          }
+          style={{ animationDelay: `${i * (pulse ? 180 : 110)}ms` }}
         />
       ))}
     </svg>

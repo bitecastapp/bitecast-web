@@ -13,7 +13,22 @@ export type PublicProfile = {
   instagram: string | null;
   created_at: string;
   regions: { name: string } | null;
+  saves_visibility: Visibility;
+  diary_visibility: Visibility;
 };
+
+// Who can see a profile's "Want to try" list and Diary.
+export type Visibility = "everyone" | "followers" | "only_me";
+export const VISIBILITIES: { value: Visibility; label: string }[] = [
+  { value: "everyone", label: "Everyone" },
+  { value: "followers", label: "Followers" },
+  { value: "only_me", label: "Only me" },
+];
+
+// The database enforces this for "Want to try"; the app mirrors it to say why a list is hidden, and to hide the Diary.
+export function canSee(visibility: Visibility, { own, follows }: { own: boolean; follows: boolean }) {
+  return own || visibility === "everyone" || (visibility === "followers" && follows);
+}
 
 export type Diet = "veg" | "eggetarian" | "vegan" | "non_veg";
 export const DIETS: { value: Diet; label: string; mark: "veg" | "vegan" | "egg" | "non_veg" }[] = [
@@ -47,7 +62,7 @@ export type Favourite = {
 export async function getProfileByHandle(supabase: SupabaseClient, handle: string) {
   const { data, error } = await supabase
     .from("profiles")
-    .select("id, username, display_name, bio, avatar, avatar_path, diet, instagram, created_at, regions(name)")
+    .select("id, username, display_name, bio, avatar, avatar_path, diet, instagram, created_at, saves_visibility, diary_visibility, regions(name)")
     .eq("username", handle)
     .maybeSingle<PublicProfile>();
   if (error) throw error;

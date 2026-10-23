@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
+import { Disclaimer } from "@/components/disclaimer";
 import { saveRating, type SaveRatingState } from "@/app/rating-actions";
 
 type Existing = { score: number; take: string | null; photos: string[] } | null;
@@ -131,6 +132,9 @@ export function RateForm({ dish, userId, existing }: { dish: DishDetail; userId:
         {busy && <Spinner data-icon="inline-start" />}
         {uploading ? "Uploading photos" : pending ? "Posting" : take.trim() ? "Post it" : "Save score"}
       </Button>
+      <Disclaimer className="justify-center text-center">
+        Your score, take and photos are public. Rate what you actually ate, and keep it about the food.
+      </Disclaimer>
     </form>
   );
 }

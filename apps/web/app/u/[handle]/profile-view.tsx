@@ -14,7 +14,7 @@ import {
   SparklesIcon,
   UtensilsIcon,
 } from "lucide-react";
-import { DIETS, palate, type Diet, type Favourite, type ProfileStats, type PublicProfile, type SavedDish } from "@/lib/profiles";
+import { canSee, DIETS, palate, type Diet, type Favourite, type ProfileStats, type PublicProfile, type SavedDish, type Visibility } from "@/lib/profiles";
 import { formatScore, photoUrl, scoreColor, summarize, type Review, type Vote } from "@/lib/ratings";
 import { dishHref } from "@/lib/dishes";
 import { cn } from "@/lib/utils";
@@ -55,6 +55,8 @@ const OVERLINE = "text-xs font-semibold tracking-[0.08em] text-faint uppercase";
 // Like a Letterboxd profile: who they are, their numbers and four favourites, then their takes and a diary of everything rated.
 export function ProfileView({ profile: p, stats, favourites, ratings, votes, saveStates, viewer, tab, saves, following, match }: Props) {
   const own = viewer === p.username;
+  const diaryOpen = canSee(p.diary_visibility, { own, follows: following });
+  const savesOpen = canSee(p.saves_visibility, { own, follows: following });
   const facts = profileFacts(ratings);
   const stated = DIETS.find((d) => d.value === p.diet); // what they say they eat beats what we infer
   const earned = badges(ratings, stats.trust);
@@ -116,11 +118,11 @@ export function ProfileView({ profile: p, stats, favourites, ratings, votes, sav
           <nav aria-label="Profile sections" className="flex gap-6 border-b border-hairline">
             {(
               [
-                ["takes", "Takes", takes.length],
-                ["diary", "Diary", ratings.length],
-                ["saved", "Want to try", saves.length],
+                ["takes", "Takes", takes.length, true],
+                ["diary", "Diary", ratings.length, diaryOpen],
+                ["saved", "Want to try", saves.length, savesOpen],
               ] as const
-            ).map(([key, label, count]) => (
+            ).map(([key, label, count, open]) => (
               <Link
                 key={key}
                 href={key === "takes" ? `/u/${p.username}` : `/u/${p.username}?tab=${key}`}
@@ -133,7 +135,7 @@ export function ProfileView({ profile: p, stats, favourites, ratings, votes, sav
                 )}
               >
                 {label}
-                <span className="text-faint tabular-nums">{count}</span>
+                {open ? <span className="text-faint tabular-nums">{count}</span> : <LockIcon aria-label="private" className="size-3.5 text-faint" />}
                 {tab === key && <span aria-hidden className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-mustard" />}
               </Link>
             ))}
@@ -152,19 +154,47 @@ export function ProfileView({ profile: p, stats, favourites, ratings, votes, sav
               <Empty>{own ? "Rate a dish and say what you thought. Your takes show up here." : `@${p.username} hasn't written a take yet.`}</Empty>
             )
           ) : tab === "diary" ? (
-            ratings.length ? (
+            !diaryOpen ? (
+              <Locked handle={p.username} visibility={p.diary_visibility} what="diary" />
+            ) : ratings.length ? (
               <Diary ratings={ratings} />
             ) : (
               <Empty>{own ? "Everything you rate lands here, by date." : `@${p.username} hasn't rated anything yet.`}</Empty>
             )
+          ) : !savesOpen ? (
+            <Locked handle={p.username} visibility={p.saves_visibility} what="Want to try list" />
           ) : saves.length ? (
             <WantToTry saves={saves} />
           ) : (
             <Empty>{own ? "Tap \u201cWant to try\u201d on any dish to save it here for later." : `@${p.username} hasn't saved any dishes yet.`}</Empty>
           )}
+          {own && tab !== "takes" && (tab === "diary" ? p.diary_visibility : p.saves_visibility) !== "everyone" && (
+            <p className="mt-4 flex items-center gap-1.5 text-xs text-faint">
+              <LockIcon aria-hidden className="size-3.5" />
+              {(tab === "diary" ? p.diary_visibility : p.saves_visibility) === "only_me" ? "Only you can see this." : "Only you and your followers can see this."}{" "}
+              <Link href="/settings#privacy" className="font-semibold text-foreground underline-offset-4 hover:underline">
+                Change
+              </Link>
+            </p>
+          )}
         </section>
       </div>
     </PageShell>
+  );
+}
+
+// Someone else's private list: who can see it, and the way in (following) when that's what it takes.
+function Locked({ handle, visibility, what }: { handle: string; visibility: Visibility; what: string }) {
+  return (
+    <div className="flex flex-col items-center gap-2 py-12 text-center">
+      <span className="grid size-11 place-items-center rounded-full bg-raised">
+        <LockIcon aria-hidden className="size-5 text-mustard" />
+      </span>
+      <p className="font-semibold">@{handle} keeps their {what} private</p>
+      <p className="max-w-xs text-sm text-muted-foreground">
+        {visibility === "followers" ? "Only people who follow them can see it. Follow them to take a look." : "Only they can see it."}
+      </p>
+    </div>
   );
 }
 

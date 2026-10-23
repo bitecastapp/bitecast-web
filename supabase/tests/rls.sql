@@ -12,14 +12,14 @@ set local role authenticated;
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000000a","role":"authenticated"}', true);
 
 insert into public.profiles (id, username, home_region)
-  values ('00000000-0000-0000-0000-00000000000a', 'rls_user_a', 'bengaluru');
+  values ('00000000-0000-0000-0000-00000000000a', 'rls_user_a', 'karnataka');
 
 do $$
 begin
   -- A cannot create a profile for B.
   begin
     insert into public.profiles (id, username, home_region)
-      values ('00000000-0000-0000-0000-00000000000b', 'rls_user_b', 'bengaluru');
+      values ('00000000-0000-0000-0000-00000000000b', 'rls_user_b', 'karnataka');
     raise exception 'FAIL: A created a profile for B';
   exception when insufficient_privilege then null;
   end;
@@ -60,7 +60,7 @@ begin
   -- Duplicate username is rejected.
   begin
     insert into public.profiles (id, username, home_region)
-      values ('00000000-0000-0000-0000-00000000000b', 'rls_user_a', 'bengaluru');
+      values ('00000000-0000-0000-0000-00000000000b', 'rls_user_a', 'karnataka');
     raise exception 'FAIL: duplicate username accepted';
   exception when unique_violation then null;
   end;
@@ -71,7 +71,7 @@ reset role;
 set local role anon;
 do $$
 begin
-  insert into public.profiles (id, username, home_region) values (gen_random_uuid(), 'anon_user', 'bengaluru');
+  insert into public.profiles (id, username, home_region) values (gen_random_uuid(), 'anon_user', 'karnataka');
   raise exception 'FAIL: anon created a profile';
 exception when insufficient_privilege then null;
 end $$;

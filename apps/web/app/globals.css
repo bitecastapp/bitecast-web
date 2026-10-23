@@ -234,18 +234,14 @@
   animation-timing-function: var(--ease-in-out);
 }
 
-/* Loader: three food characters hop in a wave, squashing as they land; their shadows shrink as they rise. */
-@keyframes hop {
-  0%, 100% { transform: translateY(0) scale(1.08, 0.9); }
-  12% { transform: translateY(0) scale(1, 1); }
-  40% { transform: translateY(-15px) scale(0.96, 1.05); }
-  62% { transform: translateY(0) scale(1, 1); }
-  72% { transform: translateY(0) scale(1.06, 0.92); }
-  84% { transform: translateY(0) scale(1, 1); }
+/* Loader: the mark's waves light up outward in turn; a ring pings out behind it. */
+@keyframes wave-pulse {
+  0%, 100% { opacity: 0.15; }
+  35% { opacity: 1; }
 }
-@keyframes hop-shadow {
-  0%, 12%, 62%, 100% { transform: scaleX(1); opacity: 0.45; }
-  40% { transform: scaleX(0.55); opacity: 0.18; }
+@keyframes ping-ring {
+  from { opacity: 0.6; transform: scale(0.55); }
+  to { opacity: 0; transform: scale(1.35); }
 }
 @keyframes line-in {
   from { opacity: 0; transform: translateY(6px); }
@@ -301,8 +297,6 @@
   }
   /* Endless loops would strobe at 1ms: stop them outright. */
   .skeleton,
-  .hop-loader,
-  .hop-loader *,
   .animate-pulse,
   [class*="_infinite"] {
     animation: none !important;

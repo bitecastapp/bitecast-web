@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
-import { AtSignIcon, ImagePlusIcon, LockIcon, ShuffleIcon, Trash2Icon } from "lucide-react";
+import { AtSignIcon, GlobeIcon, ImagePlusIcon, LockIcon, ShuffleIcon, Trash2Icon } from "lucide-react";
 import { avatarTraits, COLOURS, encodeAvatar, EYES, MOUTHS, SHAPES, type Traits } from "@/lib/avatar";
 import { DIETS, GENDERS } from "@/lib/profiles";
 import { cropSquareJpeg } from "@/lib/resize-image";
@@ -19,6 +19,8 @@ import { updateProfile, type ProfileFormState } from "./actions";
 type Props = {
   userId: string;
   handle: string;
+  regions: { slug: string; name: string }[];
+  regionLockedUntil: string | null; // "21 November" while a recent change locks the home region, else null
   initial: {
     display_name: string;
     bio: string;
@@ -28,6 +30,7 @@ type Props = {
     instagram: string;
     date_of_birth: string;
     gender: string;
+    home_region: string;
   };
 };
 
@@ -35,16 +38,21 @@ const MAX_BIO = 160;
 
 const TRAITS = [
   { key: "shape", label: "Shape", count: SHAPES.length, names: SHAPES },
-  { key: "colour", label: "Colour", count: COLOURS.length, names: COLOURS.map((c) => c.name) },
+  {
+    key: "colour",
+    label: "Colour",
+    count: COLOURS.length,
+    names: COLOURS.map((c) => c.name),
+  },
   { key: "eyes", label: "Eyes", count: EYES.length, names: EYES },
   { key: "mouth", label: "Mouth", count: MOUTHS.length, names: MOUTHS },
 ] as const;
 
-const CHIP =
+export const CHIP =
   "inline-flex min-h-10 cursor-pointer items-center gap-2 rounded-full border px-3.5 text-sm font-semibold transition-colors has-focus-visible:ring-2 has-focus-visible:ring-ring";
-const chipState = (on: boolean) => (on ? "border-mustard bg-mustard/10" : "border-input bg-raised hover:border-foreground/40");
+export const chipState = (on: boolean) => (on ? "border-mustard bg-mustard/10" : "border-input bg-raised hover:border-foreground/40");
 
-export function ProfileForm({ userId, handle, initial }: Props) {
+export function ProfileForm({ userId, handle, regions, regionLockedUntil, initial }: Props) {
   const [state, action, pending] = useActionState<ProfileFormState, FormData>(updateProfile, {});
   const [traits, setTraits] = useState<Traits>(() => avatarTraits(initial.avatar, handle));
   const [photo, setPhoto] = useState(initial.avatar_path);
@@ -53,6 +61,8 @@ export function ProfileForm({ userId, handle, initial }: Props) {
   const [bio, setBio] = useState(initial.bio);
   const [diet, setDiet] = useState(initial.diet);
   const [gender, setGender] = useState(initial.gender);
+  const [region, setRegion] = useState(initial.home_region);
+  const [traitTab, setTraitTab] = useState<(typeof TRAITS)[number]["key"]>("shape");
   const fileRef = useRef<HTMLInputElement>(null);
   const code = encodeAvatar(traits);
 
@@ -67,7 +77,11 @@ export function ProfileForm({ userId, handle, initial }: Props) {
     setUploading(true);
     try {
       const path = `${userId}/${crypto.randomUUID()}.jpg`;
-      const { error } = await createClient().storage.from("avatars").upload(path, await cropSquareJpeg(file), { contentType: "image/jpeg" });
+      const { error } = await createClient()
+        .storage.from("avatars")
+        .upload(path, await cropSquareJpeg(file), {
+          contentType: "image/jpeg",
+        });
       if (error) throw error;
       discardUnsaved(photo);
       setPhoto(path);
@@ -89,17 +103,18 @@ export function ProfileForm({ userId, handle, initial }: Props) {
   }
 
   return (
-    <form action={action} className="flex flex-col gap-8 pb-10">
+    // Desktop: the picture maker pinned on the left, the details in cards on the right. Phones: one column.
+    <form action={action} className="pb-10 lg:grid lg:grid-cols-[minmax(0,21rem)_minmax(0,1fr)] lg:items-start lg:gap-10 xl:gap-14">
       <input type="hidden" name="avatar" value={code} />
       <input type="hidden" name="avatar_path" value={photo ?? ""} />
 
       {/* Picture: an uploaded photo, or the food character (which also shows when there's no photo). */}
-      <section aria-labelledby="picture-title">
+      <section aria-labelledby="picture-title" className="rounded-2xl border border-hairline bg-paper p-4 sm:p-5 lg:sticky lg:top-6">
         <h2 id="picture-title" className="text-sm font-semibold">
           Profile picture
         </h2>
         <div className="mt-3 flex items-center gap-5">
-          <span className="relative grid size-28 shrink-0 place-items-center rounded-2xl border border-hairline bg-paper">
+          <span className="relative grid size-28 shrink-0 place-items-center rounded-2xl border border-hairline bg-raised">
             <Avatar
               key={photo ?? code}
               handle={handle}
@@ -149,10 +164,36 @@ export function ProfileForm({ userId, handle, initial }: Props) {
           <p className="text-xs text-muted-foreground">
             {photo ? "Your character shows only if you remove the photo." : "Build your character, or upload a photo instead."}
           </p>
-          <div className={cn("mt-3 flex flex-col gap-5", photo && "opacity-60")}>
-            {TRAITS.map(({ key, label, count, names }) => (
-              <fieldset key={key}>
-                <legend className="mb-2 text-xs font-semibold tracking-[0.08em] text-faint uppercase">{label}</legend>
+          {/* One trait at a time behind tabs, so the maker stays a single row tall. */}
+          <div className={cn("mt-3", photo && "opacity-60")}>
+            <div role="tablist" aria-label="Character traits" className="grid grid-cols-4 gap-1 rounded-xl bg-raised p-1">
+              {TRAITS.map(({ key, label }) => (
+                <button
+                  key={key}
+                  type="button"
+                  role="tab"
+                  id={`trait-tab-${key}`}
+                  aria-selected={traitTab === key}
+                  aria-controls={`trait-panel-${key}`}
+                  onClick={() => setTraitTab(key)}
+                  className={cn(
+                    "min-h-9 rounded-lg text-xs font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                    traitTab === key ? "bg-paper text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground",
+                  )}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            {TRAITS.filter(({ key }) => key === traitTab).map(({ key, label, count, names }) => (
+              <fieldset
+                key={key}
+                id={`trait-panel-${key}`}
+                role="tabpanel"
+                aria-labelledby={`trait-tab-${key}`}
+                className="mt-3 animate-[fade-in_180ms_var(--ease-out)]"
+              >
+                <legend className="sr-only">{label}</legend>
                 <div className="flex flex-wrap gap-1.5">
                   {Array.from({ length: count }, (_, i) => {
                     const option = { ...traits, [key]: i };
@@ -188,126 +229,150 @@ export function ProfileForm({ userId, handle, initial }: Props) {
         </div>
       </section>
 
-      <Field>
-        <FieldLabel htmlFor="display_name" className="font-semibold">
-          Name <span className="font-medium text-muted-foreground">(optional)</span>
-        </FieldLabel>
-        <Input
-          id="display_name"
-          name="display_name"
-          defaultValue={initial.display_name}
-          maxLength={40}
-          autoComplete="name"
-          placeholder={`@${handle}`}
-          className="h-12 bg-raised px-3.5 text-base"
-        />
-      </Field>
+      <div className="mt-6 flex flex-col gap-6 lg:mt-0">
+        <section aria-labelledby="public-title" className="rounded-2xl border border-hairline bg-paper p-4 sm:p-5">
+          <h2 id="public-title" className="flex items-center gap-2 text-sm font-semibold">
+            <GlobeIcon aria-hidden className="size-4 text-mustard" />
+            On your profile
+          </h2>
+          <div className="mt-4 grid gap-5 sm:grid-cols-2">
+            <Field>
+              <FieldLabel htmlFor="display_name" className="font-semibold">
+                Name <span className="font-medium text-muted-foreground">(optional)</span>
+              </FieldLabel>
+              <Input
+                id="display_name"
+                name="display_name"
+                defaultValue={initial.display_name}
+                maxLength={40}
+                autoComplete="name"
+                placeholder={`@${handle}`}
+                className="h-12 bg-raised px-3.5 text-base"
+              />
+            </Field>
 
-      <Field>
-        <FieldLabel htmlFor="bio" className="font-semibold">
-          Bio <span className="font-medium text-muted-foreground">(optional)</span>
-        </FieldLabel>
-        <textarea
-          id="bio"
-          name="bio"
-          value={bio}
-          onChange={(e) => setBio(e.target.value.slice(0, MAX_BIO))}
-          rows={3}
-          placeholder="What you'd cross the city for."
-          aria-describedby="bio-count"
-          className="w-full rounded-md border border-input bg-raised px-3.5 py-3 text-base leading-relaxed focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
-        />
-        <p id="bio-count" className="text-right text-sm text-muted-foreground tabular-nums">
-          {bio.length}/{MAX_BIO}
-        </p>
-      </Field>
+            <Field>
+              <FieldLabel htmlFor="instagram" className="font-semibold">
+                Instagram <span className="font-medium text-muted-foreground">(optional)</span>
+              </FieldLabel>
+              <div className="relative">
+                <AtSignIcon aria-hidden className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  id="instagram"
+                  name="instagram"
+                  defaultValue={initial.instagram}
+                  maxLength={80}
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  placeholder="yourhandle"
+                  className="h-12 bg-raised pr-3.5 pl-10 text-base"
+                />
+              </div>
+              <FieldDescription>Your handle or a link to your profile.</FieldDescription>
+            </Field>
 
-      <fieldset>
-        <legend className="mb-1 text-sm font-semibold">
-          Food preference <span className="font-medium text-muted-foreground">(optional)</span>
-        </legend>
-        <p className="mb-3 text-sm text-muted-foreground">Shows on your profile, so people read your takes in context.</p>
-        <div className="flex flex-wrap gap-2">
-          {[...DIETS, { value: "", label: "Not saying" }].map((d) => (
-            <label key={d.value || "none"} className={cn(CHIP, chipState(diet === d.value))}>
-              <input type="radio" name="diet" value={d.value} checked={diet === d.value} onChange={() => setDiet(d.value)} className="sr-only" />
-              {"mark" in d && <DietMark diet={d.mark} className="size-3" />}
-              {d.label}
-            </label>
-          ))}
-        </div>
-      </fieldset>
+            <Field className="sm:col-span-2">
+              <FieldLabel htmlFor="bio" className="font-semibold">
+                Bio <span className="font-medium text-muted-foreground">(optional)</span>
+              </FieldLabel>
+              <textarea
+                id="bio"
+                name="bio"
+                value={bio}
+                onChange={(e) => setBio(e.target.value.slice(0, MAX_BIO))}
+                rows={3}
+                placeholder="What you'd cross the city for."
+                aria-describedby="bio-count"
+                className="w-full rounded-md border border-input bg-raised px-3.5 py-3 text-base leading-relaxed focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+              />
+              <p id="bio-count" className="text-right text-sm text-muted-foreground tabular-nums">
+                {bio.length}/{MAX_BIO}
+              </p>
+            </Field>
 
-      <Field>
-        <FieldLabel htmlFor="instagram" className="font-semibold">
-          Instagram <span className="font-medium text-muted-foreground">(optional)</span>
-        </FieldLabel>
-        <div className="relative">
-          <AtSignIcon aria-hidden className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            id="instagram"
-            name="instagram"
-            defaultValue={initial.instagram}
-            maxLength={80}
-            autoComplete="off"
-            autoCapitalize="none"
-            spellCheck={false}
-            placeholder="yourhandle"
-            className="h-12 bg-raised pr-3.5 pl-10 text-base"
-          />
-        </div>
-        <FieldDescription>Your handle or a link to your profile.</FieldDescription>
-      </Field>
+            <fieldset className="sm:col-span-2">
+              <legend className="mb-1 text-sm font-semibold">
+                Food preference <span className="font-medium text-muted-foreground">(optional)</span>
+              </legend>
+              <p className="mb-3 text-sm text-muted-foreground">Shows on your profile, so people read your takes in context.</p>
+              <div className="flex flex-wrap gap-2">
+                {[...DIETS, { value: "", label: "Not saying" }].map((d) => (
+                  <label key={d.value || "none"} className={cn(CHIP, chipState(diet === d.value))}>
+                    <input type="radio" name="diet" value={d.value} checked={diet === d.value} onChange={() => setDiet(d.value)} className="sr-only" />
+                    {"mark" in d && <DietMark diet={d.mark} className="size-3" />}
+                    {d.label}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
 
-      {/* Private: stored in an owner-only table; never shown to anyone else. */}
-      <section aria-labelledby="private-title" className="rounded-2xl border border-hairline bg-paper p-4">
-        <h2 id="private-title" className="flex items-center gap-2 text-sm font-semibold">
-          <LockIcon aria-hidden className="size-4 text-mustard" />
-          Only you can see these
-        </h2>
-        <div className="mt-4 flex flex-col gap-5">
-          <div>
-            <p className="mb-2 text-sm font-semibold">
-              Date of birth <span className="font-medium text-muted-foreground">(optional)</span>
-            </p>
-            <DateOfBirthField name="date_of_birth" defaultValue={initial.date_of_birth} />
-          </div>
-          <fieldset>
-            <legend className="mb-3 text-sm font-semibold">
-              Gender <span className="font-medium text-muted-foreground">(optional)</span>
-            </legend>
-            <div className="flex flex-wrap gap-2">
-              {GENDERS.map((g) => (
-                <label key={g.value} className={cn(CHIP, chipState(gender === g.value))}>
-                  <input
-                    type="radio"
-                    name="gender"
-                    value={g.value}
-                    checked={gender === g.value}
-                    onChange={() => setGender(g.value)}
-                    className="sr-only"
-                  />
-                  {g.label}
-                </label>
-              ))}
-              {gender && (
-                <button type="button" onClick={() => setGender("")} className="min-h-10 px-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-                  Clear
-                </button>
+            <fieldset disabled={regionLockedUntil !== null} className="sm:col-span-2">
+              <legend className="mb-1 text-sm font-semibold">Home region</legend>
+              <p className="mb-3 text-sm text-muted-foreground">
+                {regionLockedUntil
+                  ? `You changed it recently. You can change it again from ${regionLockedUntil}.`
+                  : "Where your home food is from. It powers Tastes like home, and you can change it once every 30 days."}
+              </p>
+              {regionLockedUntil && <input type="hidden" name="home_region" value={initial.home_region} />}
+              <div className="flex flex-wrap gap-2">
+                {regions.map((r) => (
+                  <label key={r.slug} className={cn(CHIP, chipState(region === r.slug), regionLockedUntil && "cursor-not-allowed opacity-60")}>
+                    <input type="radio" name="home_region" value={r.slug} checked={region === r.slug} onChange={() => setRegion(r.slug)} className="sr-only" />
+                    {r.name}
+                  </label>
+                ))}
+              </div>
+              {!regionLockedUntil && region !== initial.home_region && (
+                <p className="mt-2 text-sm text-mustard">Once saved, you can&apos;t change it again for 30 days.</p>
               )}
+            </fieldset>
+          </div>
+        </section>
+
+        {/* Private: stored in an owner-only table; never shown to anyone else. */}
+        <section aria-labelledby="private-title" className="rounded-2xl border border-hairline bg-paper p-4 sm:p-5">
+          <h2 id="private-title" className="flex items-center gap-2 text-sm font-semibold">
+            <LockIcon aria-hidden className="size-4 text-mustard" />
+            Only you can see these
+          </h2>
+          <div className="mt-4 grid gap-5 md:grid-cols-2">
+            <div>
+              <p className="mb-2 text-sm font-semibold">
+                Date of birth <span className="font-medium text-muted-foreground">(optional)</span>
+              </p>
+              <DateOfBirthField name="date_of_birth" defaultValue={initial.date_of_birth} />
             </div>
-            {/* Radios send nothing when none is picked; this keeps "cleared" explicit. */}
-            {!gender && <input type="hidden" name="gender" value="" />}
-          </fieldset>
-        </div>
-      </section>
+            <fieldset>
+              <legend className="mb-3 text-sm font-semibold">
+                Gender <span className="font-medium text-muted-foreground">(optional)</span>
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {GENDERS.map((g) => (
+                  <label key={g.value} className={cn(CHIP, chipState(gender === g.value))}>
+                    <input type="radio" name="gender" value={g.value} checked={gender === g.value} onChange={() => setGender(g.value)} className="sr-only" />
+                    {g.label}
+                  </label>
+                ))}
+                {gender && (
+                  <button type="button" onClick={() => setGender("")} className="min-h-10 px-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                    Clear
+                  </button>
+                )}
+              </div>
+              {/* Radios send nothing when none is picked; this keeps "cleared" explicit. */}
+              {!gender && <input type="hidden" name="gender" value="" />}
+            </fieldset>
+          </div>
+        </section>
 
-      {state.error && <FieldError className="text-base">{state.error}</FieldError>}
+        {state.error && <FieldError className="text-base">{state.error}</FieldError>}
 
-      <Button type="submit" size="xl" className="w-full" disabled={pending || uploading}>
-        {pending && <Spinner data-icon="inline-start" />}
-        {pending ? "Saving" : "Save profile"}
-      </Button>
+        <Button type="submit" size="xl" className="w-full sm:w-auto sm:self-end sm:px-10" disabled={pending || uploading}>
+          {pending && <Spinner data-icon="inline-start" />}
+          {pending ? "Saving" : "Save profile"}
+        </Button>
+      </div>
     </form>
   );
 }

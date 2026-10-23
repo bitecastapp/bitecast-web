@@ -30,11 +30,11 @@ export function PreferencesForm({ initial }: { initial: { show_diet: ShowDiet; f
   const dirty = show !== initial.show_diet || feed !== initial.feed_default;
 
   return (
-    <form action={action} className="mt-3 flex flex-col gap-6">
+    <form action={action} className="flex flex-col gap-6">
       <fieldset>
         <legend className="mb-1 font-semibold">Show dishes</legend>
         <p className="mb-3 text-sm text-muted-foreground">Filters the feed, dish lists and search. Dish pages you open directly still show everything.</p>
-        <div className="flex flex-col gap-2">
+        <div className="grid gap-2 sm:grid-cols-2">
           {SHOW_DIETS.map((o) => (
             <label key={o.value} className={cn(OPTION, optionState(show === o.value))}>
               <input type="radio" name="show_diet" value={o.value} checked={show === o.value} onChange={() => setShow(o.value)} className="sr-only" />

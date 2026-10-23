@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { commentSchema, dishNameSchema, emailSchema, favouritesSchema, isAtLeast13, preferencesSchema, profileSchema, ratingSchema, reportSchema, usernameSchema } from "./validation";
+import { commentSchema, dishNameSchema, emailSchema, favouritesSchema, isAtLeast13, preferencesSchema, privacySchema, profileSchema, ratingSchema, reportSchema, signupDetailsSchema, usernameSchema } from "./validation";
 
 describe("usernameSchema", () => {
   it.each([
@@ -73,6 +73,20 @@ describe("commentSchema", () => {
   });
 });
 
+describe("signupDetailsSchema", () => {
+  it("needs a birthday showing 13 or older; the rest can stay empty", () => {
+    const base = { display_name: "", diet: "", gender: "" };
+    expect(signupDetailsSchema.safeParse({ ...base, date_of_birth: "" }).error?.issues[0].message).toBe("Add your date of birth.");
+    expect(signupDetailsSchema.safeParse({ ...base, date_of_birth: "2020-01-01" }).success).toBe(false);
+    expect(signupDetailsSchema.parse({ ...base, display_name: " Asha ", date_of_birth: "2001-05-04" })).toEqual({
+      display_name: "Asha",
+      diet: null,
+      date_of_birth: "2001-05-04",
+      gender: null,
+    });
+  });
+});
+
 describe("profileSchema", () => {
   const ok = {
     display_name: "  Asha  ",
@@ -82,6 +96,7 @@ describe("profileSchema", () => {
     instagram: "https://www.instagram.com/asha.eats/",
     date_of_birth: "2001-05-04",
     gender: "female",
+    home_region: "hyderabad",
   };
 
   it("trims, cleans the Instagram link, and empties become null", () => {
@@ -93,11 +108,12 @@ describe("profileSchema", () => {
       instagram: "asha.eats",
       date_of_birth: "2001-05-04",
       gender: "female",
+      home_region: "hyderabad",
     });
   });
 
   it("leaves every optional field empty", () => {
-    const empty = { display_name: "", bio: "", avatar: "0000", diet: "", instagram: "", date_of_birth: "", gender: "" };
+    const empty = { display_name: "", bio: "", avatar: "0000", diet: "", instagram: "", date_of_birth: "", gender: "", home_region: "kerala" };
     expect(profileSchema.parse(empty)).toEqual({
       display_name: null,
       bio: null,
@@ -106,6 +122,7 @@ describe("profileSchema", () => {
       instagram: null,
       date_of_birth: null,
       gender: null,
+      home_region: "kerala",
     });
   });
 
@@ -118,6 +135,7 @@ describe("profileSchema", () => {
     ["a long bio", { bio: "x".repeat(161) }],
     ["a bad avatar code", { avatar: "NOPE" }],
     ["an unknown diet", { diet: "carnivore" }],
+    ["a missing home region", { home_region: "" }],
     ["a bad Instagram handle", { instagram: "not a handle!" }],
     ["a half date", { date_of_birth: "2001-05" }],
     ["a birthday before 1900", { date_of_birth: "1899-12-31" }],
@@ -176,5 +194,12 @@ describe("preferencesSchema", () => {
     [{ show_diet: "all", feed_default: "hot" }],
   ])("rejects %j", (input) => {
     expect(preferencesSchema.safeParse(input).success).toBe(false);
+  });
+});
+
+describe("privacySchema", () => {
+  it("takes the three levels and nothing else", () => {
+    expect(privacySchema.parse({ saves_visibility: "followers", diary_visibility: "only_me" })).toEqual({ saves_visibility: "followers", diary_visibility: "only_me" });
+    expect(privacySchema.safeParse({ saves_visibility: "friends", diary_visibility: "everyone" }).success).toBe(false);
   });
 });

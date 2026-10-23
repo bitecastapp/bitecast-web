@@ -1,5 +1,7 @@
 # Spec: Spaces (v1 step 3) — PARKED
 
+> **Superseded on 2026-10-23 by `SPEC-rankings.md`:** the lists are now fixed and set by us; nobody creates Spaces or assigns dishes from the app.
+
 > **Parked on 2026-10-21** by the owner ("completely confusing, let us think about this later"). The UI lives on branch `spaces-parked`. The database migration stays applied on `main` (tables unused) so migration history matches the live project.
 
 Module `spaces`, depends on `restaurants` (dishes). Approved by the owner on 2026-10-21. Reviews (step 4) fill the leaderboards; Tastes like home (step 6) may hang off Spaces.

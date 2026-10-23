@@ -2,29 +2,15 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Avatar } from "@/components/avatar";
+import { BroadcastMark } from "@/components/brand";
 
-// Three of Bitecast's food characters (an idli, a momo, a laddoo) hopping in a wave: each squashes as it lands
-// and its shadow shrinks as it rises. Under reduced motion they stand still.
-const CREW = ["0110", "1201", "4342"]; // avatar codes: shape, colour, eyes, mouth
-
-export function HopLoader({ size = 30, label = "Loading", className }: { size?: number; label?: string; className?: string }) {
+// The Bitecast mark going on air: its three waves light up outward in turn while a soft ring pings behind it.
+// Under reduced motion it holds still, fully lit.
+export function BroadcastLoader({ size = 56, label = "Loading", className }: { size?: number; label?: string; className?: string }) {
   return (
-    <span role="status" aria-label={label} className={cn("hop-loader inline-flex items-end gap-2", className)}>
-      {CREW.map((code, i) => (
-        <span key={code} aria-hidden className="relative flex flex-col items-center">
-          <span
-            className="block origin-bottom animate-[hop_1.25s_var(--ease-in-out)_infinite]"
-            style={{ animationDelay: `${i * 0.14}s` }}
-          >
-            <Avatar handle="loader" code={code} size={size} />
-          </span>
-          <span
-            className="mt-0.5 block h-1.5 rounded-full bg-black/70 blur-[2px] animate-[hop-shadow_1.25s_var(--ease-in-out)_infinite]"
-            style={{ width: size * 0.7, animationDelay: `${i * 0.14}s` }}
-          />
-        </span>
-      ))}
+    <span role="status" aria-label={label} className={cn("relative grid place-items-center", className)} style={{ width: size, height: size }}>
+      <span aria-hidden className="absolute inset-0 animate-[ping-ring_1.4s_var(--ease-out)_infinite] rounded-full border-2 border-ketchup/50" />
+      <BroadcastMark lit={3} pulse className="relative" />
     </span>
   );
 }
@@ -32,7 +18,7 @@ export function HopLoader({ size = 30, label = "Loading", className }: { size?: 
 // What the kitchen's doing while the page loads.
 const LINES = ["Heating the tawa", "Steaming the idlis", "Grinding the chutney", "Pouring the filter kaapi", "Plating up"];
 
-// A whole-page wait: the hopping crew centred, with a kitchen line under it that changes every couple of seconds.
+// A whole-page wait: the broadcasting mark centred, with a kitchen line under it that changes every couple of seconds.
 export function PageLoader() {
   const [line, setLine] = useState(0);
   useEffect(() => {
@@ -41,7 +27,7 @@ export function PageLoader() {
   }, []);
   return (
     <div className="flex flex-1 animate-[fade-in_300ms_var(--ease-out)_120ms_both] flex-col items-center justify-center gap-4 py-24">
-      <HopLoader label="Loading" />
+      <BroadcastLoader />
       <p aria-hidden key={line} className="animate-[line-in_260ms_var(--ease-out)] text-sm font-medium text-muted-foreground">
         {LINES[line]}…
       </p>

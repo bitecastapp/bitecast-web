@@ -14,6 +14,7 @@ import { RateAnother } from "@/components/rate-another";
 import { ProfileView } from "@/app/u/[handle]/profile-view";
 import { ProfileForm } from "@/app/settings/profile/profile-form";
 import { PreferencesForm } from "@/app/settings/preferences-form";
+import { PrivacyForm } from "@/app/settings/privacy-form";
 import { FeedSkeleton, PageLoader } from "@/components/loader";
 import { DeleteAccount } from "@/app/settings/delete-account";
 import { Comments } from "@/components/comments";
@@ -123,8 +124,8 @@ const LONG_EMAIL = "aleksandra.wisniewska-kowalczyk+bitecast@northwind-industrie
 const FIXTURES = {
   demo: {
     login: { status: "sent", email: "jo@example.com" } as LoginState,
-    regions: [{ slug: "bengaluru", name: "Bengaluru" }] as Region[],
-    profile: { username: "dosa_devotee", home_region: "bengaluru", regions: { name: "Bengaluru", demonym: "Bengalureans" } } as Profile,
+    regions: [{ slug: "karnataka", name: "Karnataka" }] as Region[],
+    profile: { username: "dosa_devotee", home_region: "karnataka", regions: { name: "Karnataka", demonym: "Kannadigas" } } as Profile,
     places: DEMO_PLACES,
   },
   worst: {
@@ -133,7 +134,7 @@ const FIXTURES = {
     regions: [
       { slug: "chhatrapati-sambhajinagar", name: "Chhatrapati Sambhajinagar" },
       { slug: "thiruvananthapuram", name: "Thiruvananthapuram" },
-      { slug: "bengaluru", name: "Bengaluru" },
+      { slug: "karnataka", name: "Karnataka" },
       ...["Hyderabad", "Lucknow", "Kolkata", "Chennai", "Mumbai", "Delhi", "Kerala", "Punjab", "Goa", "Gujarat", "Rajasthan", "Odisha", "Assam", "Bihar", "Kashmir", "Mangaluru", "Mysuru", "Puducherry", "Visakhapatnam", "Kozhikode", "Madurai", "Indore", "Amritsar", "Nagaland", "Manipur", "Meghalaya", "Sikkim", "Tripura", "Mizoram", "Andaman & Nicobar Islands", "Dadra & Nagar Haveli and Daman & Diu"].map((name) => ({ slug: name.toLowerCase().replace(/\W+/g, "-"), name })),
     ] as Region[],
     places: WORST_PLACES,
@@ -142,13 +143,13 @@ const FIXTURES = {
   empty: {
     login: { status: "idle" } as LoginState,
     regions: [] as Region[],
-    profile: { username: "jo_", home_region: "bengaluru", regions: null } as Profile,
+    profile: { username: "jo_", home_region: "karnataka", regions: null } as Profile,
     places: [] as Restaurant[],
   },
   one: {
     login: { status: "sent", email: "a@b.co" } as LoginState,
-    regions: [{ slug: "bengaluru", name: "Bengaluru" }] as Region[],
-    profile: { username: "abc", home_region: "bengaluru", regions: { name: "Bengaluru", demonym: "Bengalureans" } } as Profile,
+    regions: [{ slug: "karnataka", name: "Karnataka" }] as Region[],
+    profile: { username: "abc", home_region: "karnataka", regions: { name: "Karnataka", demonym: "Kannadigas" } } as Profile,
     places: [place("Truffles", "Koramangala", ["All American Cheeseburger"])],
   },
 };
@@ -168,8 +169,16 @@ const fixtureProfile = (data: DataKey, f: (typeof FIXTURES)[DataKey]) => ({
   instagram: data === "demo" ? "dosa.devotee" : data === "worst" ? "a".repeat(30) : null,
   created_at: "2026-10-01T05:00:00Z",
   regions: f.profile.regions && { name: f.profile.regions.name },
+  saves_visibility: data === "worst" ? ("only_me" as const) : ("everyone" as const),
+  diary_visibility: data === "worst" ? ("followers" as const) : ("everyone" as const),
 });
 const fixtureStats = { demo: { rated: 23, average: 7.8, trust: 214, followers: 48, following: 12 }, worst: { rated: 12345, average: 1, trust: -9876, followers: 1234567, following: 0 } } as Record<string, { rated: number; average: number | null; trust: number; followers: number; following: number }>;
+
+// Home regions as seeded (SPEC-rankings.md).
+const REGIONS = ["Andhra", "Delhi", "Gujarat", "Hyderabad", "Karnataka", "Kerala", "Kolkata", "Mumbai", "Punjab", "Tamil Nadu"].map((name) => ({
+  slug: name.toLowerCase().replace(" ", "-"),
+  name,
+}));
 
 // "Want to try" for the fixture feed: the first dish already saved, the rest not.
 const fixtureSaves = (list: { dish: { id: string } }[] | undefined) => Object.fromEntries((list ?? []).map((r, i) => [r.dish.id, i === 0]));
@@ -219,10 +228,12 @@ export function BreakUi() {
         />
       )}
       {screen === "edit" && (
-        <div className="mx-auto w-full max-w-xl p-5">
+        <div className="mx-auto w-full max-w-6xl p-5">
           <ProfileForm
             userId="00000000-0000-0000-0000-000000000000"
             handle={f.profile.username}
+            regions={REGIONS}
+            regionLockedUntil={data === "worst" ? "21 November" : null}
             initial={{
               display_name: fixtureProfile(data, f).display_name ?? "",
               bio: fixtureProfile(data, f).bio ?? "",
@@ -232,6 +243,7 @@ export function BreakUi() {
               instagram: fixtureProfile(data, f).instagram ?? "",
               date_of_birth: data === "demo" ? "2001-05-04" : "",
               gender: data === "demo" ? "female" : "",
+              home_region: f.profile.home_region,
             }}
           />
         </div>
@@ -243,16 +255,22 @@ export function BreakUi() {
         </div>
       )}
       {screen === "settings" && (
-        <div className="mx-auto w-full max-w-xl p-5">
+        <div className="mx-auto grid w-full max-w-6xl gap-5 p-5 lg:grid-cols-2 lg:items-start">
           <PreferencesForm initial={{ show_diet: data === "demo" ? "egg" : "all", feed_default: "top" }} />
-          <div className="mt-8">
+          <div className="flex flex-col gap-5">
+            <PrivacyForm initial={{ saves_visibility: data === "worst" ? "only_me" : "everyone", diary_visibility: "followers" }} />
             <DeleteAccount handle={f.profile.username} />
           </div>
         </div>
       )}
       {screen === "dish" &&
         (f.places[0]?.dishes[0] ? (
-          <DishView dish={{ ...f.places[0].dishes[0], restaurant: f.places[0] }} ratings={REVIEWS[data] ?? []} viewer={f.profile.username} />
+          <DishView
+            dish={{ ...f.places[0].dishes[0], restaurant: f.places[0], space: { id: "dosa", name: "Dosa", region: { demonym: "Kannadigas" } } }}
+            ratings={REVIEWS[data] ?? []}
+            viewer={f.profile.username}
+            ranking={{ dish_id: "fixture", space_id: "dosa", rank: 2, ratings: 14, home_avg: data === "demo" ? 8.7 : null, home_count: 12 }}
+          />
         ) : (
           <p className="p-6">No dish in this fixture.</p>
         ))}
