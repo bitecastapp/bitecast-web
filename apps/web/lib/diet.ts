@@ -26,6 +26,9 @@ export function allows(show: ShowDiet, diet: DishDiet) {
   return true;
 }
 
+// The dish diets a preference lets through, for filtering in a query.
+export const dietsFor = (show: ShowDiet) => DISH_DIETS.map((d) => d.value).filter((diet) => allows(show, diet));
+
 // Places keep their page, but only list the dishes this person wants to see.
 export function filterMenus<R extends { dishes: { diet: DishDiet }[] }>(restaurants: R[], show: ShowDiet): R[] {
   if (show === "all") return restaurants;

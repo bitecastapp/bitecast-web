@@ -34,13 +34,18 @@ begin
   insert into public.profile_private (show_diet) values ('vegan');
 end $$;
 
+-- New dishes wait for approval; approve it so the second person can see and rate it.
+reset role;
+update public.dishes set approved_at = now() where id = (select v from ids where k = 'dish');
+set local role authenticated;
+
 select set_config('request.jwt.claims', '{"sub":"00000000-0000-0000-0000-00000000000b","role":"authenticated"}', true);
 do $$
 declare d uuid := (select v from ids where k = 'dish'); r uuid;
 begin
   insert into public.ratings (dish_id, score) values (d, 9) returning id into r;
   insert into ids values ('rb', r);
-  if (select rating_count from public.dishes where id = d) <> 2 or (select avg_score from public.dishes where id = d) <> 8.5 then
+  if (select rating_count from public.dishes where id = d) is distinct from 2 or (select avg_score from public.dishes where id = d) <> 8.5 then
     raise exception 'FAIL: two ratings: %', (select row(rating_count, avg_score) from public.dishes where id = d);
   end if;
 end $$;

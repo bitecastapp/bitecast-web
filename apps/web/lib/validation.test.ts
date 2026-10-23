@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { commentSchema, dishNameSchema, emailSchema, favouritesSchema, isAtLeast13, preferencesSchema, privacySchema, profileSchema, ratingSchema, reportSchema, signupDetailsSchema, usernameSchema } from "./validation";
+import { commentSchema, dishNameSchema, emailSchema, favouritesSchema, isAtLeast13, preferencesSchema, privacySchema, profileSchema, ratingSchema, reportSchema, restaurantSchema, restaurantSlug, signupDetailsSchema, usernameSchema } from "./validation";
 
 describe("usernameSchema", () => {
   it.each([
@@ -179,6 +179,7 @@ describe("reportSchema", () => {
     ["an unknown target", { target_type: "profile" }],
     ["a bad id", { target_id: "dosa" }],
     ["no reason", { reason: "" }],
+    ["a dish reason on a take", { reason: "duplicate" }],
     ["a long note", { note: "x".repeat(301) }],
   ])("rejects %s", (_, change) => {
     expect(reportSchema.safeParse({ ...ok, ...change }).success).toBe(false);
@@ -202,4 +203,17 @@ describe("privacySchema", () => {
     expect(privacySchema.parse({ saves_visibility: "followers", diary_visibility: "only_me" })).toEqual({ saves_visibility: "followers", diary_visibility: "only_me" });
     expect(privacySchema.safeParse({ saves_visibility: "friends", diary_visibility: "everyone" }).success).toBe(false);
   });
+});
+
+describe("restaurantSchema / restaurantSlug", () => {
+  it("trims and checks the name and area", () => {
+    expect(restaurantSchema.parse({ name: "  Brahmin's Coffee Bar ", area: " Basavanagudi " })).toEqual({ name: "Brahmin's Coffee Bar", area: "Basavanagudi" });
+    expect(restaurantSchema.safeParse({ name: "x", area: "Jayanagar" }).success).toBe(false);
+  });
+  it.each([
+    ["CTR (Central Tiffin Room)", "ctr-central-tiffin-room"],
+    ["Brahmin's Coffee Bar", "brahmin-s-coffee-bar"],
+    ["Café Noir", "cafe-noir"],
+    ["!!!", "place"],
+  ])("%s → %s", (name, slug) => expect(restaurantSlug(name)).toBe(slug));
 });

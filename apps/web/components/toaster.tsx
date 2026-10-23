@@ -10,6 +10,8 @@ const DONE: Record<string, string> = {
   updated: "Rating updated",
   profile: "Profile saved",
   deleted: "Take deleted",
+  "dish-live": "Dish added",
+  "dish-pending": "Dish added. Everyone sees it once it's approved",
 };
 export type Done = keyof typeof DONE;
 

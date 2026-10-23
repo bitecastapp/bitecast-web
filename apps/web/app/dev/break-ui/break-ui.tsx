@@ -15,6 +15,8 @@ import { ProfileView } from "@/app/u/[handle]/profile-view";
 import { ProfileForm } from "@/app/settings/profile/profile-form";
 import { PreferencesForm } from "@/app/settings/preferences-form";
 import { PrivacyForm } from "@/app/settings/privacy-form";
+import { NotificationList } from "@/components/notification-list";
+import type { Notification } from "@/lib/notifications";
 import { FeedSkeleton, PageLoader } from "@/components/loader";
 import { DeleteAccount } from "@/app/settings/delete-account";
 import { Comments } from "@/components/comments";
@@ -155,7 +157,7 @@ const FIXTURES = {
 };
 
 type DataKey = keyof typeof FIXTURES;
-const SCREENS = ["login", "onboarding", "home", "restaurant", "dish", "rate", "review", "profile", "edit", "settings", "loading"] as const;
+const SCREENS = ["login", "onboarding", "home", "restaurant", "dish", "rate", "review", "profile", "edit", "settings", "notifications", "loading"] as const;
 
 // Profile fixtures: worst case has a 40-character name, a 160-character bio and negative trust.
 const fixtureProfile = (data: DataKey, f: (typeof FIXTURES)[DataKey]) => ({
@@ -175,10 +177,31 @@ const fixtureProfile = (data: DataKey, f: (typeof FIXTURES)[DataKey]) => ({
 const fixtureStats = { demo: { rated: 23, average: 7.8, trust: 214, followers: 48, following: 12 }, worst: { rated: 12345, average: 1, trust: -9876, followers: 1234567, following: 0 } } as Record<string, { rated: number; average: number | null; trust: number; followers: number; following: number }>;
 
 // Home regions as seeded (SPEC-rankings.md).
-const REGIONS = ["Andhra", "Delhi", "Gujarat", "Hyderabad", "Karnataka", "Kerala", "Kolkata", "Mumbai", "Punjab", "Tamil Nadu"].map((name) => ({
-  slug: name.toLowerCase().replace(" ", "-"),
-  name,
-}));
+const REGIONS = [
+  ["andhra-pradesh", "Andhra Pradesh"],
+  ["delhi", "Delhi NCR"],
+  ["gujarat", "Gujarat"],
+  ["karnataka", "Karnataka"],
+  ["kerala", "Kerala"],
+  ["maharashtra", "Maharashtra"],
+  ["punjab", "Punjab"],
+  ["tamil-nadu", "Tamil Nadu"],
+  ["telangana", "Telangana"],
+  ["west-bengal", "West Bengal"],
+].map(([slug, name]) => ({ slug, name }));
+
+// One of each notification kind; the first three are unread.
+// Fixed times (not Date.now()) so the server and browser render the same text.
+const ago = (h: number) => new Date(Date.parse("2026-10-23T06:00:00Z") - h * 3_600_000).toISOString();
+const asha = { username: "asha_eats", avatar: "1201", avatar_path: null };
+const NOTIFICATIONS: Notification[] = [
+  { id: "n1", kind: "agree", created_at: ago(0.2), read_at: null, detail: null, actor: asha, rating: { id: "r1", dish: { name: "Masala Dosa" } }, comment: null, dish: null },
+  { id: "n2", kind: "comment", created_at: ago(1), read_at: null, detail: null, actor: { username: "biryani_bro", avatar: "4342", avatar_path: null }, rating: { id: "r1", dish: { name: "Masala Dosa" } }, comment: { body: "Hard disagree, the chutney carries it every single time and the sambar is an afterthought here." }, dish: null },
+  { id: "n3", kind: "dish_approved", created_at: ago(3), read_at: null, detail: null, actor: null, rating: null, comment: null, dish: { name: "Set Dosa", restaurant: { slug: "ctr" } } },
+  { id: "n4", kind: "follow", created_at: ago(26), read_at: ago(20), detail: null, actor: asha, rating: null, comment: null, dish: null },
+  { id: "n5", kind: "reply", created_at: ago(50), read_at: ago(40), detail: null, actor: { username: "ghee_roast", avatar: "0110", avatar_path: null }, rating: { id: "r2", dish: { name: "Ghee Podi Idli" } }, comment: { body: "Same here!" }, dish: null },
+  { id: "n6", kind: "take_removed", created_at: ago(80), read_at: ago(70), detail: "Rava Idli", actor: null, rating: null, comment: null, dish: null },
+];
 
 // "Want to try" for the fixture feed: the first dish already saved, the rest not.
 const fixtureSaves = (list: { dish: { id: string } }[] | undefined) => Object.fromEntries((list ?? []).map((r, i) => [r.dish.id, i === 0]));
@@ -252,6 +275,11 @@ export function BreakUi() {
         <div className="mx-auto flex w-full max-w-xl flex-col p-5">
           <PageLoader />
           <FeedSkeleton />
+        </div>
+      )}
+      {screen === "notifications" && (
+        <div className="mx-auto w-full max-w-xl p-5">
+          <NotificationList items={data === "empty" ? [] : NOTIFICATIONS} />
         </div>
       )}
       {screen === "settings" && (

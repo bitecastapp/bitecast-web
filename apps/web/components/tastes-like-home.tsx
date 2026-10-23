@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 type Props = { avg: number | null; count: number; demonym: string | undefined; className?: string };
 
-// "Tastes like home: 8.7 from 12 Hyderabadis": how people from the food's home region rate this dish.
+// "Tastes like home: 8.7 from 12 Kannadigas": how people from the food's home region rate this dish.
 // The database only sends an average from 3 ratings up; below that (or with no home region) nothing shows.
 export function TastesLikeHome({ avg, count, demonym, className }: Props) {
   if (avg === null || !demonym) return null;

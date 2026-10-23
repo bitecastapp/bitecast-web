@@ -2,7 +2,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // Everything is public to read except these, which need a session (writing is guarded by RLS regardless).
-const PRIVATE_PATHS = ["/onboarding", "/rate", "/settings"];
+const PRIVATE_PATHS = ["/onboarding", "/rate", "/settings", "/admin", "/suspended", "/notifications"];
 
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });

@@ -12,11 +12,11 @@ Owner decisions, 2026-10-23. Supersedes the parked `SPEC-spaces.md` (user-made S
 3. **New accounts weigh less:** a rating from an account younger than 7 days counts half (`w = 0.5`, else 1).
 4. **Unrated dishes** sit below the ranked ones, unnumbered, as "Not rated yet".
 5. **Tastes like home** comes from the dish's list: each list may carry an `origin_region`. Shown only with 3 or more ratings from that region, with the count. Lists without an origin, and dishes in no list, never show it. Copy celebrates home food, never region vs region.
-6. **Regions:** about 10 (Karnataka, Hyderabad, Tamil Nadu, Kerala, Andhra, Mumbai, Delhi, Kolkata, Punjab, Gujarat). Bengaluru becomes Karnataka. Your home region can change once every 30 days (database trigger), from Edit profile.
+6. **Regions:** 10, by state name (Andhra Pradesh, Delhi NCR, Gujarat, Karnataka, Kerala, Maharashtra, Punjab, Tamil Nadu, Telangana, West Bengal). Bengaluru became Karnataka. Your home region can change once every 30 days (database trigger), from Edit profile.
 7. The diet preference filters ranking lists like other dish lists; rank numbers stay the real ones.
 
 ## Origins (first pass, change by migration)
-Dosa, Kesari Bath, Bisi Bele Bath, Bajji → Karnataka · Idli, Vada, Filter Coffee → Tamil Nadu · Biryani → Hyderabad · Ghee Rice → Kerala · Meals, Burger, Kebab → none.
+Dosa, Kesari Bath, Bisi Bele Bath, Bajji → Karnataka · Idli, Vada, Filter Coffee → Tamil Nadu · Biryani → Telangana · Ghee Rice → Kerala · Meals, Burger, Kebab → none.
 
 ## Screens
 | Where | What |

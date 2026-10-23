@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BookOpenIcon, HeartHandshakeIcon, ScaleIcon, SettingsIcon } from "lucide-react";
+import { BookOpenIcon, FileTextIcon, HeartHandshakeIcon, ScaleIcon, SettingsIcon, ShieldIcon } from "lucide-react";
 import { Wordmark } from "@/components/brand";
 
 const LINKS = [
@@ -7,6 +7,8 @@ const LINKS = [
   { href: "/about#rankings", label: "How rankings work", icon: ScaleIcon },
   { href: "/about#guidelines", label: "Community guidelines", icon: HeartHandshakeIcon },
   { href: "/settings", label: "Settings", icon: SettingsIcon },
+  { href: "/terms", label: "Terms of Service", icon: FileTextIcon },
+  { href: "/privacy", label: "Privacy Policy", icon: ShieldIcon },
 ];
 
 // On every browsing page: the brand, the links that explain how things work, and the one disclaimer

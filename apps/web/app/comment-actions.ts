@@ -3,6 +3,7 @@
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import { friendlyError } from "@/lib/db-errors";
 import type { CommentVote } from "@/lib/comments";
 import { commentSchema } from "@/lib/validation";
 
@@ -19,7 +20,7 @@ export async function addComment(prev: CommentState, formData: FormData): Promis
   const { error } = await supabase
     .from("comments")
     .insert({ rating_id: String(formData.get("rating_id") ?? ""), parent_id: parentId, body: body.data });
-  if (error) return { error: "Couldn't post that just now. Try again in a moment." };
+  if (error) return { error: friendlyError(error, "Couldn't post that just now. Try again in a moment.") };
 
   refresh();
   return { ok: (prev.ok ?? 0) + 1 }; // a new number each success, so the form knows to clear

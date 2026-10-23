@@ -33,7 +33,7 @@ begin
   insert into public.votes (rating_id, kind) values (rb, 'cap');
   insert into public.follows (followee_id) values ('00000000-0000-0000-0000-00000000000b');
 
-  insert into public.reports (target_type, target_id, reason, note) values ('rating', rb, 'misleading', 'Not the right dish.');
+  insert into public.reports (target_type, target_id, reason, note) values ('rating', rb, 'fake', 'Not the right dish.');
   begin
     insert into public.reports (target_type, target_id, reason) values ('rating', rb, 'spam');
     raise exception 'FAIL: reported the same take twice';
@@ -50,7 +50,7 @@ begin
   exception when check_violation then null;
   end;
   begin
-    insert into public.reports (target_type, target_id, reason, reporter_id) values ('dish', rb, 'spam', '00000000-0000-0000-0000-00000000000b');
+    insert into public.reports (target_type, target_id, reason, reporter_id) values ('dish', rb, 'duplicate', '00000000-0000-0000-0000-00000000000b');
     raise exception 'FAIL: reported on someone else''s behalf';
   exception when insufficient_privilege then null;
   end;
@@ -98,7 +98,7 @@ begin
   exception when insufficient_privilege then null;
   end;
   begin
-    insert into public.reports (target_type, target_id, reason) values ('dish', gen_random_uuid(), 'spam');
+    insert into public.reports (target_type, target_id, reason) values ('dish', gen_random_uuid(), 'duplicate');
     raise exception 'FAIL: anon reported';
   exception when insufficient_privilege then null;
   end;

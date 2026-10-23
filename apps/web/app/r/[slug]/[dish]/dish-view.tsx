@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChevronRightIcon, TrophyIcon } from "lucide-react";
+import { ChevronRightIcon, ClockIcon, TrophyIcon } from "lucide-react";
 import type { DishDetail, DishPageDish } from "@/lib/restaurants";
 import { listHref, type Ranking } from "@/lib/rankings";
 import { formatScore, photoUrl, scoreColor, summarize, type Review, type Sort, type Vote } from "@/lib/ratings";
@@ -13,7 +13,7 @@ import { ReportButton } from "@/components/report-button";
 import { TastesLikeHome } from "@/components/tastes-like-home";
 
 type Props = {
-  dish: DishDetail & Partial<Pick<DishPageDish, "space">>;
+  dish: DishDetail & Partial<Pick<DishPageDish, "space" | "approved_at">>;
   ratings?: Review[];
   votes?: Record<string, Vote>;
   viewer?: string | null;
@@ -44,6 +44,12 @@ export function DishView({ dish, ratings = [], votes = {}, viewer = null, sort =
         <div className="flex flex-col lg:sticky lg:top-6">
           <BackLink href={`/r/${dish.restaurant.slug}`} />
 
+          {dish.approved_at === null && (
+            <p className="mt-3 flex items-start gap-2 rounded-lg border border-mustard/40 bg-mustard/10 px-3 py-2 text-sm">
+              <ClockIcon aria-hidden className="mt-0.5 size-4 shrink-0 text-mustard" />
+              Waiting for approval. This dish stays hidden from everyone else until it&apos;s reviewed.
+            </p>
+          )}
           <div className="mt-3 flex items-start gap-4 lg:flex-col-reverse">
             <div className="min-w-0 flex-1">
               <h1 className="text-[1.75rem] leading-tight font-bold tracking-[-0.02em] wrap-anywhere">

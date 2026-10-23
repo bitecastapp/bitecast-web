@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { allows, filterMenus } from "./diet";
+import { dietsFor, allows, filterMenus } from "./diet";
 
 describe("allows", () => {
   it.each([
@@ -28,5 +28,14 @@ describe("filterMenus", () => {
     expect(filterMenus(places, "egg")[0].dishes).toEqual([{ diet: "veg" }, { diet: "vegan" }, { diet: "egg" }]);
     expect(filterMenus(places, "veg")[0].dishes).toEqual([{ diet: "veg" }, { diet: "vegan" }]);
     expect(filterMenus(places, "vegan")[0].dishes).toEqual([{ diet: "vegan" }]);
+  });
+});
+
+describe("dietsFor", () => {
+  it("lists what each preference lets through", () => {
+    expect(dietsFor("all")).toEqual(["veg", "vegan", "egg", "non_veg"]);
+    expect(dietsFor("veg")).toEqual(["veg", "vegan"]);
+    expect(dietsFor("egg")).toEqual(["veg", "vegan", "egg"]);
+    expect(dietsFor("vegan")).toEqual(["vegan"]);
   });
 });

@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
+import { shareDish } from "@/lib/share";
 import { notFound } from "next/navigation";
 import { getViewer } from "@/lib/auth";
 import { keyFromDishSlug } from "@/lib/dishes";
@@ -11,6 +13,17 @@ import { getRankings } from "@/lib/rankings";
 import { PageShell } from "@/components/page-shell";
 import { PageLoader } from "@/components/loader";
 import { DishView } from "./dish-view";
+
+export async function generateMetadata({ params }: PageProps<"/r/[slug]/[dish]">): Promise<Metadata> {
+  const { slug, dish } = await params;
+  const d = await shareDish(slug, dish);
+  if (!d) return { title: "Dish not found · Bitecast" };
+  const title = `${d.name} at ${d.place} · Bitecast`;
+  const description = d.count
+    ? `Overall ${d.avg?.toFixed(1)} from ${d.count} ${d.count === 1 ? "rating" : "ratings"}. See every take on ${d.name} at ${d.place}, ${d.area}.`
+    : `${d.name} at ${d.place}, ${d.area}. No ratings yet: be the first.`;
+  return { title, description, openGraph: { title, description } };
+}
 
 export default function DishPage({ params, searchParams }: PageProps<"/r/[slug]/[dish]">) {
   return (

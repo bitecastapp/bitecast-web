@@ -1,17 +1,20 @@
 "use client";
 
-import { startTransition, useDeferredValue, useState, ViewTransition } from "react";
+import { startTransition, useDeferredValue, useEffect, useRef, useState, ViewTransition } from "react";
 import Link from "next/link";
 import { ChevronDownIcon, CrownIcon, PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import type { Profile } from "@/lib/auth";
 import type { Restaurant } from "@/lib/restaurants";
 import type { DishDiet, ShowDiet } from "@/lib/diet";
-import { groupMeals, type FeedSort, type Review, type Vote } from "@/lib/ratings";
+import { FEED_PAGE, groupMeals, type FeedSort, type Review, type Vote } from "@/lib/ratings";
+import { loadMoreTakes } from "@/app/feed-actions";
+import { BroadcastLoader } from "@/components/loader";
 import { listHref, type Leader } from "@/lib/rankings";
 import { ReviewCard } from "@/components/review-card";
 import { MealCard } from "@/components/meal-card";
 import { DietMark } from "@/components/diet-mark";
 import { AccountMenu } from "@/components/account-menu";
+import { NotificationBell } from "@/components/notification-bell";
 import { DishAvg } from "@/components/dish-avg";
 import { dishHref, dishKey } from "@/lib/dishes";
 import { cn } from "@/lib/utils";
@@ -23,9 +26,9 @@ type View = "takes" | "rankings" | "dishes" | "places";
 type Feed = { sort: FeedSort; reviews: Review[]; votes: Record<string, Vote> };
 type DishGroup = { key: string; name: string; spots: { id: string; name: string; diet: DishDiet; avg: number | null; count: number; place: Restaurant }[] };
 
-type HomeProps = { profile: Profile | null; restaurants: Restaurant[]; feed: Feed; leaders?: Leader[]; showDiet?: ShowDiet; notice?: string };
+type HomeProps = { profile: Profile | null; restaurants: Restaurant[]; feed: Feed; leaders?: Leader[]; showDiet?: ShowDiet; notice?: string; admin?: boolean; unread?: number };
 
-export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = "all", notice }: HomeProps) {
+export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = "all", notice, admin = false, unread = 0 }: HomeProps) {
   const [query, setQuery] = useState("");
   const [view, setView] = useState<View>("takes");
   const q = dishKey(useDeferredValue(query));
@@ -43,7 +46,10 @@ export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = 
             Rate
           </Link>
           {profile ? (
-            <AccountMenu handle={profile.username} name={null} avatar={profile.avatar} photo={profile.avatar_path} />
+            <>
+              <NotificationBell unread={unread} />
+              <AccountMenu handle={profile.username} name={null} avatar={profile.avatar} photo={profile.avatar_path} admin={admin} />
+            </>
           ) : (
             <Link
               href="/login"
@@ -134,7 +140,7 @@ export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = 
             {q ? (
               <Results q={q} restaurants={restaurants} />
             ) : view === "takes" ? (
-              <Takes feed={feed} viewer={profile?.username ?? null} />
+              <Takes key={feed.sort} feed={feed} viewer={profile?.username ?? null} />
             ) : view === "rankings" ? (
               <Rankings leaders={leaders} />
             ) : view === "dishes" ? (
@@ -357,7 +363,42 @@ function Results({ q, restaurants }: { q: string; restaurants: Restaurant[] }) {
 
 const placeCount = (n: number) => (n === 1 ? "1 place" : `${n} places`);
 
+// The feed, one page at a time: when the end comes into view, the next page loads and joins the list.
 function Takes({ feed, viewer }: { feed: Feed; viewer: string | null }) {
+  const [more, setMore] = useState<{ reviews: Review[]; votes: Record<string, Vote> }>({ reviews: [], votes: {} });
+  const [fetched, setFetched] = useState(feed.reviews.length); // rows asked for so far (the next offset)
+  const [done, setDone] = useState(feed.reviews.length < FEED_PAGE);
+  const [loading, setLoading] = useState(false);
+  const end = useRef<HTMLDivElement>(null);
+  const seen = new Set<string>();
+  const reviews = [...feed.reviews, ...more.reviews].filter((r) => !seen.has(r.id) && seen.add(r.id)); // pages can overlap
+  const votes = { ...more.votes, ...feed.votes };
+
+  useEffect(() => {
+    const el = end.current;
+    if (!el || done || loading) return;
+    const watch = new IntersectionObserver(
+      async ([entry]) => {
+        if (!entry.isIntersecting) return;
+        watch.disconnect();
+        setLoading(true);
+        try {
+          const next = await loadMoreTakes(feed.sort, fetched);
+          setMore((m) => ({ reviews: [...m.reviews, ...next.reviews], votes: { ...m.votes, ...next.votes } }));
+          setFetched((n) => n + next.reviews.length);
+          if (next.reviews.length < FEED_PAGE) setDone(true);
+        } catch {
+          setDone(true); // stop trying; a refresh starts over
+        } finally {
+          setLoading(false);
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+    watch.observe(el);
+    return () => watch.disconnect();
+  }, [done, loading, fetched, feed.sort]);
+
   return (
     <section aria-label="Takes">
       <nav aria-label="Sort takes" className="mb-1 flex gap-4 text-sm">
@@ -380,18 +421,27 @@ function Takes({ feed, viewer }: { feed: Feed; viewer: string | null }) {
           </Link>
         ))}
       </nav>
-      {feed.reviews.length ? (
-        <ul className="stagger divide-y divide-hairline">
-          {groupMeals(feed.reviews).map((meal) => (
-            <li key={meal[0].id}>
-              {meal.length > 1 ? (
-                <MealCard reviews={meal} votes={feed.votes} viewer={viewer} />
-              ) : (
-                <ReviewCard review={meal[0]} vote={feed.votes[meal[0].id]} viewer={viewer} />
-              )}
-            </li>
-          ))}
-        </ul>
+      {reviews.length ? (
+        <>
+          <ul className="stagger divide-y divide-hairline">
+            {groupMeals(reviews).map((meal) => (
+              <li key={meal[0].id}>
+                {meal.length > 1 ? (
+                  <MealCard reviews={meal} votes={votes} viewer={viewer} />
+                ) : (
+                  <ReviewCard review={meal[0]} vote={votes[meal[0].id]} viewer={viewer} />
+                )}
+              </li>
+            ))}
+          </ul>
+          <div ref={end} aria-live="polite" className="flex min-h-16 items-center justify-center py-6">
+            {loading ? (
+              <BroadcastLoader size={32} label="Loading more takes" />
+            ) : (
+              done && reviews.length > FEED_PAGE && <p className="text-sm text-faint">You&apos;re all caught up.</p>
+            )}
+          </div>
+        </>
       ) : (
         <div className="py-10 text-center">
           <p className="font-semibold">{feed.sort === "following" ? "Nothing from your people yet" : "No takes yet"}</p>

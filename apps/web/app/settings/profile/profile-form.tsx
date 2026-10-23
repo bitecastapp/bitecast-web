@@ -11,6 +11,7 @@ import { Avatar } from "@/components/avatar";
 import { DietMark } from "@/components/diet-mark";
 import { DateOfBirthField } from "@/components/date-of-birth";
 import { Button } from "@/components/ui/button";
+import { AutoTextarea } from "@/components/ui/auto-textarea";
 import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
@@ -276,7 +277,7 @@ export function ProfileForm({ userId, handle, regions, regionLockedUntil, initia
               <FieldLabel htmlFor="bio" className="font-semibold">
                 Bio <span className="font-medium text-muted-foreground">(optional)</span>
               </FieldLabel>
-              <textarea
+              <AutoTextarea
                 id="bio"
                 name="bio"
                 value={bio}

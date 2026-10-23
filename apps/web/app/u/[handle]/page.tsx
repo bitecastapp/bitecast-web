@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { shareProfile } from "@/lib/share";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getViewer } from "@/lib/auth";
@@ -9,7 +10,14 @@ import { PageShell } from "@/components/page-shell";
 import { PageLoader } from "@/components/loader";
 import { ProfileView } from "./profile-view";
 
-export const metadata: Metadata = { title: "Profile · Bitecast" };
+export async function generateMetadata({ params }: PageProps<"/u/[handle]">): Promise<Metadata> {
+  const { handle } = await params;
+  const p = await shareProfile(handle);
+  if (!p) return { title: "Profile not found · Bitecast" };
+  const title = `${p.name ? `${p.name} (@${p.handle})` : `@${p.handle}`} · Bitecast`;
+  const description = p.bio ?? `${p.rated} ${p.rated === 1 ? "dish" : "dishes"} rated on Bitecast.`;
+  return { title, description, openGraph: { title, description, type: "profile" } };
+}
 
 export default function ProfilePage({ params, searchParams }: PageProps<"/u/[handle]">) {
   return (

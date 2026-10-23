@@ -20,13 +20,14 @@ export async function GET() {
     mine("favourites", "position, rating_id"),
     mine("follows", "followee:profiles!follows_followee_id_fkey(username), created_at", "follower_id"),
     mine("reports", "target_type, target_id, reason, note, created_at", "reporter_id"),
+    mine("notifications", "kind, detail, created_at, read_at"),
   ]);
   const failed = results.find((r) => r.error);
   if (failed) return new Response("Couldn't gather your data just now. Try again in a moment.", { status: 500 });
 
-  const [profile, details, ratings, comments, votes, commentVotes, saves, favourites, following, reports] = results.map((r) => r.data);
+  const [profile, details, ratings, comments, votes, commentVotes, saves, favourites, following, reports, notifications] = results.map((r) => r.data);
   const body = JSON.stringify(
-    { exported_at: new Date().toISOString(), profile, private_details: details, ratings, comments, votes, comment_votes: commentVotes, want_to_try: saves, favourites, following, reports },
+    { exported_at: new Date().toISOString(), profile, private_details: details, ratings, comments, votes, comment_votes: commentVotes, want_to_try: saves, favourites, following, reports, notifications },
     null,
     2,
   );

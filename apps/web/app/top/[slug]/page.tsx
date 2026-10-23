@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ChevronRightIcon, CrownIcon, HouseHeartIcon, PlusIcon, ScaleIcon, SproutIcon, TrophyIcon, UsersRoundIcon } from "lucide-react";
 import { getViewer } from "@/lib/auth";
+import { shareList } from "@/lib/share";
 import { allows } from "@/lib/diet";
 import { dishHref } from "@/lib/dishes";
 import { getPreferences } from "@/lib/profiles";
@@ -17,7 +18,16 @@ import { PageShell } from "@/components/page-shell";
 import { dishCount } from "@/components/row";
 import { TastesLikeHome } from "@/components/tastes-like-home";
 
-export const metadata: Metadata = { title: "Rankings · Bitecast" };
+export async function generateMetadata({ params }: PageProps<"/top/[slug]">): Promise<Metadata> {
+  const { slug } = await params;
+  const l = await shareList(slug);
+  if (!l) return { title: "Ranking not found · Bitecast" };
+  const title = `Top ${l.name} · Bitecast`;
+  const description = l.top.length
+    ? `The best ${l.name.toLowerCase()}, ranked by the people who ate it. #1: ${l.top[0].name} at ${l.top[0].place}.`
+    : `Every ${l.name.toLowerCase()} on Bitecast, ranked by the people who ate it.`;
+  return { title, description, openGraph: { title, description } };
+}
 
 export default function ListPage({ params }: PageProps<"/top/[slug]">) {
   return (

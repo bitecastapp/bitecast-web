@@ -32,12 +32,15 @@ export async function getRestaurant(supabase: SupabaseClient, slug: string) {
 }
 
 // The dish page also wants the food list it ranks in (and that food's home region, for Tastes like home).
-export type DishPageDish = DishDetail & { space: { id: string; name: string; region: { demonym: string } | null } | null };
+export type DishPageDish = DishDetail & {
+  approved_at: string | null; // null while it waits for approval (only its creator and admins can see it then)
+  space: { id: string; name: string; region: { demonym: string } | null } | null;
+};
 
 export async function getDish(supabase: SupabaseClient, restaurantSlug: string, key: string) {
   const { data, error } = await supabase
     .from("dishes")
-    .select("id, name, diet, rating_count, avg_score, restaurant:restaurants!inner(slug, name, area), space:spaces(id, name, region:regions(demonym))")
+    .select("id, name, diet, rating_count, avg_score, approved_at, restaurant:restaurants!inner(slug, name, area), space:spaces(id, name, region:regions(demonym))")
     .eq("restaurant.slug", restaurantSlug)
     .eq("name_key", key)
     .maybeSingle<DishPageDish>();

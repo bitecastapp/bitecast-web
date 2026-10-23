@@ -2,15 +2,15 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { LogOutIcon, SettingsIcon, UserIcon } from "lucide-react";
+import { LogOutIcon, SettingsIcon, ShieldCheckIcon, UserIcon } from "lucide-react";
 import { Avatar } from "@/components/avatar";
 import { signOut } from "@/app/actions";
 
-type Props = { handle: string; name: string | null; avatar: string | null; photo: string | null };
+type Props = { handle: string; name: string | null; avatar: string | null; photo: string | null; admin?: boolean };
 
 // Your avatar in the header opens this: your profile (edit lives there), settings, sign out.
 // Closes on Escape (focus back on the avatar), on a click outside, and after choosing an item.
-export function AccountMenu({ handle, name, avatar, photo }: Props) {
+export function AccountMenu({ handle, name, avatar, photo, admin }: Props) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLButtonElement>(null);
@@ -73,6 +73,12 @@ export function AccountMenu({ handle, name, avatar, photo }: Props) {
             <SettingsIcon aria-hidden className="size-4 text-muted-foreground" />
             Settings
           </Link>
+          {admin && (
+            <Link role="menuitem" href="/admin" onClick={() => setOpen(false)} className={item}>
+              <ShieldCheckIcon aria-hidden className="size-4 text-mustard" />
+              Admin
+            </Link>
+          )}
           <div className="my-1 h-px bg-hairline" />
           <form action={signOut}>
             <button role="menuitem" type="submit" className={item}>

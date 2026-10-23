@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import { friendlyError } from "@/lib/db-errors";
 import { dishHref, dishKey } from "@/lib/dishes";
 import { dishNameSchema } from "@/lib/validation";
 
@@ -21,8 +22,8 @@ export async function addDish(_: AddDishState, formData: FormData): Promise<AddD
   const { data, error } = await supabase
     .from("dishes")
     .insert({ restaurant_id: restaurantId, name: name.data, diet })
-    .select("name, restaurant:restaurants(slug)")
-    .single<{ name: string; restaurant: { slug: string } }>();
+    .select("name, approved_at, restaurant:restaurants(slug)")
+    .single<{ name: string; approved_at: string | null; restaurant: { slug: string } }>();
 
   if (error?.code === "23505") {
     const { data: existing } = await supabase
@@ -33,7 +34,8 @@ export async function addDish(_: AddDishState, formData: FormData): Promise<AddD
       .maybeSingle();
     return { name: raw, error: "That one's already on the menu.", existing: existing ?? undefined };
   }
-  if (error) return { name: raw, error: "Couldn't add that just now. Try again in a moment." };
+  if (error) return { name: raw, error: friendlyError(error, "Couldn't add that just now. Try again in a moment.") };
 
-  redirect(dishHref(data.restaurant.slug, data.name));
+  // New dishes wait for an admin's approval (admins' own go live); the toast says which.
+  redirect(`${dishHref(data.restaurant.slug, data.name)}?done=${data.approved_at ? "dish-live" : "dish-pending"}`);
 }

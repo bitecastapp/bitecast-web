@@ -3,6 +3,7 @@
 import { refresh } from "next/cache";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import { friendlyError } from "@/lib/db-errors";
 import { dishHref } from "@/lib/dishes";
 import type { Vote } from "@/lib/ratings";
 import { ratingSchema } from "@/lib/validation";
@@ -24,7 +25,7 @@ export async function saveRating(_: SaveRatingState, formData: FormData): Promis
   const { data: saved, error } = existing
     ? await supabase.from("ratings").update(parsed.data).eq("id", existing.id).select("id").single()
     : await supabase.from("ratings").insert({ dish_id: dishId, ...parsed.data }).select("id").single();
-  if (error || !saved) return { error: "Couldn't save that just now. Try again in a moment." };
+  if (error || !saved) return { error: friendlyError(error, "Couldn't save that just now. Try again in a moment.") };
   // You've had it now: it comes off your "Want to try" list. Best effort; RLS limits this to your own saves.
   await supabase.from("saves").delete().eq("dish_id", dishId);
 

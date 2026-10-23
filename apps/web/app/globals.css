@@ -256,6 +256,14 @@
 @keyframes toast-out {
   to { opacity: 0; transform: translateY(8px) scale(0.98); }
 }
+/* The bell rings once when there's something new. */
+@keyframes bell-ring {
+  0%, 100% { transform: rotate(0); }
+  20% { transform: rotate(14deg); }
+  40% { transform: rotate(-11deg); }
+  60% { transform: rotate(7deg); }
+  80% { transform: rotate(-3deg); }
+}
 @keyframes check-pop {
   0% { opacity: 0; transform: scale(0.4); }
   60% { opacity: 1; transform: scale(1.18); }

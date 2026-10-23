@@ -8,6 +8,7 @@ import { resizeToJpeg } from "@/lib/resize-image";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { AutoTextarea } from "@/components/ui/auto-textarea";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { Disclaimer } from "@/components/disclaimer";
@@ -75,7 +76,7 @@ export function RateForm({ dish, userId, existing }: { dish: DishDetail; userId:
         <FieldLabel htmlFor="take" className="font-semibold">
           Hot take <span className="font-medium text-muted-foreground">(optional)</span>
         </FieldLabel>
-        <textarea
+        <AutoTextarea
           id="take"
           name="take"
           value={take}

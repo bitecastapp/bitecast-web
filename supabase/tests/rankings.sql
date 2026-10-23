@@ -11,9 +11,9 @@ insert into auth.users (id, email) values
   ('00000000-0000-0000-0000-00000000000d', 'rk-d@test.local'),
   ('00000000-0000-0000-0000-00000000000e', 'rk-e@test.local');
 insert into public.profiles (id, username, home_region, created_at) values
-  ('00000000-0000-0000-0000-00000000000a', 'rk_a', 'hyderabad', now() - interval '30 days'),
-  ('00000000-0000-0000-0000-00000000000b', 'rk_b', 'hyderabad', now() - interval '30 days'),
-  ('00000000-0000-0000-0000-00000000000c', 'rk_c', 'hyderabad', now() - interval '30 days'),
+  ('00000000-0000-0000-0000-00000000000a', 'rk_a', 'telangana', now() - interval '30 days'),
+  ('00000000-0000-0000-0000-00000000000b', 'rk_b', 'telangana', now() - interval '30 days'),
+  ('00000000-0000-0000-0000-00000000000c', 'rk_c', 'telangana', now() - interval '30 days'),
   ('00000000-0000-0000-0000-00000000000d', 'rk_d', 'karnataka', now() - interval '30 days'),
   ('00000000-0000-0000-0000-00000000000e', 'rk_e', 'karnataka', now());
 
@@ -30,7 +30,7 @@ begin
   if exists (select 1 from public.dishes where created_by is null and space_id is null) then
     raise exception 'FAIL: a seeded dish is in no list';
   end if;
-  if (select origin_region from public.spaces where name = 'Biryani') <> 'hyderabad' then raise exception 'FAIL: biryani origin'; end if;
+  if (select origin_region from public.spaces where name = 'Biryani') <> 'telangana' then raise exception 'FAIL: biryani origin'; end if;
 
   insert into public.dishes (restaurant_id, name, diet) values (vb, 'Rk Paneer Tikka', 'veg') returning id into d;
   if (select space_id from public.dishes where id = d) is not null then raise exception 'FAIL: unmatched dish was listed'; end if;
@@ -56,6 +56,9 @@ begin
   end if;
 end $$;
 
+-- Dishes added outside the app wait for approval; approve the test ones so they rank.
+update public.dishes set approved_at = now() where name like 'Rk %';
+
 insert into public.ratings (user_id, dish_id, score)
 select u, (select v from ids where k = 'x'), 9
 from unnest(array[
@@ -78,6 +81,7 @@ begin
   select * into z from public.dish_rankings where dish_id = (select v from ids where k = 'z');
   select * into u from public.dish_rankings where dish_id = (select v from ids where k = 'u');
 
+  if x.dish_id is null or y.dish_id is null or u.dish_id is null then raise exception 'FAIL: listed dishes missing from rankings'; end if;
   if x.rank >= y.rank then raise exception 'FAIL: one 10/10 (rank %) beat four 9s (rank %)', y.rank, x.rank; end if;
   if w.rank_score <= z.rank_score then raise exception 'FAIL: a new account''s 10 should count less (% vs %)', z.rank_score, w.rank_score; end if;
   if u.rank is not null or u.rank_score is not null or u.ratings <> 0 then raise exception 'FAIL: unrated dish ranked'; end if;

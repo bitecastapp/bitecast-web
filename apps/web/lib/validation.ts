@@ -109,21 +109,45 @@ export const favouritesSchema = z
   .max(4, "Pin up to 4 favourites.")
   .refine((ids) => new Set(ids).size === ids.length, "Each favourite can be pinned once.");
 
-// Mirrors public.reports: what's being reported, why, and an optional note (≤300).
-export const REPORT_REASONS = [
-  { value: "spam", label: "Spam or ads" },
-  { value: "offensive", label: "Offensive or hateful" },
-  { value: "harassment", label: "Harassment or bullying" },
-  { value: "misleading", label: "Fake or misleading" },
-  { value: "other", label: "Something else" },
-] as const;
+// Mirrors public.reports: what's being reported, why (reasons differ for takes, comments and dishes, as in the
+// database check), and an optional note (≤300).
+export const REPORT_REASONS = {
+  rating: [
+    { value: "fake", label: "Fake or paid review", hint: "Didn't eat it, or rated for the restaurant" },
+    { value: "off_topic", label: "Not about the food", hint: "Rants, ads or anything off the plate" },
+    { value: "wrong_dish", label: "Wrong dish or place", hint: "The take is about something else" },
+    { value: "abusive", label: "Rude, hateful or harassing", hint: "Attacks people, not the food" },
+    { value: "photo", label: "Inappropriate photo", hint: "Not food, offensive, or someone's private photo" },
+    { value: "spam", label: "Spam or self-promotion", hint: "Links, promo codes, repeated posts" },
+    { value: "other", label: "Something else", hint: "" },
+  ],
+  comment: [
+    { value: "abusive", label: "Rude, hateful or harassing", hint: "Attacks people, not the food" },
+    { value: "spam", label: "Spam or self-promotion", hint: "Links, promo codes, repeated posts" },
+    { value: "off_topic", label: "Off topic", hint: "Nothing to do with the take or the dish" },
+    { value: "other", label: "Something else", hint: "" },
+  ],
+  dish: [
+    { value: "duplicate", label: "Duplicate dish", hint: "Already on this menu under another name" },
+    { value: "not_on_menu", label: "Not on the menu", hint: "This place doesn't serve it" },
+    { value: "wrong_place", label: "Wrong restaurant", hint: "It belongs to a different place" },
+    { value: "misspelled", label: "Misspelled name", hint: "" },
+    { value: "wrong_diet", label: "Wrong veg / non-veg mark", hint: "" },
+    { value: "inappropriate", label: "Inappropriate name", hint: "" },
+    { value: "other", label: "Something else", hint: "" },
+  ],
+} as const;
 
-export const reportSchema = z.object({
-  target_type: z.enum(["rating", "comment", "dish"]),
-  target_id: z.uuid(),
-  reason: z.enum(["spam", "offensive", "harassment", "misleading", "other"], "Pick a reason."),
-  note: optionalText(300, "Keep the note under 300 characters."),
-});
+export type ReportTarget = keyof typeof REPORT_REASONS;
+
+export const reportSchema = z
+  .object({
+    target_type: z.enum(["rating", "comment", "dish"]),
+    target_id: z.uuid(),
+    reason: z.string(),
+    note: optionalText(300, "Keep the note under 300 characters."),
+  })
+  .refine((r) => REPORT_REASONS[r.target_type].some((x) => x.value === r.reason), { message: "Pick a reason.", path: ["reason"] });
 
 // Mirrors the profiles visibility checks: who sees your "Want to try" list and your Diary.
 const visibility = z.enum(["everyone", "followers", "only_me"], "Pick who can see it.");
@@ -134,3 +158,19 @@ export const preferencesSchema = z.object({
   show_diet: z.enum(["all", "vegan", "veg", "egg"], "Pick which dishes to show."),
   feed_default: z.enum(["top", "new", "following"], "Pick a default feed."),
 });
+
+// Admins adding a restaurant. Mirrors public.restaurants (name ≤ 80, area ≤ 60).
+export const restaurantSchema = z.object({
+  name: z.string().trim().min(2, "Give the restaurant's name.").max(80, "Keep the name under 80 characters."),
+  area: z.string().trim().min(2, "Add the area it's in.").max(60, "Keep the area under 60 characters."),
+});
+
+// URL slug for a restaurant: lowercase words joined by hyphens ("CTR (Central Tiffin Room)" → "ctr-central-tiffin-room").
+export const restaurantSlug = (name: string) =>
+  name
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/\p{M}/gu, "") // drop accents: "Café" → "cafe"
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 60) || "place";

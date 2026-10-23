@@ -9,6 +9,7 @@ import { AGREE_CRUMBS, DISAGREE_CRUMBS, burst } from "@/lib/burst";
 import { timeAgo } from "@/lib/time";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { AutoTextarea } from "@/components/ui/auto-textarea";
 import { Spinner } from "@/components/ui/spinner";
 import { RollingCount } from "@/components/vote-buttons";
 import { PersonLink } from "@/components/avatar";
@@ -213,7 +214,7 @@ function Composer({ ratingId, parentId, placeholder, autoFocus, className, onDon
     <form action={action} className={cn("flex flex-col gap-2", className)}>
       <input type="hidden" name="rating_id" value={ratingId} />
       {parentId && <input type="hidden" name="parent_id" value={parentId} />}
-      <textarea
+      <AutoTextarea
         name="body"
         value={body}
         onChange={(e) => setBody(e.target.value.slice(0, 500))}
@@ -222,7 +223,7 @@ function Composer({ ratingId, parentId, placeholder, autoFocus, className, onDon
         placeholder={placeholder}
         aria-label={placeholder}
         aria-invalid={Boolean(state.error) || undefined}
-        className="w-full resize-y rounded-md border border-input bg-raised px-3 py-2.5 text-base leading-relaxed focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+        className="w-full rounded-md border border-input bg-raised px-3 py-2.5 text-base leading-relaxed focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
       />
       <div className="flex items-center justify-between gap-3">
         <p role={state.error ? "alert" : undefined} className={cn("text-sm", state.error ? "text-destructive" : "text-faint tabular-nums")}>

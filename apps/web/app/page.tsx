@@ -1,9 +1,11 @@
 import { Suspense } from "react";
 import { getViewer } from "@/lib/auth";
+import { isAdmin } from "@/lib/admin";
+import { unreadCount } from "@/lib/notifications";
 import { getRestaurants } from "@/lib/restaurants";
 import { getFeed, getMyVotes, type FeedSort } from "@/lib/ratings";
 import { getFollowees, getPreferences } from "@/lib/profiles";
-import { allows, filterMenus } from "@/lib/diet";
+import { filterMenus } from "@/lib/diet";
 import { getListedDishes, getLists, getRankings, listLeaders } from "@/lib/rankings";
 import { PageShell } from "@/components/page-shell";
 import { FeedSkeleton } from "@/components/loader";
@@ -33,21 +35,26 @@ async function Home({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
   const authors = sort === "following" && userId ? await getFollowees(supabase, userId) : [];
   const [allRestaurants, feed, lists, listed, rankings] = await Promise.all([
     getRestaurants(supabase),
-    getFeed(supabase, sort, authors),
+    getFeed(supabase, sort, authors, { show: prefs.show_diet }),
     getLists(supabase),
     getListedDishes(supabase),
     getRankings(supabase),
   ]);
-  // shortcut: the diet filter trims the fetched feed page (so a page can show fewer than 30); filter in the query once the feed paginates.
   const restaurants = filterMenus(allRestaurants, prefs.show_diet);
-  const reviews = feed.filter((r) => allows(prefs.show_diet, r.dish.diet));
-  const votes = profile ? await getMyVotes(supabase, reviews.map((r) => r.id)) : {};
+  const reviews = feed;
+  const [votes, admin, unread] = await Promise.all([
+    profile ? getMyVotes(supabase, reviews.map((r) => r.id)) : {},
+    profile ? isAdmin(supabase) : false,
+    profile && userId ? unreadCount(supabase, userId) : 0,
+  ]);
   return (
     <HomeView
       profile={profile}
       restaurants={restaurants}
       feed={{ sort, reviews, votes }}
       leaders={listLeaders(lists, listed, rankings, prefs.show_diet)}
+      admin={admin}
+      unread={unread}
       showDiet={prefs.show_diet}
       notice={account === "deleted" ? "Your account and everything in it has been deleted." : undefined}
     />

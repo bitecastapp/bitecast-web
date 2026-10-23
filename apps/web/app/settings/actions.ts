@@ -10,7 +10,7 @@ export type DeleteAccountState = { error?: string };
 // Delete your account for good. You confirm by typing your handle. Your photo files go first (Storage isn't part of
 // the database cascade), then the database removes the account and everything that hangs off it.
 export async function deleteAccount(_: DeleteAccountState, formData: FormData): Promise<DeleteAccountState> {
-  const { supabase, userId, profile } = await getCurrentUser();
+  const { supabase, userId, profile } = await getCurrentUser({ allowSuspended: true });
   if (!profile) redirect("/onboarding");
   const typed = String(formData.get("confirm") ?? "").trim().replace(/^@/, "").toLowerCase();
   if (typed !== profile.username) return { error: `Type ${profile.username} to confirm.` };

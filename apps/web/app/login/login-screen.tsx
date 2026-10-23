@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, useActionState, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { MailIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -88,6 +89,17 @@ export function LoginScreen({ initialState = { status: "idle" } }: { initialStat
               {pending ? <Spinner data-icon="inline-start" /> : <MailIcon data-icon="inline-start" />}
               {pending ? "Sending" : "Send my link"}
             </Button>
+            <p className="text-center text-xs leading-relaxed text-faint">
+              By continuing, you agree to our{" "}
+              <Link href="/terms" className="font-semibold text-muted-foreground underline-offset-4 hover:underline">
+                Terms
+              </Link>{" "}
+              and{" "}
+              <Link href="/privacy" className="font-semibold text-muted-foreground underline-offset-4 hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </FieldGroup>
         </form>
       )}

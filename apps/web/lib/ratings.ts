@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { DishDiet } from "./diet";
+import { dietsFor, type DishDiet, type ShowDiet } from "./diet";
 
 export type Vote = "facts" | "cap";
 export type Review = {
@@ -17,8 +17,11 @@ export type Review = {
 export type Sort = "top" | "new";
 export type FeedSort = Sort | "following";
 
+// dishes!inner: a take only shows when its dish does (dishes waiting for approval are hidden from everyone but their creator).
 const REVIEW_FIELDS =
-  "id, score, take, facts_count, cap_count, comments_count, created_at, author:profiles!ratings_user_id_fkey(username, avatar, avatar_path), dish:dishes(id, name, diet, rating_count, avg_score, restaurant:restaurants(slug, name, area)), photos:rating_photos(path, position)";
+  "id, score, take, facts_count, cap_count, comments_count, created_at, author:profiles!ratings_user_id_fkey(username, avatar, avatar_path), dish:dishes!inner(id, name, diet, rating_count, avg_score, restaurant:restaurants(slug, name, area)), photos:rating_photos(path, position)";
+
+export const FEED_PAGE = 20;
 
 // Scores show one decimal (8.5, 9.0); a perfect 10 stays "10" so it fits the disc.
 export function formatScore(score: number) {
@@ -54,14 +57,22 @@ function sorted<T extends { photos: { position: number }[] }>(rows: T[]) {
   return rows;
 }
 
-// The home feed: reviews (ratings with a take), Top = net votes, New = newest.
-// The feed: everyone's takes by Top or New, or only takes from the people you follow (`authors`), newest first.
-export async function getFeed(supabase: SupabaseClient, sort: FeedSort, authors: string[] = [], limit = 30) {
+// The feed: everyone's takes by Top (net votes) or New, or only takes from the people you follow (`authors`), newest
+// first; one page at a time from `offset`, only dishes the diet preference allows.
+// shortcut: offset paging can repeat or skip a take when votes reorder Top between pages (the client drops repeats);
+// move to keyset paging if that shows up.
+export async function getFeed(
+  supabase: SupabaseClient,
+  sort: FeedSort,
+  authors: string[] = [],
+  { offset = 0, limit = FEED_PAGE, show = "all" }: { offset?: number; limit?: number; show?: ShowDiet } = {},
+) {
   if (sort === "following" && !authors.length) return [];
   let q = supabase.from("ratings").select(REVIEW_FIELDS).not("take", "is", null);
   if (sort === "following") q = q.in("user_id", authors);
+  if (show !== "all") q = q.in("dish.diet", dietsFor(show));
   q = sort === "top" ? q.order("net_votes", { ascending: false }).order("created_at", { ascending: false }) : q.order("created_at", { ascending: false });
-  const { data, error } = await q.limit(limit).returns<Review[]>();
+  const { data, error } = await q.order("id").range(offset, offset + limit - 1).returns<Review[]>();
   if (error) throw error;
   return sorted(data);
 }
