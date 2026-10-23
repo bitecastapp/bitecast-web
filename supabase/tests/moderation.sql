@@ -111,6 +111,11 @@ begin
     raise exception 'FAIL: banned account followed';
   exception when insufficient_privilege then null;
   end;
+  begin
+    update public.profiles set bio = 'Buy followers here' where id = '00000000-0000-0000-0000-0000000000a2';
+    raise exception 'FAIL: banned account edited its profile';
+  exception when insufficient_privilege then null;
+  end;
 end $$;
 
 -- Rate limit: b can add 15 dishes a day, not 16.

@@ -11,7 +11,8 @@ export function AutoTextarea({ className, maxRows = 8, onInput, ...props }: Prop
 
   function fit() {
     const el = ref.current;
-    if (!el) return;
+    // Hidden (e.g. inside a closed dialog) it measures 0 tall; size it once it's visible and typed in instead.
+    if (!el || el.offsetParent === null) return;
     const style = getComputedStyle(el);
     const line = parseFloat(style.lineHeight) || 24;
     const chrome = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom) + parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);

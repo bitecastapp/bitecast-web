@@ -17,6 +17,9 @@ const SECTIONS: LegalSection[] = [
     body: (
       <ul>
         <li>
+          <strong>Waitlist:</strong> if you join before launch, your email address, only to tell you when Bitecast opens.
+        </li>
+        <li>
           <strong>Account:</strong> your email address (to sign you in), handle and name.
         </li>
         <li>
