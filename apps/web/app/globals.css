@@ -310,3 +310,51 @@
     animation: none !important;
   }
 }
+
+/* Coming soon: each headline line rises from behind its own baseline; the sentence and form then fade up. */
+.mask-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+.mask-line > span {
+  display: block;
+  animation: line-rise 900ms var(--ease-out) both;
+}
+@keyframes line-rise {
+  from { transform: translateY(105%); }
+}
+.hero-after {
+  animation: rise-in 600ms var(--ease-out) 420ms both;
+}
+/* Section parts rise in once as they enter (app/coming-soon/reveal.tsx), 80ms apart. */
+.reveal-ready [data-reveal] {
+  transition: opacity 700ms var(--ease-out), transform 700ms var(--ease-out);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.reveal-ready [data-reveal]:not([data-in]) {
+  opacity: 0;
+  transform: translateY(24px);
+}
+/* A slow drift on the dish photos, so the pictures feel alive. Off entirely under reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .drift {
+    animation: drift 16s ease-in-out infinite alternate;
+  }
+}
+@keyframes drift {
+  to { transform: scale(1.07); }
+}
+/* Coming soon: the feature tour's progress bar fills over each 3-second step. */
+@keyframes tour {
+  from { transform: scaleX(0); }
+}
+/* Coming soon: an explainer slides in when its feature opens; the score sticker stamps when its verdict changes. */
+@keyframes explainer-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+}
+@keyframes stamp {
+  0% { transform: scale(0.82); }
+  60% { transform: scale(1.06); }
+  100% { transform: none; }
+}

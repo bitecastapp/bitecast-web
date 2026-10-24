@@ -1,81 +1,123 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { HouseHeartIcon, MessageCircleIcon, TrophyIcon } from "lucide-react";
-import { BroadcastMark, Wordmark } from "@/components/brand";
 import { WaitlistForm } from "./waitlist-form";
+import { ScoreDemo } from "./score-demo";
+import { TakeDemo } from "./take-demo";
+import { FeatureList } from "./feature-list";
+import { Reveal } from "./reveal";
 
 export const metadata: Metadata = {
   title: "Nomrank · Coming soon",
-  description: "Rate the dish, not the place. Nomrank is almost ready: join the waitlist and be first in.",
+  description: "Rate single dishes from 1 to 10. Join the waitlist to hear when Nomrank opens.",
 };
 
-const TEASERS = [
-  { icon: MessageCircleIcon, title: "Score every dish", text: "Rate dishes 1 to 10 with a hot take and photos. Others agree, disagree and reply." },
-  { icon: TrophyIcon, title: "Rankings per food", text: "Top Dosa, Top Biryani and more, ranked by the people who actually ate them." },
-  { icon: HouseHeartIcon, title: "Tastes like home", text: "See how people from a dish's home region rate it." },
-];
+// One page width and one pair of margins for every section, so all the left edges line up.
+const WRAP = "mx-auto w-full max-w-[76rem] px-5 sm:px-8 lg:px-10";
+const H2 = "text-[clamp(2.25rem,4vw,3.5rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance";
+const LINK = "transition-colors duration-150 underline-offset-4 hover:text-spotlight hover:underline focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-mustard focus-visible:outline-none";
 
-// The pre-launch landing page, shown on the main domain while COMING_SOON=1 (see proxy.ts).
+// The pre-launch landing page, shown on the main domain while COMING_SOON=1 (see proxy.ts). The product shows
+// itself: each section is a working piece of the app (the rating meter, a take, the feature search).
 export default function ComingSoonPage() {
   return (
-    <main className="relative flex min-h-dvh w-full flex-col overflow-hidden px-5 pt-[max(env(safe-area-inset-top),1.25rem)] pb-[max(env(safe-area-inset-bottom),1.5rem)]">
-      {/* A soft ketchup-to-mustard glow behind the hero. */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -top-40 left-1/2 h-[28rem] w-[44rem] -translate-x-1/2 rounded-full opacity-25 blur-3xl"
-        style={{ background: "radial-gradient(closest-side, var(--ketchup), var(--mustard) 55%, transparent)" }}
-      />
+    <main className="bg-studio text-spotlight">
+      <Reveal />
 
-      <header className="relative mx-auto flex h-12 w-full max-w-5xl items-center">
-        <Wordmark href={null} />
+      <header className={`${WRAP} flex h-16 animate-[fade-in_600ms_var(--ease-out)_both] items-center justify-between pt-[env(safe-area-inset-top)] lg:h-20`}>
+        <p className="font-brand text-[1.5rem] leading-none font-black tracking-[-0.04em]">
+          nomrank<span className="text-ketchup">.</span>
+        </p>
+        <Link href="/about" className={`text-[1rem] ${LINK}`}>
+          How it works
+        </Link>
       </header>
 
-      <section className="stagger relative mx-auto mt-[10dvh] flex w-full max-w-xl flex-col items-center text-center">
-        <span className="relative grid size-20 place-items-center">
-          <span aria-hidden className="absolute inset-0 animate-[ping-ring_1.8s_var(--ease-out)_infinite] rounded-full border-2 border-ketchup/40" />
-          <BroadcastMark lit={3} pulse className="relative w-14" />
-        </span>
-        <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-hairline bg-paper px-3 py-1 text-xs font-semibold tracking-[0.08em] text-mustard uppercase">
-          <span aria-hidden className="size-1.5 animate-[on-air_1.6s_ease-in-out_infinite] rounded-full bg-ketchup" />
-          Coming soon
-        </p>
-        <h1 className="mt-4 text-[2.5rem] leading-[1.05] font-extrabold tracking-[-0.03em] sm:text-6xl">
-          Rate the dish,
-          <br />
-          not the place.
-        </h1>
-        <p className="mt-4 max-w-md text-[1.0625rem] leading-relaxed text-muted-foreground">
-          Nomrank is where food lovers score individual dishes, argue about the takes, and find what&apos;s actually worth eating. We&apos;re
-          plating up. Get on the list and be first in.
-        </p>
-        <div className="mt-8 w-full">
-          <WaitlistForm />
+      {/* Hero: the promise and the signup beside the app's real rating meter. */}
+      <section className={`${WRAP} grid items-center gap-12 pt-10 pb-14 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-12 lg:gap-16 lg:pt-6 lg:pb-24`}>
+        <div className="lg:col-span-6">
+          <h1 className="text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[0.98] font-semibold tracking-[-0.04em]">
+            <span className="mask-line">
+              <span>Rate the dish,</span>
+            </span>
+            <span className="mask-line">
+              <span style={{ animationDelay: "110ms" }}>not the place.</span>
+            </span>
+          </h1>
+          <p className="hero-after mt-6 max-w-[40ch] text-[1.0625rem] leading-relaxed text-muted-foreground lg:text-[1.1875rem]">
+            Rate one dish at a time, from 1 to 10, and find the plates worth ordering. Nomrank opens soon.
+          </p>
+          <WaitlistForm id="waitlist-email" className="hero-after mt-8 max-w-[32rem]" />
+        </div>
+        <div className="hero-after max-w-[36rem] lg:col-span-6 lg:max-w-none">
+          <ScoreDemo />
         </div>
       </section>
 
-      <ul className="stagger relative mx-auto mt-16 grid w-full max-w-5xl gap-3 sm:grid-cols-3">
-        {TEASERS.map(({ icon: Icon, title, text }) => (
-          <li key={title} className="rounded-2xl border border-hairline bg-paper/80 p-4 sm:p-5">
-            <span className="grid size-9 place-items-center rounded-lg bg-mustard/12 text-mustard">
-              <Icon aria-hidden className="size-[18px]" />
-            </span>
-            <p className="mt-3 font-semibold">{title}</p>
-            <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{text}</p>
-          </li>
-        ))}
-      </ul>
+      <section className={`${WRAP} py-14 lg:pt-12 lg:pb-32`}>
+        <TakeDemo />
+      </section>
 
-      <footer className="relative mx-auto mt-auto flex w-full max-w-5xl flex-wrap items-center justify-center gap-x-5 gap-y-1 pt-14 text-xs text-faint">
-        <Link href="/about" className="inline-flex min-h-10 items-center hover:text-foreground">
-          How Nomrank works
-        </Link>
-        <Link href="/terms" className="inline-flex min-h-10 items-center hover:text-foreground">
-          Terms
-        </Link>
-        <Link href="/privacy" className="inline-flex min-h-10 items-center hover:text-foreground">
-          Privacy
-        </Link>
-        <span>© Nomrank</span>
+      {/* Features as the app's own search list. */}
+      <section className={`${WRAP} py-14 lg:py-32`}>
+        <h2 data-reveal className={H2}>
+          What you can do
+        </h2>
+        <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-5 mb-10 max-w-[42ch] text-[1.0625rem] leading-relaxed text-muted-foreground">
+          Search the list, or tap a feature to try it.
+        </p>
+        <div data-reveal style={{ "--i": 2 } as React.CSSProperties}>
+          <FeatureList />
+        </div>
+      </section>
+
+      {/* Close: the signup already open, on the ketchup field. */}
+      <section className="bg-ketchup text-studio">
+        <div className={`${WRAP} grid items-center gap-10 py-16 lg:grid-cols-12 lg:gap-16 lg:py-32`}>
+          <div className="lg:col-span-6">
+            <h2 data-reveal className="text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[0.98] font-semibold tracking-[-0.04em]">
+              Save your spot.
+            </h2>
+            <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-5 max-w-[40ch] text-[1.0625rem] leading-relaxed lg:text-[1.1875rem]">
+              Leave your email. We&apos;ll confirm it now and write again the day we open.
+            </p>
+          </div>
+          <div className="lg:col-span-6">
+            <div
+              data-ui
+              data-reveal
+              style={{ "--i": 2 } as React.CSSProperties}
+              className="w-full rounded-3xl bg-studio p-6 text-spotlight shadow-[0_24px_48px_-16px_rgb(23_17_28/0.55)] sm:p-8"
+            >
+              <p className="text-[1.5rem] font-semibold tracking-[-0.02em]">Join the waitlist</p>
+              <WaitlistForm id="waitlist-email-close" className="mt-6" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer className={`${WRAP} pt-16 pb-10 text-[0.875rem] text-muted-foreground lg:pt-20`}>
+        <div data-reveal className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-brand text-[1.5rem] leading-none font-black tracking-[-0.04em] text-spotlight">
+            nomrank<span className="text-ketchup">.</span>
+          </p>
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-[1rem] text-spotlight">
+            <Link href="/about" className={LINK}>
+              How it works
+            </Link>
+            <Link href="/terms" className={LINK}>
+              Terms
+            </Link>
+            <Link href="/privacy" className={LINK}>
+              Privacy
+            </Link>
+            <Link href="/credits" className={LINK}>
+              Credits
+            </Link>
+          </nav>
+        </div>
+        <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8">
+          © 2026 Nomrank. Rate the dish, not the place.
+        </p>
       </footer>
     </main>
   );

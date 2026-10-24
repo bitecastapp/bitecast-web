@@ -14,8 +14,8 @@ type Props = {
   facts: number; // stored as "facts", shown as Agree
   cap: number; // stored as "cap", shown as Disagree
   mine?: Vote;
-  /** Signed out → each side links to sign-in; own take → counts only, no buttons. */
-  mode: "vote" | "signed-out" | "own";
+  /** Signed out → each side links to sign-in; own take → counts only, no buttons; demo → votes stay on the page, nothing is saved. */
+  mode: "vote" | "signed-out" | "own" | "demo";
 };
 
 const SIDES = [
@@ -28,13 +28,16 @@ const SIDES = [
 // from its outer edge, pops a few crumbs, rolls the count and slides the bar to the new share.
 export function VoteButtons({ ratingId, facts, cap, mine, mode }: Props) {
   const [, startTransition] = useTransition();
-  const [state, setOptimistic] = useOptimistic<VoteState>({ facts, cap, mine });
+  const [optimistic, setOptimistic] = useOptimistic<VoteState>({ facts, cap, mine });
+  const [local, setLocal] = useState<VoteState>({ facts, cap, mine });
+  const state = mode === "demo" ? local : optimistic;
   const fx = useRef<HTMLSpanElement>(null);
   const lead = leadingSide(state.facts, state.cap);
 
   function press(kind: Vote, button: HTMLElement, crumbs: string[]) {
     const next = applyVote(state, kind);
     if (next.mine) burst(fx.current, button, crumbs); // a new vote, not a cleared one
+    if (mode === "demo") return setLocal(next);
     startTransition(async () => {
       setOptimistic(next);
       await castVote(ratingId, next.mine ?? null);
@@ -71,7 +74,7 @@ export function VoteButtons({ ratingId, facts, cap, mine, mode }: Props) {
             i === 1 && "border-l border-hairline",
             active ? "text-studio" : "text-muted-foreground",
           );
-          if (mode === "vote")
+          if (mode === "vote" || mode === "demo")
             return (
               <button
                 key={kind}
