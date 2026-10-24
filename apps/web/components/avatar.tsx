@@ -144,7 +144,7 @@ type Props = {
   label?: string; // give it a name for screen readers; otherwise it's decorative (the handle sits next to it)
 };
 
-// A person's Bitecast character, drawn from four traits.
+// A person's Nomrank character, drawn from four traits.
 export function Avatar({ handle, code, photo, size = 28, className, label }: Props) {
   if (photo) {
     return (

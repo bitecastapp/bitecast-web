@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-// "bitecast." in the brand face until the owner's logo files arrive.
+// "nomrank." in the brand face until the owner's logo files arrive.
 export function Wordmark({ className, href = "/" }: { className?: string; href?: string | null }) {
   const mark = (
     <span className={cn("font-brand text-[1.375rem] leading-none font-black tracking-[-0.04em]", className)}>
-      bitecast<span className="text-ketchup">.</span>
+      nomrank<span className="text-ketchup">.</span>
     </span>
   );
   return href ? (
-    <Link href={href} aria-label="bitecast home" className="-mx-1 rounded-sm px-1 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
+    <Link href={href} aria-label="nomrank home" className="-mx-1 rounded-sm px-1 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none">
       {mark}
     </Link>
   ) : (
@@ -17,14 +17,14 @@ export function Wordmark({ className, href = "/" }: { className?: string; href?:
   );
 }
 
-// The app icon's "b" with three broadcast waves. `lit` waves (0–3) glow Ketchup; `pulse` loops them outward
-// one after another, like a signal going out (the loader).
+// The app icon: an "n" with three waves off its shoulder. `lit` waves (0–3) glow Ketchup; `pulse` loops them
+// outward one after another (the loader).
 export function BroadcastMark({ lit, pulse, className }: { lit: number; pulse?: boolean; className?: string }) {
   const waves = ["M118 66a22 22 0 0 1 22 22", "M118 44a44 44 0 0 1 44 44", "M118 22a66 66 0 0 1 66 66"];
   return (
     <svg viewBox="0 0 200 200" aria-hidden className={cn("h-auto w-full", className)}>
       <path
-        d="M40 36h28v44c8-8 18-12 30-12 30 0 50 22 50 52s-20 52-50 52c-13 0-24-5-32-14v12H40Zm56 62c-15 0-26 10-26 24s11 24 26 24 26-10 26-24-11-24-26-24Z"
+        d="M40 172V70h28v10c8-8 18-12 30-12 30 0 50 22 50 52v52h-28v-52c0-15-9-26-22-26s-30 11-30 26v52Z"
         className="fill-spotlight"
       />
       {waves.map((d, i) => (

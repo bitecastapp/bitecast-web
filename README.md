@@ -1,2 +1,2 @@
 # bitecast-web
-web version for the bitecast app
+web version for the nomrank app

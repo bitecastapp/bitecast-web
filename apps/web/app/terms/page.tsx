@@ -2,15 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, type LegalSection } from "@/components/legal-page";
 
-export const metadata: Metadata = { title: "Terms of Service · Bitecast", description: "The rules for using Bitecast." };
+export const metadata: Metadata = { title: "Terms of Service · Nomrank", description: "The rules for using Nomrank." };
 
 const SECTIONS: LegalSection[] = [
   {
     id: "who",
-    title: "Who can use Bitecast",
+    title: "Who can use Nomrank",
     body: (
       <>
-        <p>You need to be at least 13 to use Bitecast, and old enough where you live to agree to these terms. One account per person.</p>
+        <p>You need to be at least 13 to use Nomrank, and old enough where you live to agree to these terms. One account per person.</p>
         <p>Keep your sign-in email secure. You&apos;re responsible for what happens on your account.</p>
       </>
     ),
@@ -21,8 +21,8 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          Your ratings, takes, comments, photos and dish suggestions stay yours. By posting them, you give Bitecast a free, worldwide licence
-          to show, store and share them on Bitecast and when you share Bitecast links, for as long as they&apos;re on Bitecast.
+          Your ratings, takes, comments, photos and dish suggestions stay yours. By posting them, you give Nomrank a free, worldwide licence
+          to show, store and share them on Nomrank and when you share Nomrank links, for as long as they&apos;re on Nomrank.
         </p>
         <p>Only post photos you took or have the right to share, and no photos of other people without their consent.</p>
       </>
@@ -45,7 +45,7 @@ const SECTIONS: LegalSection[] = [
           <li>harass, threaten or attack people, or post hateful content;</li>
           <li>spam, advertise, or post links to scams or malware;</li>
           <li>create accounts or use bots to push rankings up or down;</li>
-          <li>scrape Bitecast or try to get around its security or limits.</li>
+          <li>scrape Nomrank or try to get around its security or limits.</li>
         </ul>
       </>
     ),
@@ -68,7 +68,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <>
         <p>
-          Scores, rankings and takes are the personal opinions of people on Bitecast, not statements of fact by Bitecast. Bitecast isn&apos;t
+          Scores, rankings and takes are the personal opinions of people on Nomrank, not statements of fact by Nomrank. Nomrank isn&apos;t
           affiliated with, or paid by, the restaurants listed. Dish and menu details are added by the community and may be wrong or out of
           date: always check ingredients and allergens with the restaurant.
         </p>
@@ -77,11 +77,11 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: "liability",
-    title: "Bitecast as it is",
+    title: "Nomrank as it is",
     body: (
       <>
         <p>
-          We work to keep Bitecast running well, but we provide it as it is, without guarantees. To the extent the law allows, Bitecast
+          We work to keep Nomrank running well, but we provide it as it is, without guarantees. To the extent the law allows, Nomrank
           isn&apos;t responsible for losses from using it or relying on what people post.
         </p>
       </>
@@ -119,7 +119,7 @@ export default function TermsPage() {
     <LegalPage
       title="Terms of Service"
       updated="23 October 2026"
-      intro={<p>These terms are the agreement between you and Bitecast when you use the app. We&apos;ve kept them short and plain.</p>}
+      intro={<p>These terms are the agreement between you and Nomrank when you use the app. We&apos;ve kept them short and plain.</p>}
       sections={SECTIONS}
     />
   );

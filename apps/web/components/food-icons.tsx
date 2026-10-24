@@ -1,4 +1,4 @@
-// Vote icons drawn for Bitecast, in the same 24px / 2px-stroke grid as lucide so they sit beside its icons.
+// Vote icons drawn for Nomrank, in the same 24px / 2px-stroke grid as lucide so they sit beside its icons.
 // The pair must read apart without colour, so they differ three ways: solid heart vs open cross,
 // upright bowl vs bowl tipped away, soft shape vs sharp shape.
 type IconProps = { className?: string };

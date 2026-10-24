@@ -121,7 +121,7 @@ const FIXTURE_VOTES: Record<string, Record<string, "facts" | "cap">> = {
   demo: Object.fromEntries(REVIEWS.demo.slice(0, 2).map((r, i) => [r.id, i ? "cap" : "facts"])),
 };
 
-const LONG_EMAIL = "aleksandra.wisniewska-kowalczyk+bitecast@northwind-industries-holdings.example.com";
+const LONG_EMAIL = "aleksandra.wisniewska-kowalczyk+nomrank@northwind-industries-holdings.example.com";
 
 const FIXTURES = {
   demo: {

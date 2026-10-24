@@ -1,4 +1,4 @@
-// Bitecast avatars: little food characters built from four traits (shape, colour, eyes, mouth).
+// Nomrank avatars: little food characters built from four traits (shape, colour, eyes, mouth).
 // Stored on the profile as a 4-character code, one base-36 digit per trait (e.g. "2a31").
 // No code yet → a stable one generated from the handle, so everyone has a face from day one.
 

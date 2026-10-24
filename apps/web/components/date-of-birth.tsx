@@ -11,7 +11,7 @@ const daysIn = (year: number, month: number) => new Date(Date.UTC(year || 2000, 
 type Part = "day" | "month" | "year";
 type Props = { name: string; defaultValue: string; minAge?: number };
 
-// Birthday as Day · Month · Year, with Bitecast's own pickers (no browser dropdowns): tap a part and a grid opens
+// Birthday as Day · Month · Year, with Nomrank's own pickers (no browser dropdowns): tap a part and a grid opens
 // under the field (days, months, or years newest first); picking one moves on to the next part.
 // Escape or a tap outside closes it. Submits YYYY-MM-DD, or "" until all three are set.
 export function DateOfBirthField({ name, defaultValue, minAge = 13 }: Props) {
@@ -150,7 +150,7 @@ export function DateOfBirthField({ name, defaultValue, minAge = 13 }: Props) {
 
       <div className="mt-1.5 flex items-center justify-between gap-3 text-sm">
         <p className={partial ? "text-mustard" : "text-muted-foreground"} aria-live="polite">
-          {partial ? "Pick the day, month and year." : "You need to be 13 or older to use Bitecast."}
+          {partial ? "Pick the day, month and year." : "You need to be 13 or older to use Nomrank."}
         </p>
         {(complete || partial) && (
           <button

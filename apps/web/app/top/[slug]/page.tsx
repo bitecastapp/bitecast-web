@@ -21,11 +21,11 @@ import { TastesLikeHome } from "@/components/tastes-like-home";
 export async function generateMetadata({ params }: PageProps<"/top/[slug]">): Promise<Metadata> {
   const { slug } = await params;
   const l = await shareList(slug);
-  if (!l) return { title: "Ranking not found · Bitecast" };
-  const title = `Top ${l.name} · Bitecast`;
+  if (!l) return { title: "Ranking not found · Nomrank" };
+  const title = `Top ${l.name} · Nomrank`;
   const description = l.top.length
     ? `The best ${l.name.toLowerCase()}, ranked by the people who ate it. #1: ${l.top[0].name} at ${l.top[0].place}.`
-    : `Every ${l.name.toLowerCase()} on Bitecast, ranked by the people who ate it.`;
+    : `Every ${l.name.toLowerCase()} on Nomrank, ranked by the people who ate it.`;
   return { title, description, openGraph: { title, description } };
 }
 
@@ -162,7 +162,7 @@ function RankRow({ dish: d, demonym }: { dish: RankedDish; demonym?: string }) {
 // What the order means, in four lines, and where to read more.
 function HowItWorks({ list }: { list: FoodList }) {
   const points = [
-    { icon: UsersRoundIcon, text: "Only ratings from people on Bitecast count. Nobody can pay for a spot." },
+    { icon: UsersRoundIcon, text: "Only ratings from people on Nomrank count. Nobody can pay for a spot." },
     { icon: ScaleIcon, text: "Weighted, so a single perfect 10 can't take the top on its own." },
     { icon: SproutIcon, text: "Ratings from accounts less than a week old count half." },
     ...(list.region ? [{ icon: HouseHeartIcon, text: `Tastes like home shows once 3 ${list.region.demonym} have rated a dish.` }] : []),

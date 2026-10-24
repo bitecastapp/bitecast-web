@@ -1,4 +1,4 @@
-# Share Bitecast with testers at https://beta.bitecast.in, served from this PC through the Cloudflare tunnel "bitecast".
+# Share Nomrank with testers at https://beta.bitecast.in, served from this PC through the Cloudflare tunnel "bitecast".
 #
 #   .\share.ps1          start the app and the tunnel (Ctrl+C stops both)
 #   .\share.ps1 -Build   rebuild first; do this after pulling or changing code
@@ -23,7 +23,7 @@ if ($Build -or -not (Test-Path (Join-Path $web ".next\BUILD_ID"))) {
 
 $app = Start-Process "pnpm.cmd" -ArgumentList "start", "-p", "3000" -WorkingDirectory $web -NoNewWindow -PassThru
 try {
-  Write-Host "`nBitecast is live at https://beta.bitecast.in (Ctrl+C to stop)`n" -ForegroundColor Green
+  Write-Host "`nNomrank is live at https://beta.bitecast.in (Ctrl+C to stop)`n" -ForegroundColor Green
   & $cloudflared tunnel run --url http://localhost:3000 bitecast
 } finally {
   # pnpm starts node as a child; stop the whole tree so port 3000 is freed.

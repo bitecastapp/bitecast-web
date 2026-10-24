@@ -5,8 +5,8 @@ import { BroadcastMark, Wordmark } from "@/components/brand";
 import { WaitlistForm } from "./waitlist-form";
 
 export const metadata: Metadata = {
-  title: "Bitecast · Coming soon",
-  description: "Rate the dish, not the place. Bitecast is almost ready: join the waitlist and be first in.",
+  title: "Nomrank · Coming soon",
+  description: "Rate the dish, not the place. Nomrank is almost ready: join the waitlist and be first in.",
 };
 
 const TEASERS = [
@@ -45,7 +45,7 @@ export default function ComingSoonPage() {
           not the place.
         </h1>
         <p className="mt-4 max-w-md text-[1.0625rem] leading-relaxed text-muted-foreground">
-          Bitecast is where food lovers score individual dishes, argue about the takes, and find what&apos;s actually worth eating. We&apos;re
+          Nomrank is where food lovers score individual dishes, argue about the takes, and find what&apos;s actually worth eating. We&apos;re
           plating up. Get on the list and be first in.
         </p>
         <div className="mt-8 w-full">
@@ -67,7 +67,7 @@ export default function ComingSoonPage() {
 
       <footer className="relative mx-auto mt-auto flex w-full max-w-5xl flex-wrap items-center justify-center gap-x-5 gap-y-1 pt-14 text-xs text-faint">
         <Link href="/about" className="inline-flex min-h-10 items-center hover:text-foreground">
-          How Bitecast works
+          How Nomrank works
         </Link>
         <Link href="/terms" className="inline-flex min-h-10 items-center hover:text-foreground">
           Terms
@@ -75,7 +75,7 @@ export default function ComingSoonPage() {
         <Link href="/privacy" className="inline-flex min-h-10 items-center hover:text-foreground">
           Privacy
         </Link>
-        <span>© Bitecast</span>
+        <span>© Nomrank</span>
       </footer>
     </main>
   );

@@ -14,7 +14,7 @@ import { DeleteAccount } from "./delete-account";
 import { PreferencesForm } from "./preferences-form";
 import { PrivacyForm } from "./privacy-form";
 
-export const metadata: Metadata = { title: "Settings · Bitecast" };
+export const metadata: Metadata = { title: "Settings · Nomrank" };
 
 export default function SettingsPage() {
   return (
@@ -44,7 +44,7 @@ async function Settings() {
 
       {/* Desktop: preferences on the left; privacy, account and the danger zone on the right. */}
       <div className="mt-6 grid gap-5 lg:grid-cols-2 lg:items-start lg:gap-6">
-        <Card id="preferences" title="Preferences" icon={SlidersHorizontalIcon} lead="What Bitecast shows you.">
+        <Card id="preferences" title="Preferences" icon={SlidersHorizontalIcon} lead="What Nomrank shows you.">
           <PreferencesForm initial={prefs} />
         </Card>
 

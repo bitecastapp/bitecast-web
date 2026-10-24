@@ -8,7 +8,7 @@ import { PageLoader } from "@/components/loader";
 import { BackLink } from "@/components/back-link";
 import { ProfileForm } from "./profile-form";
 
-export const metadata: Metadata = { title: "Edit profile · Bitecast" };
+export const metadata: Metadata = { title: "Edit profile · Nomrank" };
 
 export default function EditProfilePage() {
   return (

@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { formatScore, scoreHeat } from "./ratings";
 
-// Link previews (WhatsApp, Instagram, X…): one 1200×630 card in the Bitecast look. Rendered by next/og, which
+// Link previews (WhatsApp, Instagram, X…): one 1200×630 card in the Nomrank look. Rendered by next/og, which
 // understands a small subset of CSS: flex layout and plain colours only (no CSS variables).
 
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -72,7 +72,7 @@ export async function ogCard({ eyebrow, title, subtitle, body, score, scoreNote,
             )}
           </div>
           <div style={{ display: "flex", alignItems: "baseline", fontFamily: "Urbanist", fontSize: 40, fontWeight: 900, letterSpacing: -1.5 }}>
-            bitecast<span style={{ color: KETCHUP }}>.</span>
+            nomrank<span style={{ color: KETCHUP }}>.</span>
             <span style={{ marginLeft: 18, fontFamily: "Geist", fontSize: 24, fontWeight: 500, color: MUTED, letterSpacing: 0 }}>Rate the dish, not the place.</span>
           </div>
         </div>

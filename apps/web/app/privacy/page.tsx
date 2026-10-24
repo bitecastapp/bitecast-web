@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, type LegalSection } from "@/components/legal-page";
 
-export const metadata: Metadata = { title: "Privacy Policy · Bitecast", description: "What Bitecast collects, why, and your choices." };
+export const metadata: Metadata = { title: "Privacy Policy · Nomrank", description: "What Nomrank collects, why, and your choices." };
 
 const SETTINGS = (
   <Link href="/settings" className="font-semibold text-foreground underline-offset-4 hover:underline">
@@ -17,7 +17,7 @@ const SECTIONS: LegalSection[] = [
     body: (
       <ul>
         <li>
-          <strong>Waitlist:</strong> if you join before launch, your email address, only to tell you when Bitecast opens.
+          <strong>Waitlist:</strong> if you join before launch, your email address, only to tell you when Nomrank opens.
         </li>
         <li>
           <strong>Account:</strong> your email address (to sign you in), handle and name.
@@ -42,7 +42,7 @@ const SECTIONS: LegalSection[] = [
     title: "How we use it",
     body: (
       <ul>
-        <li>to run Bitecast: show your posts, work out scores, rankings and Tastes like home;</li>
+        <li>to run Nomrank: show your posts, work out scores, rankings and Tastes like home;</li>
         <li>to keep it fair and safe: check ages, review new dishes, handle reports, limit spam;</li>
         <li>to sign you in and keep your account secure.</li>
       </ul>
@@ -71,7 +71,7 @@ const SECTIONS: LegalSection[] = [
       <>
         <p>
           We don&apos;t sell your data. We use Supabase to store data and sign you in, in their Mumbai (India) region. Our team sees reports
-          and moderation details only to keep Bitecast safe. We share data with authorities only when the law requires it.
+          and moderation details only to keep Nomrank safe. We share data with authorities only when the law requires it.
         </p>
       </>
     ),
@@ -83,7 +83,7 @@ const SECTIONS: LegalSection[] = [
       <>
         <p>
           We keep your data while your account exists. When you delete your account, your profile, posts and photos are deleted. Records of
-          moderation actions may be kept longer where we need them to keep Bitecast safe.
+          moderation actions may be kept longer where we need them to keep Nomrank safe.
         </p>
       </>
     ),
@@ -105,7 +105,7 @@ const SECTIONS: LegalSection[] = [
     title: "Children",
     body: (
       <>
-        <p>Bitecast isn&apos;t for anyone under 13, and we ask for a date of birth to check this.</p>
+        <p>Nomrank isn&apos;t for anyone under 13, and we ask for a date of birth to check this.</p>
       </>
     ),
   },
@@ -126,7 +126,7 @@ export default function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       updated="23 October 2026"
-      intro={<p>This explains what Bitecast collects, why, who can see it, and what you can do about it.</p>}
+      intro={<p>This explains what Nomrank collects, why, who can see it, and what you can do about it.</p>}
       sections={SECTIONS}
     />
   );

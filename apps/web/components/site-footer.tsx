@@ -3,7 +3,7 @@ import { BookOpenIcon, FileTextIcon, HeartHandshakeIcon, ScaleIcon, SettingsIcon
 import { Wordmark } from "@/components/brand";
 
 const LINKS = [
-  { href: "/about", label: "How Bitecast works", icon: BookOpenIcon },
+  { href: "/about", label: "How Nomrank works", icon: BookOpenIcon },
   { href: "/about#rankings", label: "How rankings work", icon: ScaleIcon },
   { href: "/about#guidelines", label: "Community guidelines", icon: HeartHandshakeIcon },
   { href: "/settings", label: "Settings", icon: SettingsIcon },
@@ -35,8 +35,8 @@ export function SiteFooter() {
         </nav>
       </div>
       <p className="mt-6 text-xs leading-relaxed text-faint">
-        Scores, rankings and takes are the personal opinions of people on Bitecast. Bitecast isn&apos;t affiliated with, or paid by, any
-        restaurant listed. © Bitecast
+        Scores, rankings and takes are the personal opinions of people on Nomrank. Nomrank isn&apos;t affiliated with, or paid by, any
+        restaurant listed. © Nomrank
       </p>
     </footer>
   );

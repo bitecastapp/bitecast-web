@@ -15,7 +15,7 @@ const DONE: Record<string, string> = {
 };
 export type Done = keyof typeof DONE;
 
-const EVENT = "bitecast:toast";
+const EVENT = "nomrank:toast";
 
 // Confirm an action that keeps you on the page ("Comment posted").
 export function toast(message: string) {

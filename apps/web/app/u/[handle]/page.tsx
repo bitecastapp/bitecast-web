@@ -13,9 +13,9 @@ import { ProfileView } from "./profile-view";
 export async function generateMetadata({ params }: PageProps<"/u/[handle]">): Promise<Metadata> {
   const { handle } = await params;
   const p = await shareProfile(handle);
-  if (!p) return { title: "Profile not found · Bitecast" };
-  const title = `${p.name ? `${p.name} (@${p.handle})` : `@${p.handle}`} · Bitecast`;
-  const description = p.bio ?? `${p.rated} ${p.rated === 1 ? "dish" : "dishes"} rated on Bitecast.`;
+  if (!p) return { title: "Profile not found · Nomrank" };
+  const title = `${p.name ? `${p.name} (@${p.handle})` : `@${p.handle}`} · Nomrank`;
+  const description = p.bio ?? `${p.rated} ${p.rated === 1 ? "dish" : "dishes"} rated on Nomrank.`;
   return { title, description, openGraph: { title, description, type: "profile" } };
 }
 

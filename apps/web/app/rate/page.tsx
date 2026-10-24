@@ -13,7 +13,7 @@ import { filterMenus } from "@/lib/diet";
 import { getPreferences } from "@/lib/profiles";
 import { RateForm } from "./rate-form";
 
-export const metadata: Metadata = { title: "Rate · Bitecast" };
+export const metadata: Metadata = { title: "Rate · Nomrank" };
 
 export default function RatePage({ searchParams }: PageProps<"/rate">) {
   return (

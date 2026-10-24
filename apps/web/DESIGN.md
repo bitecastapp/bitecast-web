@@ -1,5 +1,5 @@
 ---
-name: Bitecast
+name: Nomrank
 description: Broadcast your bites. Rate the dish, not the place.
 colors:
   studio: "#17111c"
@@ -71,13 +71,13 @@ components:
     size: "28px"
 ---
 
-# Design System: Bitecast
+# Design System: Nomrank
 
 ## Overview
 
 **Creative North Star: "Letterboxd for dishes"**
 
-Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist version as "AI slop". The brand stays (owner's brand sheet: the "bitecast." wordmark, Studio / Ketchup / Mustard / Spotlight), but it is used the way Letterboxd uses its colours: a dark ground, small precise type, hairline structure, and colour only where it carries meaning.
+Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist version as "AI slop". The brand stays (owner's brand sheet: the "nomrank." wordmark, Studio / Ketchup / Mustard / Spotlight), but it is used the way Letterboxd uses its colours: a dark ground, small precise type, hairline structure, and colour only where it carries meaning.
 
 **Key Characteristics:**
 - Dark Studio ground, cream text, grey-purple secondary text.
@@ -123,7 +123,7 @@ One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the
 - **Comment count** on every take row (speech-bubble icon + number) links to `#comments`.
 - **Wordmark / BroadcastMark** (`components/brand.tsx`), **Screen**, **PageShell** (with an `action` slot), **Row**.
 
-## What makes it Bitecast, not Letterboxd
+## What makes it Nomrank, not Letterboxd
 
 - **Bitten score disc:** scores sit in a Ketchup circle with a bite taken out of its top-right (after the logo's bites).
 - **Signal meter:** rating is 10 rising bars, like broadcast signal strength; the bars light up to your score.

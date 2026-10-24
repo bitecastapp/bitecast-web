@@ -1,4 +1,4 @@
-# Bitecast
+# Nomrank
 
 A Bangalore food app where people rate **individual dishes** (not restaurants), argue about them, and find what's worth eating. Signature feature: **Tastes like home**, which shows how people from a dish's home region rate it (e.g. Hyderabadis on biryani).
 

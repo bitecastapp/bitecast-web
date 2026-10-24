@@ -109,4 +109,4 @@ export const username = z.string().trim().toLowerCase()
 
 ## Open questions
 1. Custom SMTP (Resend or similar) before launch: lifts the email rate limit and unlocks a 6-digit code instead of a link.
-2. Reserved handles (`admin`, `bitecast`...): not blocked yet.
+2. Reserved handles (`admin`, `nomrank`...): not blocked yet.

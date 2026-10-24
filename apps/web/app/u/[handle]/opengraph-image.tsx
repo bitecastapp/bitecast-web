@@ -3,12 +3,12 @@ import { shareProfile } from "@/lib/share";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "A Bitecast profile";
+export const alt = "A Nomrank profile";
 
 export default async function Image({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
   const p = await shareProfile(handle);
-  if (!p) return ogCard({ eyebrow: "Bitecast", title: "Rate the dish, not the place." });
+  if (!p) return ogCard({ eyebrow: "Nomrank", title: "Rate the dish, not the place." });
   return ogCard({
     eyebrow: "Profile",
     title: p.name ?? `@${p.handle}`,

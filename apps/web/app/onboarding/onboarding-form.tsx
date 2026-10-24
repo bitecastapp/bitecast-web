@@ -61,7 +61,7 @@ export function OnboardingForm({ regions }: { regions: Region[] }) {
     } else if (step === 2) {
       const dob = String(new FormData(form).get("date_of_birth") ?? "");
       if (!dob) return setAboutError("Add your date of birth.");
-      if (!isAtLeast13(dob)) return setAboutError("You need to be at least 13 to use Bitecast.");
+      if (!isAtLeast13(dob)) return setAboutError("You need to be at least 13 to use Nomrank.");
       setAboutError(undefined);
       setStep(3);
     }

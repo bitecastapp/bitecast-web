@@ -10,7 +10,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { signOut } from "@/app/actions";
 import { DeleteAccount } from "@/app/settings/delete-account";
 
-export const metadata: Metadata = { title: "Account suspended · Bitecast" };
+export const metadata: Metadata = { title: "Account suspended · Nomrank" };
 
 export default function SuspendedPage() {
   return (

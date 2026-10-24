@@ -18,7 +18,7 @@ export function WaitlistForm() {
         </span>
         <div>
           <p className="font-semibold">You&apos;re on the list!</p>
-          <p className="mt-0.5 text-sm text-muted-foreground">We&apos;ll email you the moment Bitecast opens. Bring your appetite.</p>
+          <p className="mt-0.5 text-sm text-muted-foreground">We&apos;ll email you the moment Nomrank opens. Bring your appetite.</p>
         </div>
       </div>
     );

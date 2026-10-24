@@ -61,7 +61,7 @@ export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = 
         </div>
       }
     >
-      <h1 className="sr-only">Bitecast</h1>
+      <h1 className="sr-only">Nomrank</h1>
       {showDiet !== "all" && (
         <p className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
           <span className="flex gap-0.5">
@@ -151,7 +151,7 @@ export function HomeView({ profile, restaurants, feed, leaders = [], showDiet = 
           </div>
         </div>
 
-        <aside aria-label="Around Bitecast" className="hidden [scrollbar-width:none] lg:sticky [&::-webkit-scrollbar]:hidden lg:top-6 lg:flex lg:max-h-[calc(100dvh-3rem)] lg:flex-col lg:gap-9 lg:overflow-x-hidden lg:overflow-y-auto lg:px-2 lg:pb-6">
+        <aside aria-label="Around Nomrank" className="hidden [scrollbar-width:none] lg:sticky [&::-webkit-scrollbar]:hidden lg:top-6 lg:flex lg:max-h-[calc(100dvh-3rem)] lg:flex-col lg:gap-9 lg:overflow-x-hidden lg:overflow-y-auto lg:px-2 lg:pb-6">
           <MostDiscussed reviews={feed.reviews} />
           <ByArea restaurants={restaurants} compact />
         </aside>

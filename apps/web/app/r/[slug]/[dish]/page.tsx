@@ -17,8 +17,8 @@ import { DishView } from "./dish-view";
 export async function generateMetadata({ params }: PageProps<"/r/[slug]/[dish]">): Promise<Metadata> {
   const { slug, dish } = await params;
   const d = await shareDish(slug, dish);
-  if (!d) return { title: "Dish not found · Bitecast" };
-  const title = `${d.name} at ${d.place} · Bitecast`;
+  if (!d) return { title: "Dish not found · Nomrank" };
+  const title = `${d.name} at ${d.place} · Nomrank`;
   const description = d.count
     ? `Overall ${d.avg?.toFixed(1)} from ${d.count} ${d.count === 1 ? "rating" : "ratings"}. See every take on ${d.name} at ${d.place}, ${d.area}.`
     : `${d.name} at ${d.place}, ${d.area}. No ratings yet: be the first.`;

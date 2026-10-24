@@ -9,7 +9,7 @@ import { NotificationList } from "@/components/notification-list";
 import { PageShell } from "@/components/page-shell";
 import { MarkRead } from "./mark-read";
 
-export const metadata: Metadata = { title: "Notifications · Bitecast" };
+export const metadata: Metadata = { title: "Notifications · Nomrank" };
 
 export default function NotificationsPage() {
   return (

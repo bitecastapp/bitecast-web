@@ -89,7 +89,7 @@ export const profileSchema = z.object({
         z.iso
           .date("Enter your date of birth as a full date.")
           .refine((d) => d >= "1900-01-01", "Check the year of your date of birth.")
-          .refine((d) => isAtLeast13(d), "You need to be at least 13 to use Bitecast."),
+          .refine((d) => isAtLeast13(d), "You need to be at least 13 to use Nomrank."),
       ]),
     )
     .transform((s) => s || null),

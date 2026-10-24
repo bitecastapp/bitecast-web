@@ -3,12 +3,12 @@ import { shareDish } from "@/lib/share";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "A dish on Bitecast";
+export const alt = "A dish on Nomrank";
 
 export default async function Image({ params }: { params: Promise<{ slug: string; dish: string }> }) {
   const { slug, dish } = await params;
   const d = await shareDish(slug, dish);
-  if (!d) return ogCard({ eyebrow: "Bitecast", title: "Rate the dish, not the place." });
+  if (!d) return ogCard({ eyebrow: "Nomrank", title: "Rate the dish, not the place." });
   return ogCard({
     eyebrow: "Dish",
     title: d.name,

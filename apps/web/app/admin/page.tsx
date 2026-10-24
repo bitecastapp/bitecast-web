@@ -28,7 +28,7 @@ import { Input } from "@/components/ui/input";
 import { approveDish, dismissReports, removeContent } from "./actions";
 import { ActionButton, AddRestaurantForm, BanControls } from "./controls";
 
-export const metadata: Metadata = { title: "Admin · Bitecast", robots: { index: false } };
+export const metadata: Metadata = { title: "Admin · Nomrank", robots: { index: false } };
 
 const TABS = [
   { key: "overview", label: "Overview", icon: LayoutDashboardIcon },

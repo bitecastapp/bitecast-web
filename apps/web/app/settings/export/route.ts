@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 
-// "Download my data": everything Bitecast keeps about you, as one JSON file. Read as you, so RLS decides what's
+// "Download my data": everything Nomrank keeps about you, as one JSON file. Read as you, so RLS decides what's
 // included (your private details, your own votes and reports, and your public rows).
 export async function GET() {
   const supabase = await createClient();
@@ -34,7 +34,7 @@ export async function GET() {
   return new Response(body, {
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "Content-Disposition": 'attachment; filename="bitecast-my-data.json"',
+      "Content-Disposition": 'attachment; filename="nomrank-my-data.json"',
       "Cache-Control": "no-store",
     },
   });

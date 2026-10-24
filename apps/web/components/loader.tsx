@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { BroadcastMark } from "@/components/brand";
 
-// The Bitecast mark going on air: its three waves light up outward in turn while a soft ring pings behind it.
+// The Nomrank mark going on air: its three waves light up outward in turn while a soft ring pings behind it.
 // Under reduced motion it holds still, fully lit.
 export function BroadcastLoader({ size = 56, label = "Loading", className }: { size?: number; label?: string; className?: string }) {
   return (

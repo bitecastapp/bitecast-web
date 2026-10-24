@@ -12,13 +12,13 @@ web
 Young people in Bengaluru (students and early-career, many who moved from elsewhere in India) deciding what to eat, mostly on their phones, often while standing outside or scrolling in bed. *(inferred: age and situation)*
 
 ## Product Purpose
-Bitecast rates **individual dishes**, not restaurants. People give a dish 1–10 with a short hot take, argue about it (Agree / Disagree reactions), and find what's actually worth eating. Success: someone opens it, finds the best version of the dish they're craving near them, and comes back to rate it.
+Nomrank rates **individual dishes**, not restaurants. People give a dish 1–10 with a short hot take, argue about it (Agree / Disagree reactions), and find what's actually worth eating. Success: someone opens it, finds the best version of the dish they're craving near them, and comes back to rate it.
 
 ## Positioning
-**Tastes like home**: for a dish with a home region, Bitecast shows how people *from* that region rate it ("8.7 from 12 Hyderabadis"). No restaurant-rating app can say whether the biryani passes the Hyderabadi test.
+**Tastes like home**: for a dish with a home region, Nomrank shows how people *from* that region rate it ("8.7 from 12 Hyderabadis"). No restaurant-rating app can say whether the biryani passes the Hyderabadi test.
 
 ## Operating Context
-Bitecast is meant for all of India; Bengaluru is only the launch city. UI copy must not brand the product as a Bengaluru app (owner, 2026-10-21). Mobile-first PWA in the browser; native apps later. Each user picks one home region at onboarding (only Bengaluru exists at launch; more regions come later). Spaces are leaderboards per food (Biryani, Dosa...). Ranking uses a Bayesian average.
+Nomrank is meant for all of India; Bengaluru is only the launch city. UI copy must not brand the product as a Bengaluru app (owner, 2026-10-21). Mobile-first PWA in the browser; native apps later. Each user picks one home region at onboarding (only Bengaluru exists at launch; more regions come later). Spaces are leaderboards per food (Biryani, Dosa...). Ranking uses a Bayesian average.
 
 ## Capabilities and Constraints
 - v1: email sign-in (magic link), username + home region onboarding, restaurants, dishes, Spaces, reviews with photos, Agree/Disagree feed, Tastes like home, reporting.
@@ -26,7 +26,7 @@ Bitecast is meant for all of India; Bengaluru is only the launch city. UI copy m
 - Undecided: logo and brand mark, any photography or illustration assets.
 
 ## Brand Commitments
-- Name: Bitecast.
+- Name: Nomrank.
 - Voice: playful, Gen-Z, celebrating home food. Never frame regions against each other.
 - Terms: "Spaces", "Agree" / "Disagree" (owner, 2026-10-22: professional wording, no slang), "Tastes like home".
 

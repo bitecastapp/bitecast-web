@@ -12,9 +12,9 @@ const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 // metadataBase makes link-preview image URLs absolute. Set NEXT_PUBLIC_SITE_URL to the real address once deployed.
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
-  title: "Bitecast",
-  description: "Broadcast your bites. Rate the dish, not the place.",
-  openGraph: { siteName: "Bitecast", type: "website", locale: "en_IN" },
+  title: "Nomrank",
+  description: "Rate the dish, not the place. Rankings for every food, from the people who ate it.",
+  openGraph: { siteName: "Nomrank", type: "website", locale: "en_IN" },
   twitter: { card: "summary_large_image" },
 };
 

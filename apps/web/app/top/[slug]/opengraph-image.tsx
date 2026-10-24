@@ -3,12 +3,12 @@ import { shareList } from "@/lib/share";
 
 export const size = OG_SIZE;
 export const contentType = "image/png";
-export const alt = "A Bitecast ranking";
+export const alt = "A Nomrank ranking";
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const l = await shareList(slug);
-  if (!l) return ogCard({ eyebrow: "Bitecast", title: "Rate the dish, not the place." });
+  if (!l) return ogCard({ eyebrow: "Nomrank", title: "Rate the dish, not the place." });
   return ogCard({
     eyebrow: "Rankings",
     title: `Top ${l.name}`,

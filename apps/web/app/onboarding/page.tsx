@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { Screen } from "@/components/screen";
 import { OnboardingForm, type Region } from "./onboarding-form";
 
-export const metadata: Metadata = { title: "Set up · Bitecast" };
+export const metadata: Metadata = { title: "Set up · Nomrank" };
 
 export default function OnboardingPage() {
   return (

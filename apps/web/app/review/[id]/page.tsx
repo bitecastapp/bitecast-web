@@ -21,8 +21,8 @@ import { shareTake } from "@/lib/share";
 export async function generateMetadata({ params }: PageProps<"/review/[id]">): Promise<Metadata> {
   const { id } = await params;
   const t = await shareTake(id);
-  if (!t) return { title: "Take not found · Bitecast" };
-  const title = `@${t.author} on ${t.dish} · Bitecast`;
+  if (!t) return { title: "Take not found · Nomrank" };
+  const title = `@${t.author} on ${t.dish} · Nomrank`;
   const description = `${t.score}/10 for ${t.dish} at ${t.place}: “${t.take.length > 140 ? `${t.take.slice(0, 138)}…` : t.take}”`;
   return { title, description, openGraph: { title, description, type: "article" } };
 }

@@ -15,7 +15,7 @@ User stories:
 2. **Dishes: seeded and user-added.** Each seeded restaurant gets its 3–5 best-known dishes. Signed-in users can add a dish to a restaurant, so people aren't blocked when a dish is missing.
 3. **Dish duplicates:** names are compared after lowercasing, trimming, and collapsing spaces and punctuation ("Masala  Dosa" = "masala dosa" = "Masala-Dosa"), unique per restaurant and enforced by the database. The add form shows matching existing dishes as you type.
 4. **A dish belongs to its restaurant only, with no region field** (owner's call). Consequence: Tastes like home can't match on dishes. Proposed fix for step 3: a Space (e.g. Hyderabadi Biryani) carries the origin and its dishes inherit it. To be decided in the Spaces spec.
-5. **Restaurant fields:** name, URL slug, area/neighbourhood, city. City is a column from day one because Bitecast is pan-India, even though every seed row is Bengaluru. No address, photos, ratings, hours or prices.
+5. **Restaurant fields:** name, URL slug, area/neighbourhood, city. City is a column from day one because Nomrank is pan-India, even though every seed row is Bengaluru. No address, photos, ratings, hours or prices.
 6. **Visibility:** restaurants and dishes are readable by signed-in users only, the same as profiles. Public pages for sharing come later.
 7. **Nobody edits or deletes dishes from the app.** Fixes go through the database for now; reporting and moderation come in step 7.
 

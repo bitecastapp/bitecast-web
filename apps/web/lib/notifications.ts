@@ -39,7 +39,7 @@ export async function unreadCount(supabase: SupabaseClient, userId: string) {
 
 const snippet = (s: string) => (s.length > 70 ? `${s.slice(0, 68).trimEnd()}…` : s);
 
-// What a notification says and where it leads. `who` is null for moderation notices (from Bitecast).
+// What a notification says and where it leads. `who` is null for moderation notices (from Nomrank).
 export function describe(n: Notification): { who: string | null; text: string; quote: string | null; href: string | null } {
   const who = n.actor ? `@${n.actor.username}` : null;
   const dish = n.rating?.dish.name ?? n.dish?.name ?? n.detail ?? "a dish";

@@ -18,7 +18,7 @@ import {
 import { BackLink } from "@/components/back-link";
 import { PageShell } from "@/components/page-shell";
 
-export const metadata: Metadata = { title: "How Bitecast works · Bitecast", description: "How scores, rankings and Tastes like home work, and how we keep it fair." };
+export const metadata: Metadata = { title: "How Nomrank works · Nomrank", description: "How scores, rankings and Tastes like home work, and how we keep it fair." };
 
 type Point = { icon: React.ElementType; title: string; text: React.ReactNode };
 
@@ -67,9 +67,9 @@ export default function AboutPage() {
     <PageShell wide>
       <div className="pb-6">
         <BackLink href="/" />
-        <h1 className="mt-2 text-[1.75rem] leading-tight font-bold tracking-[-0.02em]">How Bitecast works</h1>
+        <h1 className="mt-2 text-[1.75rem] leading-tight font-bold tracking-[-0.02em]">How Nomrank works</h1>
         <p className="mt-2 max-w-2xl text-muted-foreground">
-          Bitecast is where people rate individual dishes, argue about them, and find what&apos;s worth eating. Here&apos;s how the numbers
+          Nomrank is where people rate individual dishes, argue about them, and find what&apos;s worth eating. Here&apos;s how the numbers
           work and how we keep it fair.
         </p>
 
@@ -85,7 +85,7 @@ export default function AboutPage() {
             The fine print
           </h2>
           <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-            Scores, rankings and takes are the personal opinions of people on Bitecast, not reviews by Bitecast. Bitecast isn&apos;t affiliated
+            Scores, rankings and takes are the personal opinions of people on Nomrank, not reviews by Nomrank. Nomrank isn&apos;t affiliated
             with, sponsored by, or paid by any restaurant listed. Menus, places and dish details are added by the community and may be out of
             date, so check with the restaurant about ingredients and allergens.
           </p>

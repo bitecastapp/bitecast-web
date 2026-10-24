@@ -75,7 +75,7 @@ export function ProfileView({ profile: p, stats, favourites, ratings, votes, sav
             <div className="flex items-start justify-between gap-3">
               <Avatar handle={p.username} code={p.avatar} photo={p.avatar_path} size={80} label={`${name}'s profile picture`} className="-ml-1" />
               <div className="flex shrink-0 items-center gap-2">
-                <ShareButton path={`/u/${p.username}`} title={`${name} on Bitecast`} />
+                <ShareButton path={`/u/${p.username}`} title={`${name} on Nomrank`} />
                 {own ? (
                   <Link
                     href="/settings/profile"
