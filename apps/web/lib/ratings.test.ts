@@ -26,8 +26,8 @@ describe("verdict", () => {
   it.each([
     [10, "Must try"],
     [9, "Must try"],
-    [8.9, "Seconds, please"],
-    [8, "Seconds, please"],
+    [8.9, "Order again"],
+    [8, "Order again"],
     [7.9, "Clean plate"],
     [6.5, "Clean plate"],
     [6.4, "Just okay"],

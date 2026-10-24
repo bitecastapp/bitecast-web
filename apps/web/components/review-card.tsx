@@ -17,7 +17,7 @@ import { timeAgo } from "@/lib/time";
 
 const VERDICT_TONE = {
   must: "bg-mustard/15 text-mustard",
-  seconds: "bg-raised text-mustard",
+  again: "bg-raised text-mustard",
   clean: "bg-raised text-foreground",
   okay: "bg-raised text-muted-foreground",
   skip: "bg-raised text-ketchup",

@@ -11,8 +11,9 @@ export function LogoMark({ size = 28, className }: { size?: number; className?: 
       <span className="absolute inset-0 bg-mustard" style={{ maskImage: MASK, WebkitMaskImage: MASK, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }} />
       {/* The dashed ring: thinner on small marks so the dashes stay crisp, and left off the tiniest (the verdict chip). */}
       {size >= 24 && <span className={cn("absolute inset-[19%] rounded-full border-dashed border-studio/40", size >= 40 ? "border-[1.5px]" : "border")} />}
-      {/* Suez One sits low in its line box; lift it to the badge's centre. */}
-      <span className="relative font-mark leading-none" style={{ fontSize: size * 0.56, transform: `translateY(${-size * 0.04}px)` }}>
+      {/* Suez One sits low in its line box; lift it to the badge's centre. Smaller on tiny marks (the verdict chip),
+          where a full-size n reads as a capital. */}
+      <span className="relative font-mark leading-none" style={{ fontSize: size * (size >= 24 ? 0.56 : 0.46), transform: `translateY(${-size * 0.04}px)` }}>
         n
       </span>
     </span>

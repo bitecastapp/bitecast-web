@@ -42,7 +42,7 @@ export function scoreColor(score: number) {
 // A short read of a score, shown beside the dish on a take: six tiers, from "Send it back" to "Must try".
 export function verdict(score: number) {
   if (score >= 9) return { label: "Must try", tone: "must" } as const;
-  if (score >= 8) return { label: "Seconds, please", tone: "seconds" } as const;
+  if (score >= 8) return { label: "Order again", tone: "again" } as const;
   if (score >= 6.5) return { label: "Clean plate", tone: "clean" } as const;
   if (score >= 5) return { label: "Just okay", tone: "okay" } as const;
   if (score >= 3) return { label: "Skip it", tone: "skip" } as const;
