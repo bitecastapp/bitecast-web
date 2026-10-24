@@ -13,7 +13,7 @@ export function LogoMark({ size = 28, className }: { size?: number; className?: 
       {size >= 24 && <span className={cn("absolute inset-[19%] rounded-full border-dashed border-studio/40", size >= 40 ? "border-[1.5px]" : "border")} />}
       {/* Suez One sits low in its line box; lift it to the badge's centre. Smaller on tiny marks (the verdict chip),
           where a full-size n reads as a capital. */}
-      <span className="relative font-mark leading-none normal-case" style={{ fontSize: size * (size >= 24 ? 0.56 : 0.46), transform: `translateY(${-size * 0.04}px)` }}>
+      <span className="relative font-mark leading-none font-normal normal-case" style={{ fontSize: size * (size >= 24 ? 0.56 : 0.46), transform: `translateY(${-size * 0.04}px)` }}>
         n
       </span>
     </span>
