@@ -18,7 +18,7 @@ import {
 import { BackLink } from "@/components/back-link";
 import { PageShell } from "@/components/page-shell";
 
-export const metadata: Metadata = { title: "How Nomrank works · Nomrank", description: "How scores, rankings and Tastes like home work, and how we keep it fair." };
+export const metadata: Metadata = { title: "How Nomrank works · Nomrank", description: "How scores, rankings and Tastes like home work, and how we keep it fair.", alternates: { canonical: "/about" } };
 
 type Point = { icon: React.ElementType; title: string; text: React.ReactNode };
 

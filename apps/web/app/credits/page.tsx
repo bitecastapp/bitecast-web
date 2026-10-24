@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { LegalPage, type LegalSection } from "@/components/legal-page";
 
-export const metadata: Metadata = { title: "Credits · Nomrank", description: "The photos Nomrank uses and who made them." };
+export const metadata: Metadata = { title: "Credits · Nomrank", description: "The photos Nomrank uses and who made them.", alternates: { canonical: "/credits" } };
 
 // Photos on the coming-soon page. Their Creative Commons licences require this attribution to stay reachable.
 const PHOTOS = [

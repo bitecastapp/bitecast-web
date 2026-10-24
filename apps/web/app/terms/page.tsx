@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, type LegalSection } from "@/components/legal-page";
 
-export const metadata: Metadata = { title: "Terms of Service · Nomrank", description: "The rules for using Nomrank." };
+export const metadata: Metadata = { title: "Terms of Service · Nomrank", description: "The rules for using Nomrank.", alternates: { canonical: "/terms" } };
 
 const SECTIONS: LegalSection[] = [
   {

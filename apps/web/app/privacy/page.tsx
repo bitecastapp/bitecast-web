@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage, type LegalSection } from "@/components/legal-page";
 
-export const metadata: Metadata = { title: "Privacy Policy · Nomrank", description: "What Nomrank collects, why, and your choices." };
+export const metadata: Metadata = { title: "Privacy Policy · Nomrank", description: "What Nomrank collects, why, and your choices.", alternates: { canonical: "/privacy" } };
 
 const SETTINGS = (
   <Link href="/settings" className="font-semibold text-foreground underline-offset-4 hover:underline">

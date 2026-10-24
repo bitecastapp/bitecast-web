@@ -8,8 +8,20 @@ import { Reveal } from "./reveal";
 import { Wordmark } from "@/components/brand";
 
 export const metadata: Metadata = {
-  title: "Nomrank · Coming soon",
+  title: "Nomrank · Rate the dish, not the place",
   description: "Rate single dishes from 1 to 10. Join the waitlist to hear when Nomrank opens.",
+  // Served at "/" (the proxy rewrites it here before launch), so "/" is the one address search engines should index.
+  alternates: { canonical: "/" },
+};
+
+// Tells search engines Nomrank is a brand with this name, site and logo.
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.nomrank.in";
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "Organization", name: "Nomrank", url: SITE, logo: `${SITE}/icon` },
+    { "@type": "WebSite", name: "Nomrank", url: SITE, description: "Rate the dish, not the place." },
+  ],
 };
 
 // One page width and one pair of margins for every section, so all the left edges line up.
@@ -22,6 +34,7 @@ const LINK = "transition-colors duration-150 underline-offset-4 hover:text-spotl
 export default function ComingSoonPage() {
   return (
     <main className="bg-studio text-spotlight">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }} />
       <Reveal />
 
       <header className={`${WRAP} flex h-16 animate-[fade-in_600ms_var(--ease-out)_both] items-center justify-between pt-[env(safe-area-inset-top)] lg:h-20`}>
