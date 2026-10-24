@@ -18,7 +18,7 @@ const BODY = "Geist, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-s
 
 // The menu: what Nomrank does, with the "price" column naming what you get.
 const MENU = [
-  { dish: "Score every dish", note: "One plate, one score, one honest hot take.", tag: "1 to 10" },
+  { dish: "Score every dish", note: "Score a plate from 1 to 10 and add a short take.", tag: "1 to 10" },
   { dish: "Rankings for every food", note: "Top Dosa, Top Biryani and more, ranked by the people who ate them.", tag: "Top spot" },
   { dish: "Tastes like home", note: "How people from a dish's home region rate it.", tag: "From home" },
 ];
@@ -59,10 +59,8 @@ export function waitlistEmail(siteUrl: string) {
   :root { color-scheme: light dark; supported-color-schemes: light dark; }
   @media (max-width: 520px) {
     .pad { padding-left: 20px !important; padding-right: 20px !important; }
-    .hero { padding: 28px 24px !important; }
-    .hero-title { font-size: 34px !important; line-height: 37px !important; }
-    .stack { display: block !important; width: 100% !important; }
-    .sticker-cell { padding: 0 0 20px 0 !important; }
+    .hero { padding: 24px 20px 32px 20px !important; }
+    .hero-title { font-size: 36px !important; line-height: 39px !important; }
     .dish { white-space: normal !important; }
     .leader { display: none !important; }
     .menu-pad { padding: 24px 20px !important; }
@@ -70,7 +68,7 @@ export function waitlistEmail(siteUrl: string) {
 </style>
 </head>
 <body style="margin:0;padding:0;background:${STUDIO};-webkit-text-size-adjust:100%;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${STUDIO};">Spot saved. We'll email you the moment Nomrank opens.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;color:${STUDIO};">We'll email you once more, on the day Nomrank opens.&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;&#8199;&#847;</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="${STUDIO}" style="background:${STUDIO};">
   <tr>
     <td align="center" style="padding:32px 12px 48px 12px;">
@@ -84,18 +82,10 @@ export function waitlistEmail(siteUrl: string) {
           <td class="pad" style="padding:0 8px;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td class="hero" bgcolor="${PAPER}" style="background:${PAPER};border:1px solid ${HAIRLINE};border-radius:28px;padding:36px;">
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td class="stack sticker-cell" valign="middle" width="120" style="padding-right:24px;">
-                        <img src="${site}/email/must-try-10.png" width="120" height="120" alt="10/10" style="display:block;width:120px;height:120px;border:0;outline:none;font-family:${DISPLAY};font-size:40px;line-height:120px;font-weight:900;color:${MUSTARD};">
-                      </td>
-                      <td class="stack" valign="middle">
-                        <h1 class="hero-title" style="margin:0;font-family:${DISPLAY};font-size:40px;line-height:42px;font-weight:900;letter-spacing:-1.5px;color:${SPOTLIGHT};">You're on the list<span style="color:${MUSTARD};">.</span></h1>
-                        <p style="margin:12px 0 0 0;font-family:${BODY};font-size:16px;line-height:24px;color:${MUTED};">Spot saved. The moment Nomrank opens, you'll hear it from us first.</p>
-                      </td>
-                    </tr>
-                  </table>
+                <td class="hero" align="center" bgcolor="${PAPER}" style="background:${PAPER};border:1px solid ${HAIRLINE};border-radius:28px;padding:32px 36px 40px 36px;">
+                  <img src="${site}/email/must-try-10.png" width="184" height="184" alt="10/10" style="display:block;margin:0 auto;width:184px;height:184px;border:0;outline:none;font-family:${DISPLAY};font-size:48px;line-height:184px;font-weight:900;color:${MUSTARD};text-align:center;">
+                  <h1 class="hero-title" style="margin:16px 0 0 0;font-family:${DISPLAY};font-size:44px;line-height:46px;font-weight:900;letter-spacing:-1.5px;color:${SPOTLIGHT};text-align:center;">You're on the list<span style="color:${MUSTARD};">.</span></h1>
+                  <p style="margin:12px auto 0 auto;max-width:360px;font-family:${BODY};font-size:16px;line-height:24px;color:${MUTED};text-align:center;">We'll email you once more, on the day Nomrank opens.</p>
                 </td>
               </tr>
             </table>
@@ -105,7 +95,7 @@ export function waitlistEmail(siteUrl: string) {
         <tr>
           <td class="pad" style="padding:40px 8px 0 8px;">
             <p style="margin:0;font-family:${BODY};font-size:17px;line-height:28px;color:${SPOTLIGHT};">
-              Nomrank is where you rate <strong>the dish, not the place</strong>. The same restaurant can make a legendary dosa and a forgettable vada, and now you'll know which is which.
+              Nomrank is where you rate <strong>the dish, not the place</strong>. The same restaurant can make a legendary dosa and a forgettable vada, and soon you'll know which is which.
             </p>
           </td>
         </tr>
@@ -126,15 +116,15 @@ export function waitlistEmail(siteUrl: string) {
 
         <tr>
           <td class="pad" style="padding:40px 8px 0 8px;">
-            <table role="presentation" cellpadding="0" cellspacing="0">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td bgcolor="${KETCHUP}" style="background:${KETCHUP};border-radius:999px;">
-                  <a href="${site}" style="display:inline-block;padding:16px 30px;font-family:${BODY};font-size:16px;line-height:20px;font-weight:700;color:${STUDIO};text-decoration:none;">Take a peek at ${host}&nbsp;&nbsp;&rarr;</a>
+                <td align="center" bgcolor="${KETCHUP}" style="background:${KETCHUP};border-radius:999px;">
+                  <a href="${site}" style="display:block;padding:18px 24px;font-family:${BODY};font-size:17px;line-height:22px;font-weight:700;color:${STUDIO};text-decoration:none;text-align:center;">Visit ${host}&nbsp;&nbsp;&rarr;</a>
                 </td>
               </tr>
             </table>
             <p style="margin:24px 0 0 0;font-family:${BODY};font-size:15px;line-height:24px;color:${MUTED};">
-              Know someone with strong opinions about biryani? Forward this to them. Every great argument needs a second voice.
+              Know someone with strong opinions about biryani? Forward this to them.
             </p>
           </td>
         </tr>
@@ -159,14 +149,14 @@ export function waitlistEmail(siteUrl: string) {
   const text = [
     "You're on the list.",
     "",
-    "Spot saved. The moment Nomrank opens, you'll hear it from us first.",
+    "We'll email you once more, on the day Nomrank opens.",
     "",
-    "Nomrank is where you rate the dish, not the place. The same restaurant can make a legendary dosa and a forgettable vada, and now you'll know which is which.",
+    "Nomrank is where you rate the dish, not the place. The same restaurant can make a legendary dosa and a forgettable vada, and soon you'll know which is which.",
     "",
     "On the menu:",
     ...MENU.map((m) => `- ${m.dish} (${m.tag}): ${m.note}`),
     "",
-    `Take a peek: ${site}`,
+    `Visit: ${site}`,
     "",
     "Know someone with strong opinions about biryani? Forward this to them.",
     "",
