@@ -11,8 +11,9 @@ const VERDICT_TONE = {
   back: "bg-ketchup/15 text-ketchup",
 };
 
-// The score in words, from "Send it back" to "Must try"; Must try carries the Nomrank badge.
-export function Verdict({ score }: { score: number }) {
+// The score in words, from "Send it back" to "Must try"; Must try carries the Nomrank badge. `icon` swaps the badge
+// for the app icon image (the coming soon page), which looks the same everywhere because it needs no web font.
+export function Verdict({ score, icon }: { score: number; icon?: boolean }) {
   const v = verdict(score);
   return (
     <span
@@ -22,7 +23,13 @@ export function Verdict({ score }: { score: number }) {
         VERDICT_TONE[v.tone],
       )}
     >
-      {v.tone === "must" && <LogoMark size={16} />}
+      {v.tone === "must" &&
+        (icon ? (
+          // eslint-disable-next-line @next/next/no-img-element -- the generated app icon (app/icon.tsx), shown at 16px
+          <img src="/icon" alt="" width={16} height={16} className="size-4 shrink-0 rounded-[4px]" />
+        ) : (
+          <LogoMark size={16} />
+        ))}
       {v.label}
     </span>
   );
