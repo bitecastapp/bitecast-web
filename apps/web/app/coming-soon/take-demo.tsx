@@ -14,8 +14,8 @@ type Note = { id: number; handle: string; when: string; body: string; mine?: boo
 // A take as it lands in the feed, with its comment thread. What the visitor posts joins the thread on the card,
 // styled like the app's comments; nothing is sent anywhere.
 export function TakeDemo() {
-  const [draft, setDraft] = useState("Four idlis? Rookie numbers.");
-  const [notes, setNotes] = useState<Note[]>([{ id: 0, handle: "arjun", when: "2h", body: "The drumstick is what sells it. Agree." }]);
+  const [draft, setDraft] = useState("4 is rookie numbers fr");
+  const [notes, setNotes] = useState<Note[]>([{ id: 0, handle: "arjun", when: "2h", body: "chutney > sambar here, don't @ me" }]);
   const total = notes.length;
 
   function post(e: React.FormEvent) {
@@ -72,7 +72,7 @@ export function TakeDemo() {
             </div>
             <Score score={8.5} size={52} />
           </div>
-          <p className="mt-4 text-[0.9375rem] leading-relaxed">Soft as a pillow, and the sambar had real drumstick in it. Ate four.</p>
+          <p className="mt-4 text-[0.9375rem] leading-relaxed">ordered 2, ended up eating 4. sambar refills just kept coming</p>
           <div className="mt-4 overflow-hidden rounded-lg">
             <Image
               src="/coming-soon/idli-sambar.jpg"

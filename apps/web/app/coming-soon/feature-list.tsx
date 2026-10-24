@@ -257,7 +257,7 @@ function VoteShow() {
         </p>
         <Score score={9.5} size={44} />
       </div>
-      <p className="mt-3 text-[0.9375rem] leading-relaxed">Strong, frothy, poured from a height. Had two.</p>
+      <p className="mt-3 text-[0.9375rem] leading-relaxed">bitter in the best way. had two before 9am</p>
       <div className="mt-4">
         <VoteButtons ratingId="tour" facts={214} cap={12} mode="demo" />
       </div>
