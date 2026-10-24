@@ -45,11 +45,17 @@ export function SiteFooter() {
           ))}
         </nav>
       </div>
-      <p className="mt-6 text-xs leading-relaxed text-faint">
-        {prelaunch
-          ? "Nomrank opens soon. © 2026 Nomrank"
-          : "Scores, rankings and takes are the personal opinions of people on Nomrank. Nomrank isn't affiliated with, or paid by, any restaurant listed. © Nomrank"}
-      </p>
+      <div className="mt-6 space-y-2 text-xs leading-relaxed text-faint">
+        <p>
+          {prelaunch
+            ? "Nomrank opens soon."
+            : "Scores, rankings and takes are the personal opinions of people on Nomrank. Nomrank isn't affiliated with, or paid by, any restaurant listed."}
+        </p>
+        <p>© 2026 Nomrank. All rights reserved.</p>
+        <p>
+          Nomrank and its original branding, design, website content, and proprietary materials are protected by applicable intellectual property laws. Unauthorised copying, reproduction, distribution, or commercial use without prior written permission is prohibited.
+        </p>
+      </div>
     </footer>
   );
 }

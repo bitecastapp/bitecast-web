@@ -112,9 +112,12 @@ export default function ComingSoonPage() {
             </Link>
           </nav>
         </div>
-        <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8">
-          © 2026 Nomrank. Rate the dish, not the place.
-        </p>
+        <div data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-8 max-w-[75ch]">
+          <p>© 2026 Nomrank. All rights reserved.</p>
+          <p className="mt-2 leading-relaxed text-faint">
+            Nomrank and its original branding, design, website content, and proprietary materials are protected by applicable intellectual property laws. Unauthorised copying, reproduction, distribution, or commercial use without prior written permission is prohibited.
+          </p>
+        </div>
       </footer>
     </main>
   );
