@@ -32,7 +32,7 @@ export default function ComingSoonPage() {
       </header>
 
       {/* Hero: the promise and the signup beside the app's real rating meter. */}
-      <section className={`${WRAP} grid items-center gap-12 pt-10 pb-14 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-12 lg:gap-16 lg:pt-6 lg:pb-24`}>
+      <section className={`${WRAP} grid grid-cols-1 items-center gap-12 pt-10 pb-14 lg:min-h-[calc(100svh-5rem)] lg:grid-cols-12 lg:gap-16 lg:pt-6 lg:pb-24`}>
         <div className="lg:col-span-6">
           <h1 className="text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[0.98] font-semibold tracking-[-0.04em]">
             <span className="mask-line">
@@ -71,7 +71,7 @@ export default function ComingSoonPage() {
 
       {/* Close: the signup already open, on the ketchup field. */}
       <section className="bg-ketchup text-studio">
-        <div className={`${WRAP} grid items-center gap-10 py-16 lg:grid-cols-12 lg:gap-16 lg:py-32`}>
+        <div className={`${WRAP} grid grid-cols-1 items-center gap-10 py-16 lg:grid-cols-12 lg:gap-16 lg:py-32`}>
           <div className="lg:col-span-6">
             <h2 data-reveal className="text-[clamp(2.75rem,5.4vw,4.75rem)] leading-[0.98] font-semibold tracking-[-0.04em]">
               Save your spot.
