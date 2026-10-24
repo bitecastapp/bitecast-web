@@ -4,6 +4,7 @@ import { Geist, Plus_Jakarta_Sans, Suez_One } from "next/font/google";
 import "./globals.css";
 import { NavigationTracker } from "@/components/back-link";
 import { Toaster } from "@/components/toaster";
+import { Analytics } from "@vercel/analytics/next";
 
 // Plus Jakarta Sans sets the wordmark and Suez One the "n" in the mark (the owner's picks); Geist is the UI face.
 const jakarta = Plus_Jakarta_Sans({ variable: "--font-jakarta", subsets: ["latin"], weight: "800" });
@@ -35,6 +36,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <Suspense fallback={null}>
           <Toaster />
+        </Suspense>
+        {/* Vercel Web Analytics: cookieless page views. It reads the URL, so it streams in like the tracker above. */}
+        <Suspense fallback={null}>
+          <Analytics />
         </Suspense>
       </body>
     </html>

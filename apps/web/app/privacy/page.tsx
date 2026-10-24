@@ -32,7 +32,7 @@ const SECTIONS: LegalSection[] = [
           <strong>What you do:</strong> ratings, takes, photos, comments, votes, follows, saved dishes, favourites and reports.
         </li>
         <li>
-          <strong>Technical:</strong> the sign-in cookie that keeps you signed in. We don&apos;t use advertising trackers.
+          <strong>Technical:</strong> the sign-in cookie that keeps you signed in, and visit counts from Vercel Web Analytics, which uses no cookies and doesn&apos;t identify you. We don&apos;t use advertising trackers.
         </li>
       </ul>
     ),
@@ -125,7 +125,7 @@ export default function PrivacyPage() {
   return (
     <LegalPage
       title="Privacy Policy"
-      updated="23 October 2026"
+      updated="24 October 2026"
       intro={<p>This explains what Nomrank collects, why, who can see it, and what you can do about it.</p>}
       sections={SECTIONS}
     />
