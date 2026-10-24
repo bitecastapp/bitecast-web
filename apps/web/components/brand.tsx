@@ -4,10 +4,10 @@ import { badgeUri } from "@/lib/logo";
 
 const MASK = `url("${badgeUri("#000")}")`;
 
-// The mark: the bitten Must try badge in mustard, tilted like the score sticker, with a Suez One "n".
+// The mark: the Must try badge in mustard, upright, with a Suez One "n".
 export function LogoMark({ size = 28, className }: { size?: number; className?: string }) {
   return (
-    <span aria-hidden className={cn("relative inline-grid shrink-0 -rotate-[8deg] place-items-center text-studio", className)} style={{ width: size, height: size }}>
+    <span aria-hidden className={cn("relative inline-grid shrink-0 place-items-center text-studio", className)} style={{ width: size, height: size }}>
       <span className="absolute inset-0 bg-mustard" style={{ maskImage: MASK, WebkitMaskImage: MASK, maskSize: "100% 100%", WebkitMaskSize: "100% 100%" }} />
       {size >= 40 && <span className="absolute inset-[19%] rounded-full border-[1.5px] border-dashed border-studio/35" />}
       {/* Suez One sits low in its line box; lift it to the badge's centre. */}

@@ -102,7 +102,7 @@ Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist ver
 
 **UI:** Geist. **Wordmark:** Plus Jakarta Sans ExtraBold, lowercase "nomrank." with a Ketchup full stop; the mark's "n" is Suez One. Both chosen by the owner on 2026-10-24.
 
-**The mark** (`lib/logo.ts`, `LogoMark` in `components/brand.tsx`): the scalloped Must try badge in Mustard with a three-tooth bite out of its top-right, tilted -8° like the score sticker, a dashed ring at 40px and up, and a Suez One "n" in Studio. The app icon puts it on a Ketchup tile (`app/icon.tsx`, `app/apple-icon.tsx`, generated with next/og). The header lockup is the mark plus the wordmark.
+**The mark** (`lib/logo.ts`, `LogoMark` in `components/brand.tsx`): the scalloped Must try badge in Mustard, upright, with a dashed ring at 40px and up and a Suez One "n" in Studio. The app icon puts it on a Ketchup tile (`app/icon.tsx`, `app/apple-icon.tsx`, generated with next/og). The header lockup is the mark plus the wordmark.
 
 - **Title** (700, 1.75rem): dish names, sign-in headline.
 - **Headline** (700, 1.5rem): other page titles.

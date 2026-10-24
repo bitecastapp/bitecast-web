@@ -55,14 +55,14 @@ export function loadFonts() {
   return fonts;
 }
 
-// The mark for generated images (icons, cards): the bitten badge as a picture with the "n" set over it, both tilted
-// like the score sticker. next/og has no CSS masks, which is how the app draws it.
+// The mark for generated images (icons, cards): the badge as a picture with the "n" set over it. next/og has no CSS
+// masks, which is how the app draws it.
 export function Mark({ size }: { size: number }) {
   return (
-    <div style={{ width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", transform: "rotate(-8deg)" }}>
+    <div style={{ width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
       {/* eslint-disable-next-line @next/next/no-img-element -- next/og renders plain img */}
       <img src={badgeUri(MUSTARD, STUDIO)} alt="" width={size} height={size} style={{ position: "absolute", top: 0, left: 0 }} />
-      <div style={{ display: "flex", fontFamily: "Suez One", fontSize: size * 0.56, lineHeight: 1, color: STUDIO, marginLeft: -size * 0.04, marginTop: -size * 0.06 }}>n</div>
+      <div style={{ display: "flex", fontFamily: "Suez One", fontSize: size * 0.56, lineHeight: 1, color: STUDIO, marginTop: -size * 0.06 }}>n</div>
     </div>
   );
 }
