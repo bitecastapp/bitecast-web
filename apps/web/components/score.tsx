@@ -10,7 +10,7 @@ export function Score({ score, size = 52, className }: { score: number; size?: n
   const text = formatScore(score);
   const badge = verdict(score).tone === "must";
   const fill = scoreColor(score);
-  const roomy = size >= 48; // the "/10" and the dashed ring only fit on the bigger sticker
+  const roomy = size >= 48; // the "/10" (or n) and the dashed ring only fit on the bigger sticker
   return (
     <span
       role="img"
@@ -32,7 +32,15 @@ export function Score({ score, size = 52, className }: { score: number; size?: n
         <span className="block font-extrabold tracking-[-0.04em] tabular-nums" style={{ fontSize: size * (text.length > 2 ? 0.33 : 0.38) }}>
           {text}
         </span>
-        {roomy && <span className="mt-px block text-[8px] font-bold tracking-[0.12em]">/ 10</span>}
+        {/* Must try badges carry the Nomrank "n" (Suez One, like the logo) where other stickers say "/ 10". */}
+        {roomy &&
+          (badge ? (
+            <span className="mt-0.5 block font-mark" style={{ fontSize: size * 0.22 }}>
+              n
+            </span>
+          ) : (
+            <span className="mt-px block text-[8px] font-bold tracking-[0.12em]">/ 10</span>
+          ))}
       </span>
     </span>
   );

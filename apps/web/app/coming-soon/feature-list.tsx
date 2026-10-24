@@ -7,6 +7,7 @@ import { verdict } from "@/lib/ratings";
 import { Score } from "@/components/score";
 import { TastesLikeHome } from "@/components/tastes-like-home";
 import { VoteButtons } from "@/components/vote-buttons";
+import { Verdict } from "@/components/verdict";
 
 const STEP_MS = 3000;
 
@@ -190,9 +191,9 @@ function ScoreShow() {
 }
 
 const TOP = [
-  { name: "Chicken dum biryani", score: 9.1, ratings: 412 },
-  { name: "Donne biryani", score: 8.8, ratings: 268 },
-  { name: "Mutton biryani", score: 8.6, ratings: 197 },
+  { name: "Chicken dum biryani", place: "Ammi's Biryani House", score: 9.1, ratings: 412 },
+  { name: "Donne biryani", place: "Donne Point", score: 8.8, ratings: 268 },
+  { name: "Mutton biryani", place: "Nizam's Table", score: 8.6, ratings: 197 },
 ];
 
 function RankShow() {
@@ -205,7 +206,9 @@ function RankShow() {
             <span className="w-5 text-center text-[1rem] font-bold tabular-nums text-muted-foreground">{i + 1}</span>
             <span className="min-w-0 flex-1">
               <span className="block font-semibold">{d.name}</span>
-              <span className="block text-muted-foreground tabular-nums">{d.ratings} ratings</span>
+              <span className="block truncate text-muted-foreground tabular-nums">
+                {d.place} · {d.ratings} ratings
+              </span>
             </span>
             <Score score={d.score} size={44} />
           </li>
@@ -221,6 +224,7 @@ function HomeShow() {
       <div className="flex items-center justify-between gap-3">
         <div>
           <p className="text-[1.0625rem] font-semibold">Hyderabadi biryani</p>
+          <p className="text-muted-foreground">from Nizam&apos;s Table</p>
           <p className="text-muted-foreground tabular-nums">8.3 from everyone · 156 ratings</p>
         </div>
         <Score score={8.3} size={52} />
@@ -237,15 +241,18 @@ function VoteShow() {
     <div data-ui className={CARD}>
       <div className="flex items-center gap-3">
         <span aria-hidden className="grid size-9 place-items-center rounded-full bg-raised font-semibold">
-          R
+          K
         </span>
         <p className="min-w-0 flex-1">
-          <span className="block font-semibold">@rohan</span>
-          <span className="block text-muted-foreground">Filter coffee</span>
+          <span className="block truncate font-semibold">@KaapiBefore9am</span>
+          <span className="block text-muted-foreground">Filter coffee · Corner Kaapi Co.</span>
         </p>
         <Score score={9.5} size={44} />
       </div>
-      <p className="mt-3 text-[0.9375rem] leading-relaxed">bitter in the best way. had two before 9am</p>
+      <div className="mt-3">
+        <Verdict score={9.5} />
+      </div>
+      <p className="mt-2 text-[0.9375rem] leading-relaxed">bitter in the best way. had two before 9am</p>
       <div className="mt-4">
         <VoteButtons ratingId="tour" facts={214} cap={12} mode="own" />
       </div>
@@ -275,8 +282,8 @@ function SpacesShow() {
 }
 
 const PEOPLE = [
-  { handle: "meera", match: 92, takes: 64 },
-  { handle: "arjun", match: 87, takes: 41 },
+  { handle: "throwaway_dosa_99", match: 92, takes: 64 },
+  { handle: "biryani_bandit", match: 87, takes: 41 },
 ];
 
 function FollowShow() {
@@ -290,7 +297,7 @@ function FollowShow() {
               {p.handle[0]}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block font-semibold">@{p.handle}</span>
+              <span className="block truncate font-semibold">@{p.handle}</span>
               <span className="block text-muted-foreground tabular-nums">
                 {p.match}% taste match · {p.takes} takes
               </span>

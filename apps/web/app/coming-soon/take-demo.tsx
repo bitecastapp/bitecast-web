@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Score } from "@/components/score";
 import { VoteButtons } from "@/components/vote-buttons";
+import { Verdict } from "@/components/verdict";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,7 @@ type Note = { id: number; handle: string; when: string; body: string; mine?: boo
 // styled like the app's comments; nothing is sent anywhere.
 export function TakeDemo() {
   const [draft, setDraft] = useState("4 is rookie numbers fr");
-  const [notes, setNotes] = useState<Note[]>([{ id: 0, handle: "arjun", when: "2h", body: "chutney > sambar here, don't @ me" }]);
+  const [notes, setNotes] = useState<Note[]>([{ id: 0, handle: "ExtraChutneyPls", when: "2h", body: "chutney > sambar here, don't @ me" }]);
   const total = notes.length;
 
   function post(e: React.FormEvent) {
@@ -64,15 +65,19 @@ export function TakeDemo() {
         <article data-ui aria-label="A take with its comments" className="mx-auto w-full max-w-[28rem] rounded-2xl bg-studio p-5 text-[0.875rem] text-spotlight">
           <div className="flex items-center gap-3">
             <span aria-hidden className="grid size-10 place-items-center rounded-full bg-raised text-[1rem] font-semibold">
-              M
+              S
             </span>
             <div className="min-w-0 flex-1">
-              <p className="font-semibold">@meera</p>
-              <p className="text-muted-foreground">Idli sambar</p>
+              <p className="truncate font-semibold">@SambarSupremacist</p>
+              <p className="text-muted-foreground">2d</p>
             </div>
             <Score score={8.5} size={52} />
           </div>
-          <p className="mt-4 text-[0.9375rem] leading-relaxed">ordered 2, ended up eating 4. sambar refills just kept coming</p>
+          <p className="mt-3 flex flex-wrap items-center gap-2 text-[1rem] font-semibold">
+            Idli sambar <Verdict score={8.5} />
+          </p>
+          <p className="text-muted-foreground">from Udupi Corner Tiffins</p>
+          <p className="mt-3 text-[0.9375rem] leading-relaxed">ordered 2, ended up eating 4. sambar refills just kept coming</p>
           <div className="mt-4 overflow-hidden rounded-lg">
             <Image
               src="/coming-soon/idli-sambar.jpg"

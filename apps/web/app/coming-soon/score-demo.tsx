@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Score } from "@/components/score";
 import { ScoreMeter } from "@/components/score-meter";
+import { Verdict } from "@/components/verdict";
 import { verdict } from "@/lib/ratings";
 
 // The hero's working fragment: the app's own rating screen in miniature. The meter is the real one from /rate;
@@ -30,7 +31,12 @@ export function ScoreDemo() {
         </span>
       </div>
       <div className="px-5 pt-5 pb-6 sm:px-7 sm:pb-7">
-        <p className="pr-24 text-[1.375rem] leading-tight font-semibold tracking-[-0.02em]">Chicken dum biryani</p>
+        <div className="pr-24">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[1.375rem] leading-tight font-semibold tracking-[-0.02em]">
+            Chicken dum biryani <Verdict score={score} />
+          </p>
+          <p className="mt-1 text-[0.9375rem] text-muted-foreground">from Ammi&apos;s Biryani House</p>
+        </div>
         <div className="mt-6">
           <ScoreMeter score={score} onChange={setScore} />
         </div>
