@@ -26,7 +26,7 @@ export function Verdict({ score, icon }: { score: number; icon?: boolean }) {
       {v.tone === "must" &&
         (icon ? (
           // eslint-disable-next-line @next/next/no-img-element -- the generated app icon (app/icon.tsx), shown at 16px
-          <img src="/icon" alt="" width={16} height={16} className="size-4 shrink-0 rounded-[4px]" />
+          <img src="/icon" alt="" width={16} height={16} className="size-4 shrink-0 rounded-full" />
         ) : (
           <LogoMark size={16} />
         ))}
