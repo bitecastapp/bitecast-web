@@ -39,12 +39,14 @@ export function scoreColor(score: number) {
   return `color-mix(in oklab, var(--ketchup), var(--mustard) ${Math.round(scoreHeat(score) * 100)}%)`;
 }
 
-// A one-word read of a score, shown beside the dish on a take.
+// A short read of a score, shown beside the dish on a take: six tiers, from "Send it back" to "Must try".
 export function verdict(score: number) {
   if (score >= 9) return { label: "Must try", tone: "must" } as const;
-  if (score >= 7) return { label: "Worth it", tone: "good" } as const;
-  if (score >= 5) return { label: "It's okay", tone: "meh" } as const;
-  return { label: "Skip it", tone: "skip" } as const;
+  if (score >= 8) return { label: "Seconds, please", tone: "seconds" } as const;
+  if (score >= 6.5) return { label: "Clean plate", tone: "clean" } as const;
+  if (score >= 5) return { label: "Just okay", tone: "okay" } as const;
+  if (score >= 3) return { label: "Skip it", tone: "skip" } as const;
+  return { label: "Send it back", tone: "back" } as const;
 }
 
 // Public URL for a stored photo (the bucket is public-read).

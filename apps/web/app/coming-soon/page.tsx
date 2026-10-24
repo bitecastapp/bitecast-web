@@ -62,7 +62,7 @@ export default function ComingSoonPage() {
           What you can do
         </h2>
         <p data-reveal style={{ "--i": 1 } as React.CSSProperties} className="mt-5 mb-10 max-w-[42ch] text-[1.0625rem] leading-relaxed text-muted-foreground">
-          Search the list, or tap a feature to try it.
+          Search the list, or tap a feature to see it.
         </p>
         <div data-reveal style={{ "--i": 2 } as React.CSSProperties}>
           <FeatureList />

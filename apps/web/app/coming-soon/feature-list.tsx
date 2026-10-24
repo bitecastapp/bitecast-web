@@ -7,7 +7,6 @@ import { verdict } from "@/lib/ratings";
 import { Score } from "@/components/score";
 import { TastesLikeHome } from "@/components/tastes-like-home";
 import { VoteButtons } from "@/components/vote-buttons";
-import { FollowButton } from "@/components/follow-button";
 
 const STEP_MS = 3000;
 
@@ -170,33 +169,22 @@ function Stage({ children }: { children: React.ReactNode }) {
 
 const CARD = "rounded-2xl bg-studio p-4 text-[0.875rem] sm:p-5";
 
-const SCALE = [3.5, 6, 7.5, 9.5];
+// One score from each tier, best first.
+const SCALE = [9.5, 8, 7, 5.5, 4, 2];
 
-// What a score means: the four verdicts, each on its sticker. Tap one to see it.
+// What a score means: the six verdicts, each on its sticker.
 function ScoreShow() {
-  const [pick, setPick] = useState(9.5);
   return (
     <div data-ui className={CARD}>
       <p className="text-[1.0625rem] font-semibold">What a score means</p>
-      <div className="stagger mt-4 grid grid-cols-4 gap-2" role="group" aria-label="Score examples">
+      <ul className="stagger mt-4 grid grid-cols-3 gap-x-2 gap-y-4">
         {SCALE.map((n) => (
-          <button
-            key={n}
-            type="button"
-            aria-pressed={pick === n}
-            onClick={() => setPick(n)}
-            className={cn(
-              "flex flex-col items-center gap-2 rounded-xl py-3 transition-colors outline-none focus-visible:ring-2 focus-visible:ring-mustard",
-              pick === n ? "bg-raised" : "hover:bg-raised/60",
-            )}
-          >
-            <span className={cn("transition-transform duration-200 ease-[var(--ease-out)]", pick === n && "scale-110")}>
-              <Score score={n} size={48} />
-            </span>
-            <span className={cn("text-[0.8125rem] font-semibold", pick === n ? "text-spotlight" : "text-muted-foreground")}>{verdict(n).label}</span>
-          </button>
+          <li key={n} className="flex flex-col items-center gap-2 text-center">
+            <Score score={n} size={44} />
+            <span className="text-[0.8125rem] leading-tight font-semibold text-muted-foreground">{verdict(n).label}</span>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
@@ -259,7 +247,7 @@ function VoteShow() {
       </div>
       <p className="mt-3 text-[0.9375rem] leading-relaxed">bitter in the best way. had two before 9am</p>
       <div className="mt-4">
-        <VoteButtons ratingId="tour" facts={214} cap={12} mode="demo" />
+        <VoteButtons ratingId="tour" facts={214} cap={12} mode="own" />
       </div>
     </div>
   );
@@ -307,7 +295,10 @@ function FollowShow() {
                 {p.match}% taste match · {p.takes} takes
               </span>
             </span>
-            <FollowButton followeeId={p.handle} handle={p.handle} following={false} signedIn={false} demo />
+            <span className="inline-flex min-h-10 items-center gap-1.5 rounded-md bg-mustard px-4 text-sm font-semibold text-studio">
+              <PlusIcon aria-hidden className="size-4" strokeWidth={2.5} />
+              Follow
+            </span>
           </li>
         ))}
       </ul>

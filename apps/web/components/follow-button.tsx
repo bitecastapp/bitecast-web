@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic, useRef, useState, useTransition } from "react";
+import { useOptimistic, useRef, useTransition } from "react";
 import Link from "next/link";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,20 +8,17 @@ import { AGREE_CRUMBS, burst } from "@/lib/burst";
 import { setFollow } from "@/app/u/[handle]/actions";
 import { toast } from "@/components/toaster";
 
-// demo: the landing page's preview; following toggles on the page and nothing is saved.
-type Props = { followeeId: string; handle: string; following: boolean; signedIn: boolean; demo?: boolean };
+type Props = { followeeId: string; handle: string; following: boolean; signedIn: boolean };
 
 // Follow / Following. Mustard when you're not following yet; quiet once you are (hover offers Unfollow).
-export function FollowButton({ followeeId, handle, following, signedIn, demo }: Props) {
+export function FollowButton({ followeeId, handle, following, signedIn }: Props) {
   const [, startTransition] = useTransition();
-  const [optimistic, setOn] = useOptimistic(following);
-  const [local, setLocal] = useState(following);
-  const on = demo ? local : optimistic;
+  const [on, setOn] = useOptimistic(following);
   const fx = useRef<HTMLSpanElement>(null);
   const base =
     "group inline-flex min-h-10 items-center gap-1.5 rounded-md px-4 text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-none";
 
-  if (!signedIn && !demo)
+  if (!signedIn)
     return (
       <Link href="/login" className={cn(base, "bg-mustard text-studio hover:brightness-110")}>
         <PlusIcon aria-hidden className="size-4" strokeWidth={2.5} />
@@ -37,7 +34,6 @@ export function FollowButton({ followeeId, handle, following, signedIn, demo }: 
         aria-label={on ? `Following @${handle}. Unfollow` : `Follow @${handle}`}
         onClick={(e) => {
           if (!on) burst(fx.current, e.currentTarget, AGREE_CRUMBS);
-          if (demo) return setLocal(!on);
           startTransition(async () => {
             setOn(!on);
             await setFollow(followeeId, !on);

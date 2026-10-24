@@ -26,12 +26,16 @@ describe("verdict", () => {
   it.each([
     [10, "Must try"],
     [9, "Must try"],
-    [8.5, "Worth it"],
-    [7, "Worth it"],
-    [6.5, "It's okay"],
-    [5, "It's okay"],
-    [4.5, "Skip it"],
-    [1, "Skip it"],
+    [8.9, "Seconds, please"],
+    [8, "Seconds, please"],
+    [7.9, "Clean plate"],
+    [6.5, "Clean plate"],
+    [6.4, "Just okay"],
+    [5, "Just okay"],
+    [4.9, "Skip it"],
+    [3, "Skip it"],
+    [2.5, "Send it back"],
+    [1, "Send it back"],
   ])("%s → %s", (score, label) => expect(verdict(score).label).toBe(label));
 });
 
