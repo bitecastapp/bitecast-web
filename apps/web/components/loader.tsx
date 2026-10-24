@@ -2,15 +2,17 @@
 
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { BroadcastMark } from "@/components/brand";
+import { LogoMark } from "@/components/brand";
 
-// The Nomrank mark going on air: its three waves light up outward in turn while a soft ring pings behind it.
-// Under reduced motion it holds still, fully lit.
+// The Nomrank mark turning slowly, like a sticker on a turntable, while a soft ring pings behind it.
+// Under reduced motion it holds still.
 export function BroadcastLoader({ size = 56, label = "Loading", className }: { size?: number; label?: string; className?: string }) {
   return (
     <span role="status" aria-label={label} className={cn("relative grid place-items-center", className)} style={{ width: size, height: size }}>
       <span aria-hidden className="absolute inset-0 animate-[ping-ring_1.4s_var(--ease-out)_infinite] rounded-full border-2 border-ketchup/50" />
-      <BroadcastMark lit={3} pulse className="relative" />
+      <span className="relative grid animate-[spin_3s_linear_infinite] place-items-center">
+        <LogoMark size={size * 0.8} />
+      </span>
     </span>
   );
 }
@@ -18,7 +20,7 @@ export function BroadcastLoader({ size = 56, label = "Loading", className }: { s
 // What the kitchen's doing while the page loads.
 const LINES = ["Heating the tawa", "Steaming the idlis", "Grinding the chutney", "Pouring the filter kaapi", "Plating up"];
 
-// A whole-page wait: the broadcasting mark centred, with a kitchen line under it that changes every couple of seconds.
+// A whole-page wait: the turning mark centred, with a kitchen line under it that changes every couple of seconds.
 export function PageLoader() {
   const [line, setLine] = useState(0);
   useEffect(() => {

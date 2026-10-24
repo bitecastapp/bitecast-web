@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 import type { Metadata, Viewport } from "next";
-import { Geist, Urbanist } from "next/font/google";
+import { Geist, Shrikhand } from "next/font/google";
 import "./globals.css";
 import { NavigationTracker } from "@/components/back-link";
 import { Toaster } from "@/components/toaster";
 
-// Urbanist only sets the wordmark; Geist is the UI face.
-const urbanist = Urbanist({ variable: "--font-urbanist", subsets: ["latin"], weight: ["800", "900"] });
+// Shrikhand only sets the wordmark and the "n" in the mark; Geist is the UI face.
+const shrikhand = Shrikhand({ variable: "--font-shrikhand", subsets: ["latin"], weight: "400" });
 const geist = Geist({ variable: "--font-geist", subsets: ["latin"] });
 
 // metadataBase makes link-preview image URLs absolute. Set NEXT_PUBLIC_SITE_URL to the real address once deployed.
@@ -25,7 +25,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${urbanist.variable} ${geist.variable} h-full antialiased`}>
+    <html lang="en" className={`${shrikhand.variable} ${geist.variable} h-full antialiased`}>
       <body className="flex min-h-dvh flex-col bg-background">
         {/* The pathname is request data, so it streams in rather than blocking the page shell. */}
         <Suspense fallback={null}>

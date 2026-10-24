@@ -5,6 +5,7 @@ import { ScoreDemo } from "./score-demo";
 import { TakeDemo } from "./take-demo";
 import { FeatureList } from "./feature-list";
 import { Reveal } from "./reveal";
+import { Wordmark } from "@/components/brand";
 
 export const metadata: Metadata = {
   title: "Nomrank · Coming soon",
@@ -24,9 +25,7 @@ export default function ComingSoonPage() {
       <Reveal />
 
       <header className={`${WRAP} flex h-16 animate-[fade-in_600ms_var(--ease-out)_both] items-center justify-between pt-[env(safe-area-inset-top)] lg:h-20`}>
-        <p className="font-brand text-[1.5rem] leading-none font-black tracking-[-0.04em]">
-          nomrank<span className="text-ketchup">.</span>
-        </p>
+        <Wordmark href={null} className="text-[1.5rem]" />
         <Link href="/about" className={`text-[1rem] ${LINK}`}>
           How it works
         </Link>
@@ -97,9 +96,7 @@ export default function ComingSoonPage() {
 
       <footer className={`${WRAP} pt-16 pb-10 text-[0.875rem] text-muted-foreground lg:pt-20`}>
         <div data-reveal className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="font-brand text-[1.5rem] leading-none font-black tracking-[-0.04em] text-spotlight">
-            nomrank<span className="text-ketchup">.</span>
-          </p>
+          <Wordmark href={null} className="text-[1.5rem] text-spotlight" />
           <nav aria-label="Footer" className="flex flex-wrap gap-x-6 gap-y-2 text-[1rem] text-spotlight">
             <Link href="/about" className={LINK}>
               How it works

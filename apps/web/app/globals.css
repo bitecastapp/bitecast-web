@@ -9,7 +9,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist);
   --font-heading: var(--font-geist);
-  --font-brand: var(--font-urbanist);
+  --font-wordmark: var(--font-shrikhand);
   --color-raised: var(--raised);
   --color-hairline: var(--hairline);
   --color-faint: var(--faint);
@@ -187,10 +187,6 @@
   }
 }
 
-/* Broadcast waves light up one by one. */
-@keyframes wave-on {
-  from { opacity: 0.18; }
-}
 @keyframes rise {
   from { transform: translateY(12px); }
 }
@@ -234,11 +230,7 @@
   animation-timing-function: var(--ease-in-out);
 }
 
-/* Loader: the mark's waves light up outward in turn; a ring pings out behind it. */
-@keyframes wave-pulse {
-  0%, 100% { opacity: 0.15; }
-  35% { opacity: 1; }
-}
+/* Loader: a ring pings out behind the mark. */
 @keyframes ping-ring {
   from { opacity: 0.6; transform: scale(0.55); }
   to { opacity: 0; transform: scale(1.35); }

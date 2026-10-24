@@ -14,6 +14,7 @@ const FAINT = "#8e8296"; // fine print: 5.2:1 on studio
 const KETCHUP = "#ff4b3a";
 const MUSTARD = "#ffc23c";
 const DISPLAY = "Urbanist, 'Helvetica Neue', Helvetica, Arial, sans-serif";
+const WORDMARK = "Shrikhand, Georgia, 'Times New Roman', serif"; // the wordmark face; a serif where web fonts are blocked
 const BODY = "Geist, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
 // The menu: what Nomrank does, with the "price" column naming what you get.
@@ -54,7 +55,7 @@ export function waitlistEmail(siteUrl: string) {
 <meta name="color-scheme" content="light dark">
 <meta name="supported-color-schemes" content="light dark">
 <title>${subject}</title>
-<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Urbanist:wght@800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&family=Urbanist:wght@800;900&family=Shrikhand&display=swap" rel="stylesheet">
 <style>
   :root { color-scheme: light dark; supported-color-schemes: light dark; }
   @media (max-width: 520px) {
@@ -75,7 +76,12 @@ export function waitlistEmail(siteUrl: string) {
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;">
 
         <tr>
-          <td class="pad" style="padding:0 8px 24px 8px;font-family:${DISPLAY};font-size:26px;line-height:30px;font-weight:900;letter-spacing:-1px;color:${SPOTLIGHT};">nomrank<span style="color:${KETCHUP};">.</span></td>
+          <td class="pad" style="padding:0 8px 24px 8px;">
+            <table role="presentation" cellpadding="0" cellspacing="0"><tr>
+              <td valign="middle" style="padding-right:12px;"><img src="${site}/apple-icon" width="40" height="40" alt="" style="display:block;width:40px;height:40px;border:0;border-radius:10px;"></td>
+              <td valign="middle" style="font-family:${WORDMARK};font-size:26px;line-height:30px;font-weight:400;color:${SPOTLIGHT};">nomrank<span style="color:${KETCHUP};">.</span></td>
+            </tr></table>
+          </td>
         </tr>
 
         <tr>
@@ -132,7 +138,7 @@ export function waitlistEmail(siteUrl: string) {
         <tr>
           <td class="pad" style="padding:48px 8px 0 8px;">
             <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="border-top:1px solid ${HAIRLINE};font-size:1px;line-height:1px;">&nbsp;</td></tr></table>
-            <p style="margin:24px 0 0 0;font-family:${DISPLAY};font-size:16px;line-height:20px;font-weight:900;letter-spacing:-0.5px;color:${SPOTLIGHT};">nomrank<span style="color:${KETCHUP};">.</span> <span style="font-family:${BODY};font-size:14px;font-weight:400;letter-spacing:0;color:${MUTED};">Rate the dish, not the place.</span></p>
+            <p style="margin:24px 0 0 0;font-family:${WORDMARK};font-size:16px;line-height:20px;font-weight:400;color:${SPOTLIGHT};">nomrank<span style="color:${KETCHUP};">.</span> <span style="font-family:${BODY};font-size:14px;font-weight:400;letter-spacing:0;color:${MUTED};">Rate the dish, not the place.</span></p>
             <p style="margin:12px 0 0 0;font-family:${BODY};font-size:12px;line-height:19px;color:${FAINT};">
               You're getting this because this address joined the Nomrank waitlist at ${host}. Not you? Ignore this email and you won't hear from us again.
             </p>

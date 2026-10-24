@@ -15,10 +15,9 @@ colors:
   error: "#ff8a7d"
 typography:
   wordmark:
-    fontFamily: "Urbanist, sans-serif"
+    fontFamily: "Shrikhand, serif"
     fontSize: "1.375rem"
-    fontWeight: 900
-    letterSpacing: "-0.04em"
+    fontWeight: 400
   title:
     fontFamily: "Geist, sans-serif"
     fontSize: "1.75rem"
@@ -82,7 +81,7 @@ Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist ver
 **Key Characteristics:**
 - Dark Studio ground, cream text, grey-purple secondary text.
 - Ketchup means "score" and "the main action". Mustard means "Agree" and "you are here" (active tab, active sort, focus).
-- Geist for UI; Urbanist only for the wordmark.
+- Geist for UI; Shrikhand only for the wordmark and the mark's "n".
 - Lists separated by hairlines, not cards. No shadows, no outlines on content, no tilts.
 
 ## Colors
@@ -100,7 +99,9 @@ Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist ver
 
 ## Typography
 
-**UI:** Geist. **Wordmark:** Urbanist 900 (swap for the owner's logo files when available).
+**UI:** Geist. **Wordmark:** Shrikhand (Jonny Pinhorn's display face after Gujarati hand-painted lettering), lowercase "nomrank." with a Ketchup full stop, chosen by the owner on 2026-10-24.
+
+**The mark** (`lib/logo.ts`, `LogoMark` in `components/brand.tsx`): the scalloped Must try badge in Mustard with a three-tooth bite out of its top-right, tilted -8° like the score sticker, a dashed ring at 40px and up, and a Shrikhand "n" in Studio. The app icon puts it on a Ketchup tile (`app/icon.tsx`, `app/apple-icon.tsx`, generated with next/og). The header lockup is the mark plus the wordmark.
 
 - **Title** (700, 1.75rem): dish names, sign-in headline.
 - **Headline** (700, 1.5rem): other page titles.
@@ -111,7 +112,7 @@ Chosen by the owner on 2026-10-22 after rejecting the loud sticker/brutalist ver
 
 ## Layout
 
-One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the Rate button right (no floating buttons). Tabs are text with a Mustard underline. Sign-up screens are a narrow column with a small broadcast mark (waves = progress) in the header.
+One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the Rate button right (no floating buttons). Tabs are text with a Mustard underline. Sign-up screens are a narrow column with three progress dots in the header (Ketchup once a step is done).
 
 ## Components
 
@@ -122,7 +123,7 @@ One column, max 576px, 20px gutters, safe-area aware. Header: wordmark left, the
 - **Comments** (`components/comments.tsx`): overline "Comments · N", a composer, then threads: avatar initial, @handle, time, body; replies indented one level behind a 1px hairline. Reply opens an inline composer; Delete asks "Delete it / Keep" first. Comments that appear after the page loaded rise in (260ms); the rest stay still.
 - **Comment count** on every take row (speech-bubble icon + number) links to `#comments`.
 - **Coming soon page** (`app/coming-soon`): a Persuade surface where the product shows itself, on one page width (76rem, 20/32/40px margins) for every section. Hero: headline, sentence and waitlist form beside the app's real rating screen in miniature (`ScoreMeter` from `components/score-meter.tsx`, shared with /rate, driving the `Score` sticker on the dish photo). Then "Every take is up for debate.": a comment box with a Post button beside a take card on a Spotlight panel; posting adds the comment to the card's thread (styled like the app's comments, latest three shown), and its Agree/Disagree work in demo mode. Then the features as the app's own search list (type to filter, the selected row on Ketchup) with a working explainer for each built from app components (the verdict scale, a Top Biryani list, Tastes like home, a take with live Agree/Disagree, Spaces, people to follow); it steps to the next feature every 3 seconds while on screen, stops when you pick one or press Pause, resumes on Play, and never runs under reduced motion. Demo vote and follow buttons use the components' `demo` mode, which never saves. Close: a full Ketchup band with the signup dialog open. No sample labels; dish photos are credited Wikimedia Commons images in `public/coming-soon/`. Motion: headline lines rise from their baselines, section parts rise in once, dish photos drift slowly.
-- **Wordmark / BroadcastMark** (`components/brand.tsx`), **Screen**, **PageShell** (with an `action` slot), **Row**.
+- **Wordmark / LogoMark** (`components/brand.tsx`; the loader turns the mark slowly), **Screen**, **PageShell** (with an `action` slot), **Row**.
 
 ## What makes it Nomrank, not Letterboxd
 
