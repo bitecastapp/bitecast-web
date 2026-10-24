@@ -31,15 +31,15 @@ type Card = {
   photo?: string | null;
 };
 
-// Fonts for the card (the built-in font is regular only): Geist for text, Shrikhand for the wordmark and the mark's
-// "n", as in the app. Fetched once per server process as TTF (Google Fonts serves TTF to clients that don't ask for
+// Fonts for the card (the built-in font is regular only): Geist for text, Plus Jakarta Sans for the wordmark and
+// Suez One for the mark's "n", as in the app. Fetched once per server process as TTF (Google Fonts serves TTF to clients that don't ask for
 // woff2). If the fetch fails, the card still renders in the built-in font.
 type Font = { name: string; data: ArrayBuffer; weight: 400 | 500 | 800; style: "normal" };
 let fonts: Promise<Font[]> | null = null;
 
 async function googleFont(family: string, weight: Font["weight"]): Promise<Font | null> {
   try {
-    const css = await (await fetch(`https://fonts.googleapis.com/css2?family=${family}:wght@${weight}`)).text();
+    const css = await (await fetch(`https://fonts.googleapis.com/css2?family=${family.replaceAll(" ", "+")}:wght@${weight}`)).text();
     const url = css.match(/src: url\((.+?)\) format\('(opentype|truetype)'\)/)?.[1];
     if (!url) return null;
     return { name: family, data: await (await fetch(url)).arrayBuffer(), weight, style: "normal" };
@@ -49,7 +49,7 @@ async function googleFont(family: string, weight: Font["weight"]): Promise<Font 
 }
 
 export function loadFonts() {
-  fonts ??= Promise.all([googleFont("Geist", 500), googleFont("Geist", 800), googleFont("Shrikhand", 400)]).then((list) =>
+  fonts ??= Promise.all([googleFont("Geist", 500), googleFont("Geist", 800), googleFont("Plus Jakarta Sans", 800), googleFont("Suez One", 400)]).then((list) =>
     list.filter((f): f is Font => f !== null),
   );
   return fonts;
@@ -62,7 +62,7 @@ export function Mark({ size }: { size: number }) {
     <div style={{ width: size, height: size, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", transform: "rotate(-8deg)" }}>
       {/* eslint-disable-next-line @next/next/no-img-element -- next/og renders plain img */}
       <img src={badgeUri(MUSTARD, STUDIO)} alt="" width={size} height={size} style={{ position: "absolute", top: 0, left: 0 }} />
-      <div style={{ display: "flex", fontFamily: "Shrikhand", fontSize: size * 0.54, lineHeight: 1, color: STUDIO, marginLeft: -size * 0.08, marginTop: size * 0.04 }}>n</div>
+      <div style={{ display: "flex", fontFamily: "Suez One", fontSize: size * 0.56, lineHeight: 1, color: STUDIO, marginLeft: -size * 0.04, marginTop: -size * 0.06 }}>n</div>
     </div>
   );
 }
@@ -85,7 +85,7 @@ export async function ogCard({ eyebrow, title, subtitle, body, score, scoreNote,
               </div>
             )}
           </div>
-          <div style={{ display: "flex", alignItems: "center", fontFamily: "Shrikhand", fontSize: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", fontFamily: "Plus Jakarta Sans", fontWeight: 800, fontSize: 40, letterSpacing: -1.4 }}>
             <Mark size={52} />
             <span style={{ marginLeft: 14 }}>nomrank</span>
             <span style={{ color: KETCHUP }}>.</span>

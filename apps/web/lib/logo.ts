@@ -1,5 +1,5 @@
 // The Nomrank mark: the scalloped "Must try" badge with a bite out of its top-right, tilted like the score sticker,
-// with a Shrikhand "n" in the middle. One outline, used as a CSS mask in the app and as an image in generated icons.
+// with a Suez One "n" in the middle. One outline, used as a CSS mask in the app and as an image in generated icons.
 
 // Badge: a centre circle and 14 scallops (the same geometry as the Score sticker), on a 100×100 box.
 const SCALLOPS = [

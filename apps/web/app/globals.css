@@ -9,7 +9,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist);
   --font-heading: var(--font-geist);
-  --font-wordmark: var(--font-shrikhand);
+  --font-wordmark: var(--font-jakarta);
+  --font-mark: var(--font-suez);
   --color-raised: var(--raised);
   --color-hairline: var(--hairline);
   --color-faint: var(--faint);
